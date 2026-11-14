@@ -1,0 +1,6 @@
+{
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+  "name": "hellball-ultimate",
+  "compatibility_date": "2026-11-01",
+  "assets": { "directory": "." }
+}
