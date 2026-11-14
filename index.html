@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; font-src 'self' data:; connect-src 'self' https://*.workers.dev wss://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.19</title>
+<title>HELLBALL ULTIMATE v0.19.1</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -49,7 +49,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.19 // BUILD 20261114.0339 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.19.1 // BUILD 20261114.0341 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="modes" class="ov hidden"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
@@ -1539,15 +1539,24 @@ function fxStamp(){if(FXSTAMP)return FXSTAMP;GLY.F=["11111","10000","10000","111
   return FXSTAMP=pts.concat(pts.map(([x,y,z])=>[-x,y,-z]))}
 ACH.push({id:"world_one",name:"NUMBER ONE",desc:"Reach #1 on any World Board."});
 COS.ball.push({id:"fxorb",n:"FX ORB",un:"world_one"});
-function drawFXOrb(cx,cy,r,c){c=c||ctx;const t=performance.now()/1000,gl=Math.random()<.07;
-  c.save();c.globalCompositeOperation="lighter";for(const[col,dx]of[["255,30,80",r*.09],["40,120,255",-r*.09]]){const g=c.createRadialGradient(cx+dx,cy,r*.2,cx+dx,cy,r*1.05);g.addColorStop(0,"rgba("+col+",.0)");g.addColorStop(.8,"rgba("+col+",.28)");g.addColorStop(1,"rgba("+col+",0)");c.fillStyle=g;c.beginPath();c.arc(cx+dx,cy,r*1.05,0,TAU2);c.fill()}c.restore();
-  drawBall3D(cx,cy,r,c);
-  if(r>4){const s=Math.max(1,r*.075);c.save();c.beginPath();c.arc(cx,cy,r,0,TAU2);c.clip();c.globalCompositeOperation="lighter";
-    const jit=gl?(Math.random()-.5)*r*.3:0;for(const[col,ox,a]of[["255,40,90",r*.05,.55],["60,140,255",-r*.05,.55],["255,255,255",0,.95]])
-      {c.fillStyle="rgba("+col+","+a+")";for(const v of fxStamp()){const q=rot(v);if(q[2]<=.12)continue;const f=(.5+.5*q[2])*s;c.globalAlpha=Math.min(1,q[2]*2.5);c.fillRect(cx+q[0]*r-f/2+ox+(Math.abs(q[1])<.15?jit:0),cy+q[1]*r-f/2,f,f)}}
-    c.globalAlpha=1;if(gl){c.fillStyle="rgba(255,60,200,.5)";c.fillRect(cx-r,cy+(Math.random()-.5)*r*1.6,r*2,Math.max(1,r*.06));c.fillStyle="rgba(60,255,220,.4)";c.fillRect(cx-r,cy+(Math.random()-.5)*r*1.6,r*2,Math.max(1,r*.04))}
-    c.restore()}}
-
+function drawFXOrb(cx,cy,r,c){c=c||ctx;const gl=Math.random()<.06,j=()=>Math.random()<.04?(Math.random()-.5)*r*.25:0;
+  c.save();c.globalCompositeOperation="lighter";const h=c.createRadialGradient(cx,cy,r*.9,cx,cy,r*4.2);h.addColorStop(0,"rgba(80,255,150,.3)");h.addColorStop(.15,"rgba(255,40,80,.12)");h.addColorStop(.4,"rgba(80,255,150,.04)");h.addColorStop(1,"rgba(80,255,150,0)");
+  c.fillStyle=h;c.fillRect(cx-r*4.2,cy-r*4.2,r*8.4,r*8.4);c.restore();
+  c.save();const body=c.createRadialGradient(cx-r*.35,cy-r*.4,r*.05,cx,cy,r);body.addColorStop(0,"rgb(30,70,45)");body.addColorStop(.5,"rgb(6,24,14)");body.addColorStop(1,"rgb(1,6,3)");
+  c.fillStyle=body;c.beginPath();c.arc(cx,cy,r,0,TAU2);c.fill();c.beginPath();c.arc(cx,cy,r,0,TAU2);c.clip();
+  const back=new Path2D(),bands=[new Path2D(),new Path2D(),new Path2D()],L=[-.45,-.5,.74];
+  for(const line of WIRE){let prev=null;for(const v of line){const q=rot(v);if(prev){const zz=(prev[2]+q[2])/2,g=j();
+        if(zz<=0){back.moveTo(cx+prev[0]*r,cy+prev[1]*r);back.lineTo(cx+q[0]*r,cy+q[1]*r)}
+        else{const lit=Math.max(0,(prev[0]+q[0])/2*L[0]+(prev[1]+q[1])/2*L[1]+zz*L[2]),k=lit>.6?2:lit>.3?1:0;bands[k].moveTo(cx+prev[0]*r+g,cy+prev[1]*r);bands[k].lineTo(cx+q[0]*r+g,cy+q[1]*r)}}prev=q}}
+  c.lineWidth=Math.max(.5,r*.035);c.strokeStyle="rgba(255,40,80,.18)";c.stroke(back);
+  c.globalCompositeOperation="lighter";for(const[col,dx]of[["255,34,85",r*.05],["34,136,255",-r*.05]]){c.save();c.translate(dx,0);c.strokeStyle="rgba("+col+",.35)";for(const b of bands)c.stroke(b);c.restore()}
+  ["rgba(90,200,130,.55)","rgba(140,255,180,.8)","rgba(220,255,230,.95)"].forEach((col,k)=>{c.strokeStyle=col;c.stroke(bands[k])});
+  if(r>4){const s=Math.max(1,r*.07);c.shadowColor="#ff4455";c.shadowBlur=r*.15;c.fillStyle="#ff4455";for(const v of fxStamp()){const q=rot(v);if(q[2]<=.1)continue;const f=(.55+.45*q[2])*s;c.globalAlpha=Math.min(1,q[2]*2.5);c.fillRect(cx+q[0]*r-f/2+j(),cy+q[1]*r-f/2,f,f)}c.globalAlpha=1;c.shadowBlur=0}
+  c.globalCompositeOperation="source-over";const sh=c.createRadialGradient(cx+r*.3,cy+r*.35,r*.2,cx,cy,r);sh.addColorStop(0,"rgba(0,0,0,0)");sh.addColorStop(1,"rgba(0,0,0,.55)");c.fillStyle=sh;c.fillRect(cx-r,cy-r,r*2,r*2);
+  c.globalCompositeOperation="lighter";const sp=c.createRadialGradient(cx-r*.38,cy-r*.42,0,cx-r*.38,cy-r*.42,r*.3);sp.addColorStop(0,"rgba(255,255,255,.6)");sp.addColorStop(1,"rgba(255,255,255,0)");c.fillStyle=sp;c.fillRect(cx-r,cy-r,r*2,r*2);
+  const rim=c.createRadialGradient(cx,cy,r*.8,cx,cy,r);rim.addColorStop(0,"rgba(80,255,150,0)");rim.addColorStop(1,"rgba(80,255,150,.45)");c.fillStyle=rim;c.fillRect(cx-r,cy-r,r*2,r*2);
+  if(gl){c.fillStyle="rgba(255,40,100,.55)";c.fillRect(cx-r,cy+(Math.random()-.5)*r*1.6,r*2,Math.max(1,r*.06));c.fillStyle="rgba(60,160,255,.45)";c.fillRect(cx-r,cy+(Math.random()-.5)*r*1.6,r*2,Math.max(1,r*.04))}
+  c.restore();c.save();c.strokeStyle="rgba(140,255,180,.5)";c.lineWidth=Math.max(.6,r*.03);c.beginPath();c.arc(cx,cy,r,0,TAU2);c.stroke();c.restore()}
 /* ---------- run tracking ---------- */
 const RUN={st0:{},ach0:new Set(),maxVol:0,maxMult:1,board:null,boardP:null};
 function runStart(){RUN.st0=Object.assign({},ST);RUN.ach0=new Set(Object.keys(ACHD||{}));RUN.maxVol=0;RUN.maxMult=1;RUN.board=null;RUN.boardP=null}
