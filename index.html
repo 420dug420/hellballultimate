@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.16</title>
+<title>HELLBALL ULTIMATE v0.17</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -27,7 +27,7 @@ input[type=range]{accent-color:#33ff77;vertical-align:middle}
 .pf{width:min(94vw,660px);box-sizing:border-box;border:1px solid #114422;background:rgba(0,10,4,.75);padding:10px 12px;font-size:12px;white-space:pre;overflow-x:auto;box-shadow:inset 0 0 22px rgba(51,255,119,.07)}
 .pf-h{color:#33ff77;letter-spacing:2px}.pf-s{color:#119944;margin:2px 0 8px}.pf-r{display:flex;gap:10px;line-height:1.5}.pf-b{color:#1f9a4c}
 .pf-r.up,.pf-r.up .pf-b{color:#ffd23a;text-shadow:0 0 6px rgba(255,210,58,.5)}.pf-r.dn,.pf-r.dn .pf-b{color:#ff4455;text-shadow:0 0 6px rgba(255,68,85,.5)}
-html,body{overscroll-behavior:none}canvas{touch-action:none;-webkit-user-select:none;user-select:none}</style></head><body>
+.wbr{cursor:pointer}.wbr span{white-space:nowrap}.wbr span:nth-child(2){min-width:10em}.wbr:hover{background:rgba(51,214,255,.08)}.wbr.me{color:#ffb000;text-shadow:0 0 6px rgba(255,176,0,.6)}html,body{overscroll-behavior:none}canvas{touch-action:none;-webkit-user-select:none;user-select:none}</style></head><body>
 <!--DISCORD--><script src="discord-sdk.js"></script>
 <script>
 /* Discord Activity handshake: only runs inside Discord (the iframe URL carries frame_id). The app id comes from <app-id>.discordsays.com */
@@ -39,14 +39,16 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.16 // BUILD 20261114.0303 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.17 // BUILD 20261114.0309 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="modes" class="ov hidden"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
  <button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><div class="dim">PLAY A FRIEND. FIRST TO 7.</div>
  <button class="mb" id="mBack">BACK</button></div>
-<div id="lb" class="ov hidden"><div class="ttl">LOCAL SCORES</div><div class="row" id="lbTabs"></div><div id="lbList" style="width:min(94vw,640px);max-height:58vh;overflow:auto"></div><div class="dim">STORED ON THIS COMPUTER // ONLINE BOARD COMING</div><button class="mb" id="lbBack">BACK</button></div>
+<div id="lb" class="ov hidden"><div class="ttl">LOCAL SCORES</div><div class="row" id="lbTabs"></div><div id="lbList" style="width:min(94vw,640px);max-height:58vh;overflow:auto"></div><div class="dim">STORED ON THIS COMPUTER // EVERYONE ELSE: MENU &gt; WORLD BOARD</div><button class="mb" id="lbBack">BACK</button></div>
 <div id="hkb" class="ov scroll hidden"><div class="ttl" style="color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</div><div class="dim">GLOBAL HACKER RANKING // ☠ = TIMES THEY ENDED YOU // CLICK A USER FOR THEIR DOSSIER</div><div id="hkList" style="width:min(94vw,720px)"></div><button class="mb" id="hkBack">BACK</button></div>
+<div id="wb" class="ov scroll hidden"><div class="ttl">WORLD BOARD</div><div class="dim">EVERY PLAYER, EVERYWHERE // CLICK A NAME FOR THEIR SUBJECT FILE</div><div class="row" id="wbTabs"></div><div id="wbList" style="width:min(94vw,640px)"></div><div class="dim" id="wbYou"></div><div id="wbProf" class="pf hidden" style="max-width:min(94vw,760px)"></div><button class="mb" id="wbBack">BACK</button></div>
+<div id="nameAsk" class="ov hidden" style="z-index:9;background:rgba(2,8,4,.97)"><div class="ttl">WHAT DO THEY CALL YOU?</div><div class="dim" style="text-align:center;max-width:90vw">YOUR NAME SHOWS ON THE WORLD BOARD AND IN ONLINE 1V1. YOU CAN CHANGE IT IN CUSTOMIZE.</div><input id="naIn" class="sb" maxlength="12" spellcheck="false" autocomplete="off" style="width:260px;text-transform:uppercase;font-size:18px;text-align:center;letter-spacing:3px"><button class="mb" id="naGo">ENTER</button></div>
 <div id="olobby" class="ov hidden"><div class="ttl">ONLINE 1V1</div><div id="olCode" class="ttl" style="font-size:24px;color:#ffb000;letter-spacing:6px"></div><div id="olStatus" class="dim" style="text-align:center;max-width:90vw;line-height:1.8"></div>
  <div class="row" id="olShare"><input id="olLink" class="sb" readonly style="width:min(70vw,320px)"><button class="sb" id="olCopy">COPY INVITE LINK</button></div>
  <div class="row" id="olJoin"><input id="olIn" class="sb" placeholder="FRIEND'S CODE" maxlength="5" style="width:150px;text-transform:uppercase"><button class="sb" id="olGo">JOIN</button></div>
@@ -66,6 +68,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <div class="cl">BALL</div><div class="row"><canvas id="ballPrev" width="110" height="110" style="width:80px;height:80px"></canvas><div class="row" id="cos_ball" style="max-width:520px"></div></div>
  <div class="dim" id="cosHint" style="color:#ffb000;min-height:14px">COSMETICS ARE LOOKS ONLY. UNLOCK MORE WITH ACHIEVEMENTS.</div>
  <div class="cl">SUBJECT PROFILE</div><div id="profC" class="pf"></div>
+ <div class="cl">YOUR NAME</div><div class="row"><input id="nmIn" class="sb" maxlength="12" spellcheck="false" autocomplete="off" style="width:200px;text-transform:uppercase;letter-spacing:2px"><button class="sb" id="nmSave">SAVE</button></div>
  <div class="cl">HELLBUD  //  FROM HELLWORLD</div><div class="row"><canvas id="budPrev" width="120" height="120" style="width:90px;height:90px;border:1px solid #114422"></canvas><input id="budSeed" class="sb" placeholder="SEED  E.G. YUSP-YKZD-KJ6M" style="width:220px"><input id="budName" class="sb" placeholder="NAME" style="width:110px"><button class="sb" id="budSet">IMPORT</button></div><div class="dim" id="budInfo" style="max-width:600px;text-align:center"></div>
  <button class="mb" id="bBack">DONE</button><input type="file" id="file" accept="image/png,image/*" class="hidden"></div>
 <script>
@@ -1425,9 +1428,10 @@ function nOpen(code){nClose();net.leaving=false;net.full=false;net.live=false;ne
     nLobby((was?"CONNECTION LOST.":"COULD NOT REACH THE GAME SERVER.")+"<br>PRESS BACK AND TRY AGAIN.")}}
 function nMsg(m){if(!m||!m.t)return;
   if(m.t==="wait"){net.host=true;if(G.mode!=="online"||G.state==="menu")nLobby(nWait(),{share:true,join:true})}
-  else if(m.t==="peer"){net.host=!!m.host;net.live=true;net.meReady=net.themReady=false;nLobby("OPPONENT CONNECTED<br>CLICK READY WHEN YOU ARE.",{ready:true})}
+  else if(m.t==="peer"){net.host=!!m.host;net.live=true;nSend({t:"nm",n:gName()});net.meReady=net.themReady=false;nLobby("OPPONENT CONNECTED<br>CLICK READY WHEN YOU ARE.",{ready:true})}
   else if(m.t==="left"||m.t==="bye"){if(net.live){net.live=false;G.mode="normal";nLobby("YOUR OPPONENT LEFT.<br>"+nWait().split("<br>")[1],{share:true,join:true})}}
   else if(m.t==="full"){net.full=true;nLobby(nInDc()?"TWO PEOPLE IN THIS ACTIVITY ARE ALREADY PLAYING.<br>WAIT FOR THEIR MATCH TO END.":"THAT LOBBY ALREADY HAS TWO PLAYERS.")}
+  else if(m.t==="nm"){net.oname=gClean(m.n);if(G.mode==="online"&&net.oname)G.aiName=net.oname}
   else if(m.t==="ping")nSend({t:"pong",ts:m.ts});
   else if(m.t==="pong")net.rtt=net.rtt*.7+(performance.now()-m.ts)*.3;
   else if(m.t==="p"){net.ox=BW-m.x;net.oy=m.y}
@@ -1442,7 +1446,7 @@ function nAdvance(){if(ball.stop)return;ball.vx+=ball.cx;ball.vy+=ball.cy;ball.z
   if(ball.z<0)ball.z=0;if(ball.z>DEPTH)ball.z=DEPTH}
 function nMaybe(){if(net.meReady&&net.themReady){net.meReady=net.themReady=false;nStart(net.host?"me":"them")}}
 function nMaybeRe(){if(net.meRe&&net.themRe){net.meRe=net.themRe=false;nStart(net.lastLoser)}}
-function nStart(server){initAudio();hideAll();newGame("online");G.pl=99;G.el=99;G.elMax=3;G.aiName="OPPONENT";G.tagFade=0;G.tagGo=false;G.level=3;net.me=net.them=0;net.over=false;
+function nStart(server){initAudio();hideAll();newGame("online");G.pl=99;G.el=99;G.elMax=3;G.aiName=net.oname||"OPPONENT";G.tagFade=0;G.tagGo=false;G.level=3;net.me=net.them=0;net.over=false;
   resetBall();G.state="count";let n=3;const cd=()=>{if(G.mode!=="online"||G.state!=="count")return;if(n>0){say(String(n),.7);tn(440,.1,"square",.05);n--;setTimeout(cd,700)}else{tn(880,.2,"square",.05);nServe(server)}};cd()}
 function nServe(server){net.server=server;resetBall();if(server==="them"){ball.x=ball.px=ai.x;ball.y=ball.py=ai.y;ball.z=ball.pz=DEPTH}G.vol=0;G.state=server==="me"?"serve":"oserve";say(server==="me"?"YOUR SERVE":"OPPONENT SERVES",1.4)}
 function nHit(serve){nSend({t:"hit",serve,b:{x:ball.x,y:ball.y,z:ball.z,vx:ball.vx,vy:ball.vy,vz:ball.vz,cx:ball.cx,cy:ball.cy}})}
@@ -1450,7 +1454,7 @@ function nPoint(who){if(net.over)return;if(who==="me")net.me++;else net.them++;G
   if(who==="me"){popup("POINT   "+net.me+" - "+net.them,"#33ff77");G.ripple={sx:Math.max(0,Math.min(BW,ball.x)),sy:Math.max(0,Math.min(BH,ball.y)),t:0};tn(660,.15,"square",.04);setTimeout(()=>tn(990,.25,"square",.04),120)}
   else{popup("OPPONENT SCORES   "+net.me+" - "+net.them,"#ff4455");S.miss()}
   if(net.me>=NET_WIN||net.them>=NET_WIN){const won=net.me>net.them;net.over=true;net.lastLoser=won?"them":"me";say(won?"YOU WIN":"YOU LOSE",3);
-    if(won)[784,988,1175,1568].forEach((f,i)=>setTimeout(()=>tn(f,.18,"square",.045),i*90));
+    if(won){gWin();[784,988,1175,1568].forEach((f,i)=>setTimeout(()=>tn(f,.18,"square",.045),i*90))}
     setTimeout(()=>{if(net.over)nLobby((won?"YOU WIN   ":"YOU LOSE   ")+net.me+" - "+net.them+"<br>REMATCH?",{re:true})},2600);return}
   setTimeout(()=>{if(G.mode==="online"&&G.state==="between")nServe(who==="me"?"them":"me")},1000)}
 function nAI(){ai.ox=ai.x;ai.oy=ai.y;ai.px=ai.x;ai.py=ai.y;ai.x+=(net.ox-ai.x)*.6;ai.y+=(net.oy-ai.y)*.6;clampP(ai);ai.vx=ai.x-ai.px;ai.vy=ai.y-ai.py;
@@ -1467,11 +1471,56 @@ g$("olCopy").onclick=()=>{const u=g$("olLink").value,b=g$("olCopy"),done=()=>{b.
   if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(u).then(done,()=>{g$("olLink").select();try{document.execCommand("copy")}catch(e){}done()});else{g$("olLink").select();try{document.execCommand("copy")}catch(e){}done()}};
 setTimeout(()=>{const j=location.hash.match(/join=([A-Z0-9]{5})/i);if(j&&!nInDc())nOpen(j[1])},300);
 
+/* ---------- v0.17 NAMES + WORLD BOARD: your name, world leaderboards and public stat sheets, kept on the same server as online 1v1 ---------- */
+const GB={scope:"hbu",tab:"normal",seq:0,lastProf:0};
+const gAPI=()=>nInDc()?"/.proxy/ws/lb/"+GB.scope:"https://hellball.hellball-discord.workers.dev/ws/lb/"+GB.scope;
+const gStore=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}return v};
+let gPid=gStore("hb3_pid");if(!/^[a-z0-9]{8,24}$/.test(gPid||""))gPid=gStore("hb3_pid",Array.from({length:12},()=>"abcdefghijklmnopqrstuvwxyz0123456789"[Math.random()*36|0]).join(""));
+const gClean=n=>String(n||"").toUpperCase().replace(/[^A-Z0-9 _.-]/g,"").trim().slice(0,12);
+const gName=()=>gStore("hb3_name")||"PLAYER-"+gPid.slice(0,4).toUpperCase();
+const gEsc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const gPost=o=>fetch(gAPI(),{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(Object.assign({pid:gPid,n:gName()},o))}).then(r=>r.json());
+const gDay=()=>new Date().toISOString().slice(0,10);
+const GB_TABS=[["normal","NORMAL"],["hard","ENDLESS"],["daily","DAILY"],["classic","DEEPEST LEVEL"],["1v1","1V1 WINS"]];
+const gKey=b=>b==="daily"?"daily-"+gDay():b;
+function gProfile(){const R=readouts();return{v:1,id:ST.id,best:Math.max(G.best||0,(G.mode==="normal"||G.mode==="daily"||G.mode==="endless")?G.score||0:0),maxL:ST.maxL||0,games:ST.games||0,hits:ST.hits||0,aces:ST.aces||0,sweet:ST.sweet||0,flips:ST.flips||0,
+  tricks:ST.tricks||0,min:Math.floor((ST.time||0)/60),pw:ST.pw||0,plost:ST.plost||0,w1:ST.w1v1||0,ach:Object.keys(ACHD||{}).length,r:R.map(x=>x[1]),
+  ball:SEL.ball,tint:SEL.tint,border:SEL.border,bud:(BUD&&BUD.g)?BUD.name:"",d:gDay()}}
+function gSendProfile(force){const n=performance.now();if(!force&&n-GB.lastProf<120000)return;GB.lastProf=n;gPost({op:"prof",p:gProfile()}).catch(()=>{})}
+function gSubmit(){if(G.test)return;const b=G.mode==="normal"?"normal":G.mode==="daily"?"daily-"+gDay():G.mode==="endless"?"hard":null;
+  if(b&&G.score>0)gPost({op:"score",b,s:G.score,l:G.level}).then(d=>{if(d&&d.you&&d.you.rank<=10)say("WORLD RANK #"+d.you.rank,3)}).catch(()=>{});
+  const deep=Math.max(ST.maxL||0,G.level||0);if(G.mode!=="online"&&deep>0)gPost({op:"score",b:"classic",s:deep,l:deep}).catch(()=>{});gSendProfile(true)}
+function gWin(){ST.w1v1=(ST.w1v1||0)+1;stSave();gPost({op:"win",b:"1v1"}).catch(()=>{});gSendProfile(true)}
+function gOpen(){hideAll();g$("wb").classList.remove("hidden");g$("wbProf").classList.add("hidden");gLoad(GB.tab)}
+function gLoad(b){GB.tab=b;g$("wbTabs").innerHTML=GB_TABS.map(([k,t])=>'<button class="sb'+(k===b?" on":"")+'" data-wb="'+k+'">'+t+'</button>').join("");
+  const n=++GB.seq;g$("wbList").innerHTML='<div class="dim">LOADING...</div>';g$("wbYou").textContent="";
+  fetch(gAPI()+"?b="+encodeURIComponent(gKey(b))+"&pid="+gPid).then(r=>r.json()).then(d=>{if(n!==GB.seq)return;if(!d||!d.top){g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>';return}
+    const unit=b==="classic"?"LV":b==="1v1"?"WINS":"";
+    g$("wbList").innerHTML=d.top.length?d.top.map((e,i)=>'<div class="lbr wbr'+(e.me?" me":"")+'"'+(e.id?' data-pid="'+e.id+'"':"")+'><span>'+String(i+1).padStart(2,"0")+'</span><span>'+gEsc(e.n)+'</span><span>'+e.s+(unit?" "+unit:"")+'</span><span>'+(b!=="classic"&&b!=="1v1"&&e.l?"LV "+e.l:"")+'</span></div>').join(""):'<div class="dim">NO SCORES YET. BE THE FIRST.</div>';
+    g$("wbYou").textContent=d.you?(d.you.rank>10?"YOU: #"+d.you.rank+" OF "+d.total+"   "+d.you.s:""):"YOU ARE NOT ON THIS BOARD YET"},()=>{if(n===GB.seq)g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>'})}
+function gShowProfile(pid){const box=g$("wbProf");box.classList.remove("hidden");box.innerHTML='<div class="dim">PULLING SUBJECT FILE...</div>';
+  fetch(gAPI()+"?prof="+encodeURIComponent(pid)).then(r=>r.json()).then(d=>{if(!d||!d.p){box.innerHTML='<div class="dim">NO SUBJECT FILE ON RECORD'+(d&&d.error?" (THE SERVER NEEDS ITS PROFILE UPDATE)":"")+'.</div>';return}
+    const p=d.p,names=readouts().map(x=>x[0]),bar=v=>"█".repeat(Math.round(v/5))+"░".repeat(20-Math.round(v/5));
+    box.innerHTML='<div class="pf-h">// FATALIX TERMINAL // SUBJECT FILE HB-'+gEsc(p.id||"????")+' // '+gEsc(d.n||"PLAYER")+' //</div>'+
+      '<div class="pf-s">BEST: '+(p.best|0)+' &nbsp; DEEPEST: '+(p.maxL|0)+' &nbsp; RUNS: '+(p.games|0)+' &nbsp; TIME: '+(p.min|0)+'m &nbsp; 1V1 WINS: '+(p.w1|0)+' &nbsp; ACHIEVEMENTS: '+(p.ach|0)+'</div>'+
+      '<div class="pf-s">HITS: '+(p.hits|0)+' &nbsp; ACES: '+(p.aces|0)+' &nbsp; SWEET SPOTS: '+(p.sweet|0)+' &nbsp; PADDLEFLIPS: '+(p.flips|0)+' &nbsp; POINTS WON/LOST: '+(p.pw|0)+'/'+(p.plost|0)+(p.bud?' &nbsp; HELLBUD: '+gEsc(p.bud):"")+'</div>'+
+      (Array.isArray(p.r)?p.r.slice(0,names.length).map((v,i)=>'<div class="pf-r"><span class="pf-n">'+names[i].padEnd(18,".")+'</span><span class="pf-b">'+bar(Math.max(0,Math.min(100,v|0)))+'</span><span class="pf-v">'+String(v|0).padStart(3)+'%</span></div>').join(""):"")+
+      '<div class="dim" style="margin-top:6px">LAST SEEN '+gEsc(p.d||"?")+'</div>'},()=>{box.innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>'})}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-wb]");if(t){gLoad(t.dataset.wb);return}const r=e.target.closest&&e.target.closest("[data-pid]");if(r&&!g$("wb").classList.contains("hidden"))gShowProfile(r.dataset.pid)});
+g$("bWb").onclick=()=>{initAudio();gOpen()};g$("wbBack").onclick=()=>showMenu();
+/* your name: asked once on first launch, changeable in CUSTOMIZE */
+function gSetName(v){const n=gClean(v);if(!n)return false;gStore("hb3_name",n);gPost({op:"name"}).catch(()=>{});gSendProfile(true);const ci=g$("nmIn");if(ci)ci.value=n;return true}
+g$("naGo").onclick=()=>{if(gSetName(g$("naIn").value))g$("nameAsk").classList.add("hidden");else g$("naIn").focus()};
+g$("naIn").addEventListener("keydown",e=>{if(e.key==="Enter")g$("naGo").click()});
+g$("nmSave").onclick=()=>{if(gSetName(g$("nmIn").value)){g$("nmSave").textContent="SAVED";setTimeout(()=>g$("nmSave").textContent="SAVE",1200)}};
+g$("nmIn").value=gStore("hb3_name")||"";
+if(!gStore("hb3_name"))setTimeout(()=>{g$("nameAsk").classList.remove("hidden");g$("naIn").focus()},400);else setTimeout(()=>gSendProfile(),3000);
+
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
 function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}musStart();if(MUS.on&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}}
 function showMenu(){G.paused=false;if(G.mode==="online"&&typeof nClose==="function"){nClose();G.mode="normal"}musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
-const OVS=["menu","cust","achs","modes","lb","over","hkb","pause","olobby"];
+const OVS=["menu","cust","achs","modes","lb","over","hkb","pause","olobby","wb"];
 function hideAll(){for(const id of OVS)$(id).classList.add("hidden")}
 function startMode(m){initAudio();G.paused=false;hideAll();newGame(m);droneOn();if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
 $("bStart").onclick=()=>startMode("normal");
@@ -1494,7 +1543,7 @@ addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT
   if(k==="escape"){if(G.paused||!$("pause").classList.contains("hidden"))pauseClose();else if(inRun())pauseOpen();return}
   if(k==="r"&&G.mode!=="online"&&(inRun()||G.state==="over")){e.preventDefault();restartRun()}});
 addEventListener("blur",()=>{if(inRun()&&G.state==="play"&&G.mode!=="online")pauseOpen()});
-function showOver(){const won=!!G.bossWon;if(!won)recordKiller();stInc("games");if(G.mode==="daily")stInc("dailies");
+function showOver(){try{gSubmit()}catch(e){}const won=!!G.bossWon;if(!won)recordKiller();stInc("games");if(G.mode==="daily")stInc("dailies");
   if(G.mode==="daily"&&!G.test){let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}if(!db||db.date!==todayKey()||G.score>db.best)try{localStorage.setItem("hb3_daily",JSON.stringify({date:todayKey(),best:Math.max(G.score,db&&db.date===todayKey()?db.best:0)}))}catch(e){}}
   const rank=G.test?0:lbAdd(G.mode,{s:G.score,l:G.level,d:new Date().toISOString().slice(0,10),k:won?"KILLED THE WARDEN":G.aiName?"ENDED BY "+G.aiName:""});stSave();
   $("ovT").textContent=won?"THE WARDEN FALLS":"GAME OVER";$("ovT").style.color=won?"#ffb000":"#ff4455";
