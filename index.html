@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.14</title>
+<title>HELLBALL ULTIMATE v0.15</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -39,7 +39,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.14 // BUILD 20261114.0247 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.15 // BUILD 20261114.0251 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="modes" class="ov hidden"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
@@ -1323,7 +1323,7 @@ function orbTex(rgb){if(ORB.key===rgb)return ORB.tex;const N=128,c=mkC(N,N),x=c.
     w=Math.pow(Math.max(0,1-Math.abs(w)*.5),3);const k=(j*N+i)*4,m=.5+.3*w;d[k]=Math.min(255,r*m+255*w*.7);d[k+1]=Math.min(255,g*m+255*w*.7);d[k+2]=Math.min(255,b*m+255*w*.75);d[k+3]=255}
   x.putImageData(id,0,0);const c2=mkC(N,N),y2=c2.getContext("2d");y2.filter="blur(2.5px)";y2.drawImage(c,0,0);y2.filter="none";y2.globalCompositeOperation="lighter";y2.globalAlpha=.5;y2.drawImage(c,0,0);ORB.tex=c2;ORB.key=rgb;return c}
 function drawBall3D(cx,cy,r,c){c=c||ctx;const rgb=TINT().rgb||"51,255,119",tx=orbTex(rgb),q=rot([1,0,0]),q2=rot([0,1,0]);
-  c.save();c.globalCompositeOperation="lighter";const h=c.createRadialGradient(cx,cy,r*.6,cx,cy,r*2.6);h.addColorStop(0,"rgba("+rgb+",.35)");h.addColorStop(1,"rgba("+rgb+",0)");c.fillStyle=h;c.fillRect(cx-r*2.6,cy-r*2.6,r*5.2,r*5.2);c.restore();
+  c.save();c.globalCompositeOperation="lighter";const h=c.createRadialGradient(cx,cy,r*.9,cx,cy,r*4.5);h.addColorStop(0,"rgba("+rgb+",.42)");h.addColorStop(.12,"rgba("+rgb+",.24)");h.addColorStop(.3,"rgba("+rgb+",.1)");h.addColorStop(.55,"rgba("+rgb+",.035)");h.addColorStop(1,"rgba("+rgb+",0)");c.fillStyle=h;c.fillRect(cx-r*4.5,cy-r*4.5,r*9,r*9);c.restore();
   c.save();c.beginPath();c.arc(cx,cy,r,0,TAU2);c.clip();c.fillStyle="#000";c.fillRect(cx-r,cy-r,r*2,r*2);
   c.translate(cx,cy);c.rotate(Math.atan2(q[1],q[0]));const s=r*1.6,ox=q2[2]*r*.5,oy=-q[2]*r*.5;c.globalAlpha=.95;c.drawImage(tx,-s+ox,-s+oy,s*2,s*2);c.restore();
   c.save();c.beginPath();c.arc(cx,cy,r,0,TAU2);c.clip();
@@ -1335,6 +1335,47 @@ function ballShadow(x,y,z){if(z<0)return;const q=P(x,y,z),r=BR*q[2]*view.s,rgb=T
   ctx.save();const d=ctx.createRadialGradient(q[0],q[1],r*1.5,q[0],q[1],R);d.addColorStop(0,"rgba(0,0,0,0)");d.addColorStop(.35,"rgba(0,0,0,.35)");d.addColorStop(1,"rgba(0,0,0,.72)");ctx.fillStyle=d;ctx.fillRect(0,0,W,H);
   ctx.globalCompositeOperation="lighter";const p=P(x,BH,z),hgt=Math.max(0,Math.min(1,(BH-y)/BH)),a=.4*(1-hgt*.6),pr=r*(2.2+hgt*2.5);
   const g=ctx.createRadialGradient(p[0],p[1],0,p[0],p[1],pr);g.addColorStop(0,"rgba("+rgb+","+a+")");g.addColorStop(1,"rgba("+rgb+",0)");ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(p[0],p[1],pr,pr*.3,0,0,TAU2);ctx.fill();ctx.restore()}
+
+/* ---------- v0.15: orb lighting pass - the tunnel goes dark, and each wall gets its own pool of light
+   that grows and fades with the orb's distance to it (inverse-square falloff), clipped to that wall ---------- */
+function wallPool(quad,cw,rgb,I,rx,ry){if(I<.01||rx<1)return;ctx.save();ctx.beginPath();quad.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.clip();
+  ctx.translate(cw[0],cw[1]);ctx.scale(1,Math.max(.05,ry/rx));const g=ctx.createRadialGradient(0,0,0,0,0,rx);
+  g.addColorStop(0,"rgba("+rgb+","+I+")");g.addColorStop(.25,"rgba("+rgb+","+(I*.55)+")");g.addColorStop(.55,"rgba("+rgb+","+(I*.18)+")");g.addColorStop(1,"rgba("+rgb+",0)");
+  ctx.fillStyle=g;ctx.globalCompositeOperation="lighter";ctx.fillRect(-rx,-rx,rx*2,rx*2);ctx.restore()}
+function ballShadow(x,y,z){if(z<0)return;const q=P(x,y,z),r=BR*q[2]*view.s,rgb=TINT().rgb||"51,255,119",W=innerWidth,H=innerHeight,R=Math.hypot(W,H)*.6;
+  ctx.save();const d=ctx.createRadialGradient(q[0],q[1],r*1.2,q[0],q[1],R);d.addColorStop(0,"rgba(0,0,0,.05)");d.addColorStop(.12,"rgba(0,0,0,.45)");d.addColorStop(.4,"rgba(0,0,0,.78)");d.addColorStop(1,"rgba(0,0,0,.92)");
+  ctx.fillStyle=d;ctx.fillRect(0,0,W,H);ctx.restore();
+  const Z1=Math.min(DEPTH,z+DEPTH*.8),Z0=Math.max(0,z-DEPTH*.8),fall=dd=>.55/(1+Math.pow(dd/(BR*2.2),2)),Q=(a,b,c)=>P(a,b,c);
+  const pool=(dist,cxw,cyw,czw,quad,horiz)=>{const I=fall(dist),rw=BR*1.4+dist*1.1,c=Q(cxw,cyw,czw);let rx,ry;
+    if(horiz){const a=Q(cxw-rw,cyw,czw),b=Q(cxw+rw,cyw,czw),f=Q(cxw,cyw,Math.max(0,czw-rw)),k=Q(cxw,cyw,czw+rw);rx=(b[0]-a[0])/2;ry=Math.abs(f[1]-k[1])/2}
+    else{const a=Q(cxw,cyw-rw,czw),b=Q(cxw,cyw+rw,czw),f=Q(cxw,cyw,Math.max(0,czw-rw)),k=Q(cxw,cyw,czw+rw);ry=(b[1]-a[1])/2;rx=Math.abs(f[0]-k[0])/2;
+      ctx.save();wallPoolV(quad,c,rgb,I,rx,ry);ctx.restore();return}
+    wallPool(quad,c,rgb,I,rx,ry)};
+  pool(BH-y,x,BH,z,[Q(0,BH,0),Q(BW,BH,0),Q(BW,BH,DEPTH),Q(0,BH,DEPTH)],1);
+  pool(y,x,0,z,[Q(0,0,0),Q(BW,0,0),Q(BW,0,DEPTH),Q(0,0,DEPTH)],1);
+  pool(x,0,y,z,[Q(0,0,0),Q(0,BH,0),Q(0,BH,DEPTH),Q(0,0,DEPTH)],0);
+  pool(BW-x,BW,y,z,[Q(BW,0,0),Q(BW,BH,0),Q(BW,BH,DEPTH),Q(BW,0,DEPTH)],0);
+  const bd=DEPTH-z,bc=Q(x,y,DEPTH),bk=K(DEPTH)*view.s,brw=(BR*1.4+bd*1.1)*bk;wallPool([Q(0,0,DEPTH),Q(BW,0,DEPTH),Q(BW,BH,DEPTH),Q(0,BH,DEPTH)],bc,rgb,fall(bd)*.8,brw,brw)}
+function wallPoolV(quad,c,rgb,I,rx,ry){if(I<.01||ry<1)return;ctx.save();ctx.beginPath();quad.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.clip();
+  ctx.translate(c[0],c[1]);ctx.scale(Math.max(.05,rx/ry),1);const g=ctx.createRadialGradient(0,0,0,0,0,ry);
+  g.addColorStop(0,"rgba("+rgb+","+I+")");g.addColorStop(.25,"rgba("+rgb+","+(I*.55)+")");g.addColorStop(.55,"rgba("+rgb+","+(I*.18)+")");g.addColorStop(1,"rgba("+rgb+",0)");
+  ctx.fillStyle=g;ctx.globalCompositeOperation="lighter";ctx.fillRect(-ry,-ry,ry*2,ry*2);ctx.restore()}
+/* ---------- v0.15 lighting: each wall is lit as a mesh - every patch gets inverse-square light with a facing (cosine) term, so pools sit correctly in perspective ---------- */
+function ballShadow(x,y,z){if(z<0)return;const q=P(x,y,z),r=BR*q[2]*view.s,rgb=TINT().rgb||"51,255,119",W=innerWidth,H=innerHeight,R=Math.hypot(W,H)*.6;
+  ctx.save();const d=ctx.createRadialGradient(q[0],q[1],r*1.2,q[0],q[1],R);d.addColorStop(0,"rgba(0,0,0,.05)");d.addColorStop(.12,"rgba(0,0,0,.45)");d.addColorStop(.4,"rgba(0,0,0,.78)");d.addColorStop(1,"rgba(0,0,0,.92)");
+  ctx.fillStyle=d;ctx.fillRect(0,0,W,H);ctx.restore();
+  const LW=Math.max(2,Math.round(W/4)),LH=Math.max(2,Math.round(H/4));if(LT.a.width!==LW||LT.a.height!==LH){LT.a.width=LT.b.width=LW;LT.a.height=LT.b.height=LH}const lc=LT.a.getContext("2d");lc.setTransform(1,0,0,1,0,0);lc.clearRect(0,0,LW,LH);lc.setTransform(LW/W,0,0,LH/H,0,0);lc.globalCompositeOperation="lighter";
+  const Lr=BR*2.4,amp=QL<1?0:.75,NU=QL>=2?16:10,NV=QL>=2?12:8,span=DEPTH*.7,z0=Math.max(0,z-span),z1=Math.min(DEPTH,z+span);
+  const lightAt=(px,py,pz,nx,ny,nz)=>{const dx=x-px,dy=y-py,dz=z-pz,dd=Math.hypot(dx,dy,dz)||1,cos=Math.max(0,(dx*nx+dy*ny+dz*nz)/dd);return amp*cos/(1+(dd/Lr)*(dd/Lr))};
+  const wall=(fn,nx,ny,nz)=>{const pts=[],val=[];for(let j=0;j<=NV;j++){pts.push([]);val.push([]);for(let i=0;i<=NU;i++){const w=fn(i/NU,j/NV);pts[j].push(P(w[0],w[1],w[2]));val[j].push(lightAt(w[0],w[1],w[2],nx,ny,nz))}}
+    for(let j=0;j<NV;j++)for(let i=0;i<NU;i++){const I=(val[j][i]+val[j][i+1]+val[j+1][i]+val[j+1][i+1])/4;if(I<.012)continue;const a=pts[j][i],b=pts[j][i+1],c=pts[j+1][i+1],e=pts[j+1][i];
+      lc.fillStyle="rgba("+rgb+","+Math.min(.6,I)+")";lc.beginPath();lc.moveTo(a[0],a[1]);lc.lineTo(b[0],b[1]);lc.lineTo(c[0],c[1]);lc.lineTo(e[0],e[1]);lc.closePath();lc.fill()}};
+  if(amp>0){const zz=v=>z0+(z1-z0)*v;
+    wall((u,v)=>[u*BW,BH,zz(v)],0,-1,0);wall((u,v)=>[u*BW,0,zz(v)],0,1,0);wall((u,v)=>[0,u*BH,zz(v)],1,0,0);wall((u,v)=>[BW,u*BH,zz(v)],-1,0,0);
+    wall((u,v)=>[u*BW,v*BH,DEPTH],0,0,-1);
+    const lb=LT.b.getContext("2d");lb.globalCompositeOperation="copy";lb.filter="blur(3px)";lb.drawImage(LT.a,0,0);lb.filter="none";
+    ctx.save();ctx.globalCompositeOperation="lighter";ctx.imageSmoothingEnabled=true;ctx.drawImage(LT.b,0,0,W,H);ctx.restore()}}
+const LT={a:mkC(2,2),b:mkC(2,2)};
 
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
