@@ -2,14 +2,14 @@
 <html lang="en"><head>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; font-src 'self' data:; connect-src 'self' https://*.workers.dev wss://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.19.2</title>
+<title>HELLBALL ULTIMATE v0.20</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
 .ov{position:fixed;inset:0;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(2,8,4,.84);z-index:5;cursor:default;padding:16px;box-sizing:border-box}
 .hidden{display:none!important}
 .ov h1{font-size:clamp(28px,6.5vw,52px);letter-spacing:.3em;margin:0 0 4px;text-align:center;line-height:1.15;text-shadow:0 0 14px #33ff77;font-weight:bold}
-.mb{background:transparent;border:1px solid #33ff77;color:#33ff77;font:bold 18px "Courier New",monospace;letter-spacing:6px;padding:12px 0;width:260px;max-width:80vw;cursor:pointer;text-shadow:0 0 8px #33ff77;box-shadow:inset 0 0 12px rgba(51,255,119,.18)}
+.mb{background:transparent;border:1px solid #33ff77;color:#33ff77;font:bold 18px "Courier New",monospace;letter-spacing:6px;padding:12px 0;width:260px;max-width:80vw;cursor:pointer;text-shadow:0 0 8px #33ff77;box-shadow:0 0 12px -3px currentColor,inset 0 0 14px -5px currentColor}
 .mb:hover,.sb:hover{background:rgba(51,255,119,.12)}
 .sb{background:transparent;border:1px solid #119944;color:#33ff77;font:12px "Courier New",monospace;letter-spacing:2px;padding:7px 12px;cursor:pointer}
 .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;font-size:12px;letter-spacing:2px}
@@ -49,12 +49,11 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.19.2 // BUILD 20261114.0343 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.20 // BUILD 20261114.0354 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="modes" class="ov hidden"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
- <button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><div class="dim">PLAY A FRIEND. FIRST TO 7.</div>
- <button class="mb" id="mBack">BACK</button></div>
+  <button class="mb" id="mBack">BACK</button></div>
 <div id="lb" class="ov hidden"><div class="ttl">LOCAL SCORES</div><div class="row" id="lbTabs"></div><div id="lbList" style="width:min(94vw,640px);max-height:58vh;overflow:auto"></div><div class="dim">STORED ON THIS COMPUTER // EVERYONE ELSE: MENU &gt; WORLD BOARD</div><button class="mb" id="lbBack">BACK</button></div>
 <div id="hkb" class="ov scroll hidden"><div class="ttl" style="color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</div><div class="dim">GLOBAL HACKER RANKING // ☠ = TIMES THEY ENDED YOU // CLICK A USER FOR THEIR DOSSIER</div><div id="hkList" style="width:min(94vw,720px)"></div><button class="mb" id="hkBack">BACK</button></div>
 <div id="wb" class="ov scroll hidden"><div class="ttl">WORLD BOARD</div><div class="dim">EVERY PLAYER, EVERYWHERE // CLICK A NAME FOR THEIR SUBJECT FILE</div><div class="row" id="wbTabs"></div><div id="wbList" style="width:min(94vw,640px)"></div><div class="dim" id="wbYou"></div><div id="wbProf" class="pf hidden" style="max-width:min(94vw,760px)"></div><button class="mb" id="wbBack">BACK</button></div>
@@ -111,7 +110,7 @@ function spinBall(){if(G.state!=="play"||ball.stop){rotAxis(0,1,0,.012);return}
   rotAxis(0,1,0,ball.vx*.045+ball.cx*7);            // sideways drift + side spin
   rotAxis(1,0,0,-ball.vy*.045+ball.cy*7+ball.vz*.03)} // up/down drift + top spin + rolling down the tunnel
 function resetBall(){Object.assign(ball,{x:WX,y:WY,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,px:WX,py:WY,pz:0})}
-function startLevel(){G.vol=0;resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck()}
+function startLevel(){G.vol=0;resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck();G.dark=G.mode!=="online"&&G.level>=41&&Math.random()<.45;if(G.dark)setTimeout(()=>{if(G.dark)popup("LIGHTS OUT","#ff4455")},2600)}
 function newGame(mode){runStart();mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
   G.mod={};G.modNames=[];if(mode==="daily"){const ms=dailyMods();ms.forEach(m=>Object.assign(G.mod,m));G.modNames=ms.map(m=>m.n.split(":")[0]);RNG=mulberry(todayKey())}else RNG=Math.random;
   G.level=G.mod.start||1;G.score=0;G.pl=mode==="endless"?3:(G.mod.lives||5);G.el=(mode==="endless"||mode==="boss")?99:3;G.epts=0;G.bossWon=false;G.bossLost=false;G.zone=null;G.tube=false;G.tubeK=0;G.elMax=3;G.oceanA=1;ABYSS.length=0;EV.list=[];EV.t=8;BLK.length=0;G.hyCam=0;G.twins=false;ai.w=PW;ai.h=PH;
@@ -437,7 +436,7 @@ const BALLSTY={wire:{w:()=>WIRE,f:"rgba(140,255,180,.8)",b:"rgba(51,255,119,.13)
   glitch:{w:()=>WIRE,f:"rgba(140,255,180,.75)",b:"rgba(255,40,80,.12)",o:"#33ff77",st:"#ff4455",glitch:1},
   gold:{w:()=>WIRE,f:"rgba(255,205,90,.85)",b:"rgba(255,176,0,.12)",o:"#ffb000",st:"#ffffff"},
   eye:{w:()=>WIRE,f:"rgba(140,255,180,.6)",b:"rgba(51,255,119,.1)",o:"#33ff77",st:null,eye:1}};
-function drawWireBall(cx,cy,r,c){c=c||ctx;{const bid=cosGet("ball").id;if(bid==="fxorb")return drawFXOrb(cx,cy,r,c);if(bid==="b3d")return drawBall3D(cx,cy,r,c)}const S2=BALLSTY[cosGet("ball").id]||BALLSTY.wire;
+function drawWireBall(cx,cy,r,c){c=c||ctx;{const bid=cosGet("ball").id;if(bid==="fx2d")return drawFX2D(cx,cy,r,c);if(bid==="fxorb")return drawFXOrb(cx,cy,r,c);if(bid==="b3d")return drawBall3D(cx,cy,r,c)}const S2=BALLSTY[cosGet("ball").id]||BALLSTY.wire;
   c.save();c.fillStyle="rgba(2,12,6,.88)";c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.fill();
   const back=new Path2D(),front=new Path2D(),fine=r>7,j=S2.glitch?()=>(Math.random()<.04?(Math.random()-.5)*r*.25:0):()=>0;
   for(const line of S2.w()){let prev=null;for(const v of line){const q=rot(v);if(prev){const tgt=(prev[2]+q[2])>0?front:back,g=j();tgt.moveTo(cx+prev[0]*r+g,cy+prev[1]*r);tgt.lineTo(cx+q[0]*r+g,cy+q[1]*r)}prev=q}}
@@ -1142,7 +1141,7 @@ const FACE_TALK=["I SEE YOU","OPEN WIDER","YOU WERE ALWAYS COMING HERE","THE TUN
 const FZ=()=>DEPTH*.4;
 function faceCheck(){FACE.on=G.level===40&&G.mode!=="boss";FACE.dead=false;G.elMax=FACE.on?6:3;if(!FACE.on)return;
   FACE.eyes=[{x:.3,y:.36,hp:3,shut:0},{x:.7,y:.36,hp:3,shut:0}];FACE.mouth=0;FACE.mT=3;FACE.t=0;FACE.rets=0;FACE.talkT=5;G.el=6;G.aiName=null;G.tagFade=1;G.zone="face"}
-function faceRender(c,open,eyes,t,dead){c.clearRect(0,0,96,64);const E=(e,i)=>{const x=e.x*96,y=e.y*64,w=14,ht=e.hp<=0?0:6*(1-Math.min(1,e.shut*2.5));
+function faceRender(c,open,eyes,t,dead){FACE.le=eyes;c.clearRect(0,0,96,64);const E=(e,i)=>{const x=e.x*96,y=e.y*64,w=14,ht=e.hp<=0?0:6*(1-Math.min(1,e.shut*2.5));
     if(e.hp<=0){c.fillStyle="#2a0004";c.beginPath();c.ellipse(x,y,w*.8,3,0,0,TAU2);c.fill();c.fillStyle="#700010";c.fillRect(x-1,y,2,6+Math.floor(t*2)%4);return}
         c.fillStyle="#ff1a22";c.beginPath();c.moveTo(x-w,y);c.quadraticCurveTo(x,y-ht*1.4-.5,x+w,y);c.quadraticCurveTo(x,y+ht*1.2+.5,x-w,y);c.fill();
     if(ht>2){c.fillStyle="#ffd0b0";c.fillRect(x-1,y-ht*.9,2,ht*1.8);c.fillStyle="#000";c.fillRect(x-.5+Math.sin(t*.7+i)*2,y-ht*.8,1.5,ht*1.6)}};
@@ -1152,7 +1151,7 @@ function faceRender(c,open,eyes,t,dead){c.clearRect(0,0,96,64);const E=(e,i)=>{c
   c.strokeStyle="#ff2030";c.lineWidth=1;c.stroke();c.fillStyle="#e8d0c0";for(let i=0;i<12;i++){if(i%2)continue;const x=mx-mw+i*mw/6+mw/12;c.fillRect(x-1,my-mh*.62,2,Math.max(1,mh*.35));c.fillRect(x+mw/6-1,my+mh*.35,2,Math.max(1,mh*.3))}}
 function faceBlit(x0,y0,w,h,A){const c=FACE.lc;ctx.save();ctx.imageSmoothingEnabled=false;ctx.globalAlpha=A*.45;ctx.globalCompositeOperation="lighter";
   if(!FACE.tb){FACE.tb=mkC(96,64)}const tb=FACE.tb.getContext("2d");tb.globalCompositeOperation="copy";tb.drawImage(c,0,0);tb.globalCompositeOperation="source-in";tb.fillStyle="#0018ff";tb.fillRect(0,0,96,64);
-  const o=w/96*1.2;ctx.drawImage(FACE.tb,x0-o,y0+o*.6,w,h);ctx.globalCompositeOperation="source-over";ctx.globalAlpha=A;ctx.drawImage(c,x0,y0,w,h);ctx.restore()}
+  const o=w/96*1.2;ctx.drawImage(FACE.tb,x0-o,y0+o*.6,w,h);ctx.globalCompositeOperation="source-over";ctx.globalAlpha=A;ctx.drawImage(c,x0,y0,w,h);ctx.restore();eyeGlow(x0,y0,w,h,A)}
 function faceTick(dt){if(!FACE.on)return;FACE.t+=dt;const dmg=6-Math.max(0,G.el);
   FACE.sx=Math.sin(FACE.t*.4)*.035*(1+dmg*.35);FACE.sy=Math.cos(FACE.t*.31)*.025*(1+dmg*.35);for(const e of FACE.eyes)e.shut=Math.max(0,e.shut-dt);
   if(FACE.dead){FACE.xT+=dt;return}
@@ -1606,6 +1605,43 @@ function repNear(d){const c=g$("repC2"),t=g$("repNearT");if(!c)return;const x=c.
 g$("rep").addEventListener("click",e=>{if(e.target.id==="rep"||e.target.id==="repX")reportClose();else g$("repWin").classList.add("now")});
 addEventListener("keydown",e=>{if(g$("rep").classList.contains("hidden"))return;e.preventDefault();e.stopImmediatePropagation();reportClose()},true);
 
+/* ---------- v0.20: neon tubes + things that glow in the dark, FX 2D ball, lights-out levels after THE FACE ---------- */
+const isOrb=()=>{const b=cosGet("ball").id;return b==="b3d"||b==="fxorb"};
+const darkOn=()=>isOrb()||!!G.dark;
+/* a neon tube: wide soft halo, tighter colour, hot near-white core (layered strokes, no blur filter) */
+function neonRect(x,y,w,h,rgb,lw,a){ctx.save();ctx.globalCompositeOperation="lighter";ctx.lineJoin="round";
+  for(const[m,al]of[[8,.06],[4.5,.14],[2.2,.38]]){ctx.strokeStyle="rgba("+rgb+","+(al*a)+")";ctx.lineWidth=lw*m;ctx.strokeRect(x,y,w,h)}
+  ctx.strokeStyle="rgba(255,236,236,"+(.92*a)+")";ctx.lineWidth=Math.max(.6,lw*.7);ctx.strokeRect(x,y,w,h);ctx.restore()}
+/* a point of light seen through dark air: bloom, hot core, long horizontal streak, short cross streaks */
+function flare(x,y,r,rgb,a){if(a<=.01)return;ctx.save();ctx.globalCompositeOperation="lighter";
+  let g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,"rgba("+rgb+","+(.7*a)+")");g.addColorStop(.25,"rgba("+rgb+","+(.3*a)+")");g.addColorStop(1,"rgba("+rgb+",0)");ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2);
+  g=ctx.createRadialGradient(x,y,0,x,y,r*.22);g.addColorStop(0,"rgba(255,250,235,"+a+")");g.addColorStop(.5,"rgba(255,170,120,"+(.6*a)+")");g.addColorStop(1,"rgba("+rgb+",0)");ctx.fillStyle=g;ctx.fillRect(x-r*.22,y-r*.22,r*.44,r*.44);
+  for(const[ang,len,th,al]of[[0,2.1,.05,.55],[Math.PI/2,.9,.035,.3],[Math.PI/4,.8,.03,.22],[-Math.PI/4,.8,.03,.22]]){ctx.save();ctx.translate(x,y);ctx.rotate(ang);ctx.scale(1,th/len);
+    const s=ctx.createRadialGradient(0,0,0,0,0,r*len);s.addColorStop(0,"rgba(255,200,170,"+(al*a)+")");s.addColorStop(.3,"rgba("+rgb+","+(al*.6*a)+")");s.addColorStop(1,"rgba("+rgb+",0)");ctx.fillStyle=s;ctx.fillRect(-r*len,-r*len,r*len*2,r*len*2);ctx.restore()}
+  ctx.restore()}
+/* THE FACE: a faint blue haze where the head is, and eyes that burn through it */
+function eyeGlow(x0,y0,w,h,A){const le=FACE.le;if(!le||A<=0)return;ctx.save();ctx.globalCompositeOperation="lighter";
+  const hx=x0+w/2,hy=y0+h*.5,g=ctx.createRadialGradient(hx,hy,w*.05,hx,hy,w*.75);g.addColorStop(0,"rgba(24,48,190,"+(.16*A)+")");g.addColorStop(.5,"rgba(10,24,120,"+(.08*A)+")");g.addColorStop(1,"rgba(0,0,60,0)");
+  ctx.fillStyle=g;ctx.fillRect(hx-w*.75,hy-w*.75,w*1.5,w*1.5);ctx.restore();
+  const t=performance.now()/1000;le.forEach((e,i)=>{if(e.hp<=0)return;const open=1-Math.min(1,(e.shut||0)*2.5);flare(x0+e.x*w,y0+e.y*h,w*.2,"255,24,30",A*open*(.85+.1*Math.sin(t*1.3+i)))})}
+/* in the dark, the far paddle is a lit sign and a plain ball still carries its own light */
+function darkGlows(t,x,y,z){if(!isOrb()){const q=P(x,y,z),r=BR*q[2]*view.s,rgb=TINT().rgb||"51,255,119";ctx.save();ctx.globalCompositeOperation="lighter";const h=ctx.createRadialGradient(q[0],q[1],r*.8,q[0],q[1],r*4);
+    h.addColorStop(0,"rgba("+rgb+",.36)");h.addColorStop(.15,"rgba("+rgb+",.2)");h.addColorStop(.4,"rgba("+rgb+",.06)");h.addColorStop(1,"rgba("+rgb+",0)");ctx.fillStyle=h;ctx.fillRect(q[0]-r*4,q[1]-r*4,r*8,r*8);ctx.restore()}
+  if(CYL.on||FACE.on||!["play","serve","wait","oserve","between","count"].includes(G.state))return;
+  for(const p of G.twins?[ai,ai2]:[ai]){const px=p.ox+(p.x-p.ox)*t,py=p.oy+(p.y-p.oy)*t,pw=p.w||PW,ph=p.h||PH,a=P(px-pw/2,py-ph/2,DEPTH),b=P(px+pw/2,py+ph/2,DEPTH);
+    neonRect(a[0],a[1],b[0]-a[0],b[1]-a[1],"255,40,60",Math.max(1,2.2*a[2]),.9)}}
+/* FX 2D: the FX ball as a flat neon sign */
+COS.ball.push({id:"fx2d",n:"FX 2D",un:"world_one"});
+function drawFX2D(cx,cy,r,c){c=c||ctx;fxStamp();const gl=Math.random()<.06,m=ROT.m,ang=Math.atan2(m[3],m[0]);c.save();
+  c.fillStyle="rgba(60,255,140,.07)";c.beginPath();c.arc(cx,cy,r,0,TAU2);c.fill();c.globalCompositeOperation="lighter";
+  const ring=(rr,dx,col,lw)=>{c.strokeStyle=col;c.lineWidth=lw;c.beginPath();c.arc(cx+dx,cy,rr,0,TAU2);c.stroke()},w=Math.max(1,r*.07);
+  ring(r*.96,r*.06,"rgba(255,34,85,.5)",w);ring(r*.96,-r*.06,"rgba(34,136,255,.5)",w);
+  ring(r*.96,0,"rgba(57,255,106,.12)",w*5);ring(r*.96,0,"rgba(57,255,106,.3)",w*2.4);ring(r*.96,0,"rgba(215,255,225,.95)",w*.8);ring(r*.74,0,"rgba(57,255,106,.45)",Math.max(.6,w*.4));
+  c.translate(cx,cy);c.rotate(ang);const s=r*.105,W=11*s,H=7*s,cell=(ox,col)=>{c.fillStyle=col;"FX".split("").forEach((ch,i)=>GLY[ch].forEach((row,rw)=>{const j=gl&&Math.random()<.3?(Math.random()-.5)*r*.3:0;
+      [...row].forEach((v,k)=>{if(v==="1")c.fillRect(-W/2+(i*6+k)*s+ox+j,-H/2+rw*s,s*.82,s*.82)})}))};
+  cell(r*.05,"rgba(255,34,85,.55)");cell(-r*.05,"rgba(34,136,255,.55)");cell(0,"rgba(57,255,106,.35)");cell(0,"rgba(190,255,205,.95)");
+  if(gl){c.fillStyle="rgba(255,40,100,.5)";c.fillRect(-r,(Math.random()-.5)*r*1.5,r*2,Math.max(1,r*.06))}c.restore()}
+
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
 function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}musStart();if(MUS.on&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}}
@@ -1641,7 +1677,6 @@ function showOver(){try{gSubmit()}catch(e){}setTimeout(()=>{try{reportOpen()}cat
   $("ovK").textContent=won?"":G.aiName?"ENDED BY "+G.aiName+(G.hk&&G.hk.w?"  //  IT HAS ENDED YOU "+G.hk.w+"x  //  NOW #"+(boardRanked().findIndex(e=>e.h===G.hk)+1)+" ON THE THREAT BOARD":""):"";
   $("profO").innerHTML=profHTML(G.prevR);$("over").classList.remove("hidden")}
 addEventListener("beforeunload",stSave);
-$("bTest").onclick=()=>startMode("test");
 $("bAch").onclick=()=>{$("menu").classList.add("hidden");achRender();$("achs").classList.remove("hidden")};
 $("bAchBack").onclick=()=>{$("achs").classList.add("hidden");showMenu()};
 addEventListener("keydown",e=>{if(G.test&&e.key.toLowerCase()==="l"&&(G.state==="play"||G.state==="serve")){ball.stop=true;ball.vz=0;G.el=0;endPoint(true)}});
@@ -1854,7 +1889,7 @@ function drawPaddle(p,z,col,rgb,t){
   drawFace(ctx,a[0],a[1],w,h,{rgb,player:p===pad,cracks:p.cracks,t:performance.now()/1000,heal:p.heal});if(g3)drawSlabGlow(a[0],a[1],w,h,rgb);
   if(p.hlT>0&&p.hl){ctx.fillStyle="rgba("+rgb+","+(.35*p.hlT/.35)+")";const q={UL:[0,0],UR:[1,0],BL:[0,1],BR:[1,1]}[p.hl];
     if(q)ctx.fillRect(a[0]+q[0]*w/2,a[1]+q[1]*h/2,w/2,h/2);else{ctx.fillRect(m[0]-6*k*view.s,m[1]-4*k*view.s,12*k*view.s,8*k*view.s)}}
-  if(p===pad)drawBorder(ctx,cosGet("border").id,a[0],a[1],w,h,k*view.s,col,rgb,performance.now()/1000);else{ctx.shadowColor=col;ctx.shadowBlur=10;ctx.strokeStyle=col;ctx.lineWidth=Math.max(1,2.2*k);ctx.strokeRect(a[0],a[1],w,h)}ctx.shadowBlur=0;ctx.strokeStyle="rgba(255,255,255,.35)";ctx.lineWidth=Math.max(.5,.8*k);ctx.strokeRect(a[0]+2*k,a[1]+2*k,w-4*k,h-4*k);   // glass bevel
+  if(p===pad)drawBorder(ctx,cosGet("border").id,a[0],a[1],w,h,k*view.s,col,rgb,performance.now()/1000);else neonRect(a[0],a[1],w,h,rgb,Math.max(1,2.2*k),.8);ctx.shadowBlur=0;ctx.strokeStyle="rgba(255,255,255,.35)";ctx.lineWidth=Math.max(.5,.8*k);ctx.strokeRect(a[0]+2*k,a[1]+2*k,w-4*k,h-4*k);   // glass bevel
   ctx.shadowBlur=0;ctx.lineWidth=Math.max(.6,1*k);ctx.strokeStyle="rgba("+rgb+",.55)";
   ctx.beginPath();ctx.moveTo(m[0],a[1]);ctx.lineTo(m[0],b[1]);ctx.moveTo(a[0],m[1]);ctx.lineTo(b[0],m[1]);ctx.stroke();
   ctx.strokeStyle=col;ctx.lineWidth=Math.max(.8,1.4*k);const sw=12*k*view.s,sh=8*k*view.s;ctx.strokeRect(m[0]-sw/2,m[1]-sh/2,sw,sh);   // the 12x8 sweet spot
@@ -1863,7 +1898,7 @@ function drawBall(t){
   const x=ball.px+(ball.x-ball.px)*t,y=ball.py+(ball.y-ball.py)*t,z=Math.max(0,ball.pz+(ball.z-ball.pz)*t);
   // the depth ring that rides along with the ball (Curveball's marker), fading with distance
   frame(z,"rgba(255,176,0,"+Math.max(.15,(1-z/DEPTH*.75)*.9)+")",1.6);
-  if(cosGet("ball").id==="b3d"||cosGet("ball").id==="fxorb")ballShadow(x,y,z);const p=P(x,y,z);drawWireBall(p[0],p[1],BR*p[2]*view.s)}
+  if(darkOn()){ballShadow(x,y,z);darkGlows(t,x,y,z)}const p=P(x,y,z);drawWireBall(p[0],p[1],BR*p[2]*view.s)}
 /* 5x7 terminal glyphs for the stamp */
 const GLY={H:["10001","10001","10001","11111","10001","10001","10001"],E:["11111","10000","10000","11110","10000","10000","11111"],
   L:["10000","10000","10000","10000","10000","10000","11111"],B:["11110","10001","10001","11110","10001","10001","11110"],A:["01110","10001","10001","11111","10001","10001","10001"]};
