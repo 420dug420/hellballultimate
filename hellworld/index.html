@@ -126,13 +126,15 @@ window.HBU=(()=>{const inDc=/[?&]frame_id=/.test(location.search),API=inDc?"/.pr
   const api={block:false,pid};let last=0,timer=null;
   const send=()=>{last=Date.now();try{const sv=JSON.parse(g(KEY)||"null");if(sv&&sv.seed)return post({op:"hwsave",save:sv}).catch(()=>{})}catch(e){}return Promise.resolve()};
   api.push=()=>{clearTimeout(timer);timer=setTimeout(send,Math.max(1500,15000-(Date.now()-last)))};
-  api.leave=()=>{clearTimeout(timer);try{if(typeof save==="function")save()}catch(e){}clearTimeout(timer);const go=()=>{if(back&&history.length>1)history.back();else location.href="../index.html"+location.search};Promise.race([send(),new Promise(r=>setTimeout(r,1800))]).then(go,go)};
+  let leaving=false;const home=()=>{const p=location.pathname.replace(/hellworld\/(index\.html)?$/,"");return (inDc?"/index.html":p+"index.html")+location.search};
+  api.leave=()=>{if(leaving)return;leaving=true;document.querySelectorAll(".hbuBack").forEach(b=>b.textContent="SAVING...");clearTimeout(timer);try{if(typeof save==="function")save()}catch(e){}clearTimeout(timer);
+    const go=()=>{if(back&&history.length>1){history.back();setTimeout(()=>{location.href=home()},900)}else location.href=home()};Promise.race([send(),new Promise(r=>setTimeout(r,1200))]).then(go,go)};
   let synced=false;try{synced=sessionStorage.getItem("hbuSync")==="1"}catch(e){}
   if(!synced||h)post({op:"hwload"}).then(d=>{try{sessionStorage.setItem("hbuSync","1")}catch(e){}if(!d||!d.save||!d.save.seed)return;let loc=null;try{loc=JSON.parse(g(KEY)||"null")}catch(e){}
     if(!loc||!loc.seed||(d.save._ts||0)>(loc._ts||0)+3000){api.block=true;st(KEY,JSON.stringify(d.save));location.reload()}}).catch(()=>{});
   return api})();
 </script>
-<button onclick="HBU.leave()" style="position:fixed;left:6px;bottom:6px;z-index:9999;background:#000;border:1px solid #ff4455;color:#ff4455;font:bold 11px 'Courier New',monospace;letter-spacing:2px;padding:5px 9px;cursor:pointer">&#9668; HELLBALL</button>
+<button class="hbuBack" id="hbuFix" onclick="HBU.leave()" style="display:none;position:fixed;left:14px;top:14px;z-index:9999;background:#000;border:1px solid #ff4455;color:#ff4455;font:bold 11px 'Courier New',monospace;letter-spacing:2px;padding:5px 9px;cursor:pointer">&#9668; HELLBALL</button>
 <!--DISCORD--><script src="../discord-sdk.js"></script>
 <script>
 /* Discord Activity handshake: only runs inside Discord (the iframe URL carries frame_id). App ID comes from <app-id>.discordsays.com */
@@ -141,10 +143,11 @@ window.HBU=(()=>{const inDc=/[?&]frame_id=/.test(location.search),API=inDc?"/.pr
   const id=location.hostname.split(".")[0];
   const sdk=new DiscordSDK(id);await sdk.ready();
 }catch(e){console.warn("Discord SDK:",e)}})();
-</script><!--/DISCORD-->
+</script><!--/DISCORD--><script>/* the top bar is hidden under the summoning screen, so show a corner button there */
+setInterval(()=>{const b=document.getElementById("birth"),f=document.getElementById("hbuFix");if(!f)return;const on=!!b&&!b.classList.contains("hidden")&&getComputedStyle(b).display!=="none";f.style.display=on?"block":"none"},400)</script>
 <div id="app">
  <header id="top"><div class="logo">HELLWORLD</div>
-  <nav><button class="tab" id="tInv">INVENTORY</button><button class="tab" id="tWorld">WORLD</button><button class="tab" id="tCmd">COMMANDS</button><button class="tab" id="tGen">GENOME</button><button class="tab" id="tDex">BUDDEX</button><button class="tab" id="tDeco">DECORATE</button><button class="tab" id="tNew" style="border-color:#ff4455;color:#ff4455">TEST NEW</button><button class="tab" id="bTr" style="border-color:#ffb000;color:#ffb000">TRAITS</button></nav>
+  <nav><button class="tab hbuBack" onclick="HBU.leave()" style="border-color:#ff4455;color:#ff4455">&#9668; HELLBALL</button><button class="tab" id="tInv">INVENTORY</button><button class="tab" id="tWorld">WORLD</button><button class="tab" id="tCmd">COMMANDS</button><button class="tab" id="tGen">GENOME</button><button class="tab" id="tDex">BUDDEX</button><button class="tab" id="tDeco">DECORATE</button><button class="tab" id="tNew" style="border-color:#ff4455;color:#ff4455">TEST NEW</button><button class="tab" id="bTr" style="border-color:#ffb000;color:#ffb000">TRAITS</button></nav>
   <div class="tr"><span class="chip" id="hc">$0</span><button class="tab" id="bMusic">MUSIC: ON</button><button class="tab" id="bMute">SFX: ON</button></div></header>
  <section id="main"><div class="ban" id="banT">SIGNAL CONTAINED</div><div class="vert l" id="vL">SIGNAL CONTAINED</div><div class="vert r" id="vR">SIGNAL CONTAINED</div>
   <div id="cwrap"><canvas id="c"></canvas>
