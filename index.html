@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; font-src 'self' data:; connect-src 'self' https://*.workers.dev wss://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.22</title>
+<title>HELLBALL ULTIMATE v0.23</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -49,11 +49,15 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.22 // BUILD 20261114.0423 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
-<div id="modes" class="ov hidden"><div class="ttl">MODES</div>
- <button class="mb" id="mDaily">DAILY RUN</button><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.23 // BUILD 20261114.0444</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="modes" class="ov scroll hidden" style="gap:8px"><div class="ttl">MODES</div>
+ <button class="mb" id="mDaily">DAILY RUN</button><div class="dim">GHOST RACE: THE PADDLE OF THE WORLD #1 PLAYS ALONGSIDE YOU.</div><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
-  <button class="mb" id="mBack">BACK</button></div>
+  <button class="mb" id="mCoop" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">CO-OP CAMPAIGN</button><div class="dim">2 PLAYERS VS THE MACHINE. SHARED LIVES.</div>
+ <div class="row"><button class="mb" id="mRaid15" style="width:230px;font-size:14px;letter-spacing:3px;border-color:#33d6ff;color:#33d6ff">RAID: THE CYLINDER</button><button class="mb" id="mRaid40" style="width:230px;font-size:14px;letter-spacing:3px;border-color:#33d6ff;color:#33d6ff">RAID: THE FACE</button></div><div class="dim">2 PLAYERS VS A BOSS WITH DOUBLE HEALTH.</div>
+ <button class="mb" id="mKoth" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">KING OF THE HILL</button><div class="dim">UP TO 4. WINNER STAYS ON. 5 IN A ROW WINS.</div>
+ <button class="mb hidden" id="mGrudge" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">GRUDGE MATCH</button><div class="dim hidden" id="mGrudgeT" style="max-width:90vw;text-align:center"></div>
+ <button class="mb" id="mBack">BACK</button></div>
 <div id="lb" class="ov hidden"><div class="ttl">LOCAL SCORES</div><div class="row" id="lbTabs"></div><div id="lbList" style="width:min(94vw,640px);max-height:58vh;overflow:auto"></div><div class="dim">STORED ON THIS COMPUTER // EVERYONE ELSE: MENU &gt; WORLD BOARD</div><button class="mb" id="lbBack">BACK</button></div>
 <div id="hkb" class="ov scroll hidden"><div class="ttl" style="color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</div><div class="dim">GLOBAL HACKER RANKING // ☠ = TIMES THEY ENDED YOU // CLICK A USER FOR THEIR DOSSIER</div><div id="hkList" style="width:min(94vw,720px)"></div><button class="mb" id="hkBack">BACK</button></div>
 <div id="wb" class="ov scroll hidden"><div class="ttl">WORLD BOARD</div><div class="dim">EVERY PLAYER, EVERYWHERE // CLICK A NAME FOR THEIR SUBJECT FILE</div><div class="row" id="wbTabs"></div><div id="wbList" style="width:min(94vw,640px)"></div><div class="dim" id="wbYou"></div><div id="wbProf" class="pf hidden" style="max-width:min(94vw,760px)"></div><button class="mb" id="wbBack">BACK</button></div>
@@ -112,7 +116,7 @@ function spinBall(){if(G.state!=="play"||ball.stop){rotAxis(0,1,0,.012);return}
   rotAxis(1,0,0,-ball.vy*.045+ball.cy*7+ball.vz*.03)} // up/down drift + top spin + rolling down the tunnel
 function resetBall(){Object.assign(ball,{x:WX,y:WY,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,px:WX,py:WY,pz:0})}
 function startLevel(){G.vol=0;resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck();G.dark=G.mode!=="online"&&G.level>=41&&Math.random()<.45;if(G.dark)setTimeout(()=>{if(G.dark)popup("LIGHTS OUT","#ff4455")},2600)}
-function newGame(mode){runStart();mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
+function newGame(mode){runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
   G.mod={};G.modNames=[];if(mode==="daily"){const ms=dailyMods();ms.forEach(m=>Object.assign(G.mod,m));G.modNames=ms.map(m=>m.n.split(":")[0]);RNG=mulberry(todayKey())}else RNG=Math.random;
   G.level=G.mod.start||1;G.score=0;G.pl=mode==="endless"?3:(G.mod.lives||5);G.el=(mode==="endless"||mode==="boss")?99:3;G.epts=0;G.bossWon=false;G.bossLost=false;G.zone=null;G.tube=false;G.tubeK=0;G.elMax=3;G.oceanA=1;ABYSS.length=0;EV.list=[];EV.t=8;BLK.length=0;G.hyCam=0;G.twins=false;ai.w=PW;ai.h=PH;
   G.streak=0;G.matrixA=G.level>=6?1:0;G.cam=0;G.shards=[];G.debris=[];G.blown=false;G.hg=null;G.wh=null;setField(1);droneOn();pad.cracks=[];ai.cracks=[];
@@ -180,7 +184,8 @@ function playerHit(serve){
   if(!serve&&(pad.flip||performance.now()-pad.flipEnd<600)){G.score+=25;popup("PADDLEFLIP +25","#33d6ff");S.trick();stInc("flips")}
   G.trickN=0;
   if(!cracked)S.pHit()}
-function step(){
+function step(){if(CO.on&&!CO.host){coGuestStep();return}stepCore();if(CO.on&&CO.host)coHostStep();ghTick()}
+function stepCore(){
   pad.h=isMaster(pad)?PH*.8:PH;
   pad.ox=pad.x;pad.oy=pad.y;pad.px=pad.x;pad.py=pad.y;
   pad.x-= (pad.x-mouse.x)/1.5;pad.y-=(pad.y-mouse.y)/1.5;clampP(pad);pad.vx=pad.x-pad.px;pad.vy=pad.y-pad.py;
@@ -203,14 +208,15 @@ function step(){
     if(hA){hA.hl=zone(hA);hA.hlT=.35;const cr=impact(hA),bk=G.mode==="boss"?.6:1;ball.z=DEPTH;ball.cx=hA.vx/(LC()*bk);ball.cy=-hA.vy/(LC()*bk);ball.vz=-ball.vz;if(!cr)S.eHit()}
     else{ball.stop=true;ball.vz=0;if(G.mode==="boss")bossDamage();else if(G.mode==="endless"){G.epts++;if(G.epts%3===0)G.el=0}else G.el--;S.miss();winPoint();endPoint(true)}}
   else if(ball.z<0){
-    if(G.mode==="online"){if(touches(pad)){playerHit(false);nHit(false)}else{ball.stop=true;ball.vz=0;S.miss();nSend({t:"miss"});nPoint("them")}}
+    if(G.mode==="online"){if(net.spec){ball.z=0;ball.stop=true}else if(touches(pad)){playerHit(false);nHit(false)}else{ball.stop=true;ball.vz=0;S.miss();if(net.kind==="koth")nSend({t:"kmiss",ep:net.ep});else{nSend({t:"miss"});nPoint("them")}}}
     else if(touches(pad))playerHit(false);
+    else if(CO.on&&CO.host&&net.live&&touches(pad2))coHit(false);
     else{ball.stop=true;ball.vz=0;if(!G.test)G.pl--;S.miss();losePoint();endPoint(false)}}
 }
 function winPoint(){budCheer();if(Math.random()<.35)aiSay(pick(talkTier()>=2?["LUCKY","FUCK","SHIT","FUCKING HELL","THAT DIDN'T COUNT",">|"]:["LUCKY","WHATEVER","THAT DIDN'T COUNT",">|","HMPH","LAG"]));if(G.vol===1){G.score+=15;popup("ACE! +15","#ffb000")}
   stInc("pw");if(G.vol===1)stInc("aces");G.streak++;const p=25*G.streak;G.score+=p;popup(G.streak>1?"POINT  STREAK x"+G.streak+"  +"+p:"POINT +25","#33ff77");G.vol=0}
 function losePoint(){if(FACE.on)FACE.lostPt=true;budSad();stInc("plost");if(G.mode==="boss")G.bossLost=true;setTimeout(()=>aiMock(true),250);const lost=Math.ceil(G.score*.25);G.score-=lost;if(lost)popup("-25%  (-"+lost+")","#ff4455");G.streak=0;G.vol=0}
-function endPoint(won){G.tagGo=true;if(won&&G.el<1&&FACE.on&&!FACE.dead){faceDie();G.state="wait";G.waitT=3.6;G.after="hellworld";return}
+function endPoint(won){G.tagGo=true;if(G.mode==="grudge"&&won&&G.el<1){grudgeWin();G.state="wait";G.waitT=2.2;G.after="over";return}if(won&&G.el<1&&FACE.on&&!FACE.dead){faceDie();G.state="wait";G.waitT=3.6;G.after="hellworld";return}
   if(won&&G.el<1&&G.level===29){G.state="wait";G.waitT=1;G.after="fold";return}
   if(won&&G.el<1&&G.level===39){G.state="wait";G.waitT=.5;G.after="faceintro";return}
   if(won&&G.el<1&&CYL.on&&!CYL.dead){cylDie();G.state="wait";G.waitT=3.4;G.after="level";return}
@@ -298,7 +304,7 @@ cv.addEventListener("pointerdown",e=>{if(G.paused)return;toWorld(e);
   if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}
   if(false){showMenu();return}
   if(G.state==="menu"||G.state==="warp")return;
-  if(G.state==="serve"&&touches(pad)){G.state="play";playerHit(true);if(G.mode==="online")nHit(true);return}
+  if(G.state==="serve"&&touches(pad)){if(CO.on&&!CO.host){nSend({t:"gsv"});return}G.state="play";playerHit(true);if(G.mode==="online")nHit(true);return}
   press={t:performance.now(),x:e.clientX,y:e.clientY,flip:false,hold:false}});
 addEventListener("pointerup",()=>{if(!press)return;const p=press;press=null;if(p.flip)return;
   if(p.hold){catchSpin();return}
@@ -468,7 +474,7 @@ function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a
 function dailyMods(){const r=mulberry(todayKey()*7+13),a=Math.floor(r()*MODS.length);let b=Math.floor(r()*MODS.length);if(b===a)b=(b+3)%MODS.length;return[MODS[a],MODS[b]]}
 const MOD=()=>G.mod||{};
 const LC=()=>L_CURVE[lv()]/(MOD().curve||1);
-const MODE_NAME={normal:"NORMAL",daily:"DAILY",endless:"ENDLESS",boss:"BOSS",test:"TEST"};
+const MODE_NAME={grudge:"GRUDGE MATCH",coop:"CO-OP",online:"ONLINE",normal:"NORMAL",daily:"DAILY",endless:"ENDLESS",boss:"BOSS",test:"TEST"};
 
 /* ---- THE WARDEN: 10 health. A giant paddle; at half health it splits into twins ---- */
 const ai2={x:0,y:0,ox:0,oy:0,vx:0,vy:0,px:0,py:0,hl:null,hlT:0,cracks:[],rot:0};
@@ -1493,7 +1499,7 @@ const gName=()=>gStore("hb3_name")||"PLAYER-"+gPid.slice(0,4).toUpperCase();
 const gEsc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const gPost=o=>fetch(gAPI(),{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(Object.assign({pid:gPid,n:gName()},o))}).then(r=>r.json());
 const gDay=()=>new Date().toISOString().slice(0,10);
-const GB_TABS=[["normal","NORMAL"],["hard","ENDLESS"],["daily","DAILY"],["classic","DEEPEST LEVEL"],["1v1","1V1 WINS"]];
+const GB_TABS=[["normal","NORMAL"],["hard","ENDLESS"],["daily","DAILY"],["classic","DEEPEST LEVEL"],["1v1","1V1 WINS"],["koth","KOTH CROWNS"]];
 const gKey=b=>b==="daily"?"daily-"+gDay():b;
 function gProfile(){const R=readouts();return{v:1,id:ST.id,best:Math.max(G.best||0,(G.mode==="normal"||G.mode==="daily"||G.mode==="endless")?G.score||0:0),maxL:ST.maxL||0,games:ST.games||0,hits:ST.hits||0,aces:ST.aces||0,sweet:ST.sweet||0,flips:ST.flips||0,
   tricks:ST.tricks||0,min:Math.floor((ST.time||0)/60),pw:ST.pw||0,plost:ST.plost||0,w1:ST.w1v1||0,ach:Object.keys(ACHD||{}).length,r:R.map(x=>x[1]),
@@ -1501,7 +1507,7 @@ function gProfile(){const R=readouts();return{v:1,id:ST.id,best:Math.max(G.best|
 function gSendProfile(force){const n=performance.now();if(!force&&n-GB.lastProf<120000)return;GB.lastProf=n;gPost({op:"prof",p:gProfile()}).catch(()=>{})}
 function gSubmit(){if(G.test)return;const b=G.mode==="normal"?"normal":G.mode==="daily"?"daily-"+gDay():G.mode==="endless"?"hard":null;
   if(b&&G.score>0){RUN.boardP=gPost({op:"score",b,s:G.score,l:G.level});RUN.boardP.then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{})}
-  const deep=Math.max(ST.maxL||0,G.level||0);if(G.mode!=="online"&&deep>0)gPost({op:"score",b:"classic",s:deep,l:deep}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
+  const deep=Math.max(ST.maxL||0,G.level||0);if(G.mode!=="online"&&G.mode!=="coop"&&G.mode!=="grudge"&&deep>0)gPost({op:"score",b:"classic",s:deep,l:deep}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
 function gWin(){ST.w1v1=(ST.w1v1||0)+1;stSave();gPost({op:"win",b:"1v1"}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
 function gOpen(){hideAll();g$("wb").classList.remove("hidden");g$("wbProf").classList.add("hidden");gLoad(GB.tab)}
 function gLoad(b){GB.tab=b;g$("wbTabs").innerHTML=GB_TABS.map(([k,t])=>'<button class="sb'+(k===b?" on":"")+'" data-wb="'+k+'">'+t+'</button>').join("");
@@ -1764,10 +1770,156 @@ g$("bHw").onclick=openHellworld;
 g$("acShow").onclick=()=>{const i=g$("acCode");i.value=gPid;i.classList.toggle("hidden")};
 g$("acLink").onclick=()=>{const v=g$("acIn").value.trim().toLowerCase();if(!/^[a-z0-9]{8,24}$/.test(v)){g$("acMsg").textContent="THAT IS NOT AN ACCOUNT CODE.";return}gStore("hb3_pid",v);try{localStorage.removeItem("hb3_hwcache")}catch(e){}g$("acMsg").textContent="LINKED. RELOADING...";setTimeout(()=>location.reload(),600)};
 
+/* =====================================================================================================
+   v0.23: CO-OP CAMPAIGN + BOSS RAIDS (2 players, host runs the game), KING OF THE HILL (up to 4),
+   GHOST RACE on the daily run, RIVAL GRUDGE MATCHES
+   ===================================================================================================== */
+const KIND_NAME={"1v1":"ONLINE 1V1",coop:"CO-OP CAMPAIGN",raid15:"BOSS RAID: THE CYLINDER",raid40:"BOSS RAID: THE FACE",koth:"KING OF THE HILL"};
+const CO={on:false,host:false,snap:null,seen:new WeakSet(),lastMsg:"",lastMsgT:0,raid:0,gx:150,gy:100,lastVz:0};
+const pad2={x:150,y:100,ox:150,oy:100,px:150,py:100,vx:0,vy:0,cracks:[],hlT:0,hl:null,rot:0};
+const isCoopKind=k=>k==="coop"||k==="raid15"||k==="raid40";
+const kname=id=>net.ks&&id===net.ks.you?"YOU":(net.names&&net.names[id])||"P"+id;
+function nWaitK(){const k=net.kind;if(k==="koth")return "KING OF THE HILL<br>WAITING FOR MORE PLAYERS";
+  const who=k==="1v1"?"AN OPPONENT":"A PARTNER";return nInDc()?"WAITING FOR "+who+"<br>ANYONE ELSE IN THIS ACTIVITY WHO PICKS AN ONLINE MODE LANDS RIGHT HERE."
+    :"WAITING FOR "+who+"<br>SEND YOUR FRIEND THE CODE"+(location.protocol==="file:"?"":" OR THE INVITE LINK")+". THEY TYPE IT UNDER ANY ONLINE MODE."}
+function nTitle(){const t=g$("olobby").querySelector(".ttl");if(t)t.textContent=KIND_NAME[net.kind]||"ONLINE"}
+function nOpen(code,kind){nClose();net.leaving=false;net.full=false;net.live=false;net.over=false;net.spec=false;net.ks=null;net.names={};net.kPend=false;CO.on=false;
+  code=code?String(code).toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,5):"";net.kind=kind||(code[0]==="K"?"koth":"1v1");if(code&&code[0]==="K")net.kind="koth";const koth=net.kind==="koth";
+  if(nInDc()){const id=new URLSearchParams(location.search).get("instance_id");if(!id){nLobby("STILL CONNECTING TO DISCORD...<br>TRY AGAIN IN A SECOND.");return}net.code="";net.room=(koth?"kdc-u":"dc-x")+id}
+  else{if(!code){do{code=nCode()}while(code[0]==="K");if(koth)code="K"+code.slice(1)}net.code=code;net.room=(koth?"kweb-U":"web-X")+code}
+  nTitle();nLobby("CONNECTING...");
+  const url=nInDc()?(location.protocol==="https:"?"wss://":"ws://")+location.host+"/.proxy/ws/"+net.room:NET_RELAY+"/ws/"+net.room;
+  let ws;try{ws=net.ws=new WebSocket(url)}catch(e){nLobby("COULD NOT REACH THE GAME SERVER.");return}
+  ws.onmessage=e=>{if(net.ws!==ws)return;let m;try{m=JSON.parse(e.data)}catch(_){return}net.lastMsg=performance.now();nMsg(m)};
+  ws.onclose=()=>{if(net.ws!==ws)return;net.ws=null;const was=net.live;net.live=false;if(net.leaving||net.full)return;if(CO.on&&CO.host){popup("PARTNER LEFT  //  SOLO NOW","#ffb000");return}CO.on=false;
+    nLobby((was?"CONNECTION LOST.":"COULD NOT REACH THE GAME SERVER.")+"<br>PRESS BACK AND TRY AGAIN.")}}
+function nBall(r){const V=LS()*2.5,b={x:nNum(r.x,0,BW),y:nNum(r.y,0,BH),z:nNum(r.z,-5,DEPTH+5),vx:nNum(r.vx,-60,60),vy:nNum(r.vy,-60,60),vz:nNum(r.vz,.5,V),cx:nNum(r.cx,-8,8),cy:nNum(r.cy,-8,8)};return Object.values(b).some(v=>v===null)?null:b}
+function nMsg(m){if(!m||typeof m.t!=="string")return;
+  if(net.kind==="koth"){kMsg(m);return}
+  if(m.t==="wait"){net.host=true;if(CO.on)return;if(G.mode!=="online"||G.state==="menu")nLobby(nWaitK(),{share:true,join:true})}
+  else if(m.t==="peer"){net.host=!!m.host;net.live=true;nSend({t:"nm",n:gName()});if(net.host)nSend({t:"kind",k:net.kind});net.meReady=net.themReady=false;nTitle();nLobby((net.kind==="1v1"?"OPPONENT":"PARTNER")+" CONNECTED<br>CLICK READY WHEN YOU ARE.",{ready:true})}
+  else if(m.t==="kind"){if(!net.host&&KIND_NAME[m.k]&&m.k!=="koth"){net.kind=m.k;nTitle();if(!net.meReady&&!CO.on&&G.mode!=="online")nLobby((m.k==="1v1"?"OPPONENT":"PARTNER")+" CONNECTED<br>"+KIND_NAME[m.k]+"<br>CLICK READY WHEN YOU ARE.",{ready:true})}}
+  else if(m.t==="left"||m.t==="bye"){if(!net.live)return;net.live=false;if(CO.on&&CO.host){popup("PARTNER LEFT  //  SOLO NOW","#ffb000");return}CO.on=false;G.mode="normal";nLobby((net.kind==="1v1"?"YOUR OPPONENT":"YOUR PARTNER")+" LEFT.<br>"+nWaitK().split("<br>")[1],{share:true,join:true})}
+  else if(m.t==="full"){net.full=true;nLobby(nInDc()?"TWO PEOPLE IN THIS ACTIVITY ARE ALREADY PLAYING.<br>WAIT FOR THEM TO FINISH.":"THAT LOBBY ALREADY HAS TWO PLAYERS.")}
+  else if(m.t==="nm"){net.oname=gClean(m.n);if(G.mode==="online"&&net.oname)G.aiName=net.oname}
+  else if(m.t==="ping"){if(isFinite(Number(m.ts)))nSend({t:"pong",ts:Number(m.ts)})}
+  else if(m.t==="pong"){const d=performance.now()-Number(m.ts);if(isFinite(d)&&d>=0&&d<10000)net.rtt=net.rtt*.7+d*.3}
+  else if(m.t==="p"){const x=nNum(m.x,0,BW),y=nNum(m.y,0,BH);if(x===null||y===null)return;if(CO.on){CO.gx=x;CO.gy=y}else{net.ox=BW-x;net.oy=y}}
+  else if(m.t==="ready"){net.themReady=true;if(!net.meReady)nLobby("THE OTHER PLAYER IS READY.<br>CLICK READY TO START.",{ready:true});nMaybe()}
+  else if(m.t==="s"){if(CO.on&&!CO.host)CO.snap=m}
+  else if(m.t==="gsv"){if(CO.on&&CO.host&&G.state==="serve"&&touches(pad2)){G.state="play";coHit(true)}}
+  else if(m.t==="cov"){if(CO.on&&!CO.host)coOver(m)}
+  else if(m.t==="hit"){if(G.mode!=="online"||!["play","oserve","between","serve"].includes(G.state)||!m.b)return;const b=nBall(m.b);if(!b)return;
+    Object.assign(ball,{x:BW-b.x,y:b.y,z:DEPTH-b.z,vx:-b.vx,vy:b.vy,vz:-b.vz,cx:-b.cx,cy:b.cy,stop:false});ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;G.state="play";
+    ai.hl=zone(ai);ai.hlT=.35;S.eHit();const n=Math.min(6,Math.round(net.rtt/2/(1000/30)));for(let i=0;i<n;i++)nAdvance()}
+  else if(m.t==="miss"){if(G.mode==="online"&&G.state==="play"){ball.stop=true;nPoint("me")}}
+  else if(m.t==="rematch"){net.themRe=true;if(net.over&&!net.meRe)g$("olStatus").innerHTML+="<br>YOUR OPPONENT WANTS A REMATCH.";nMaybeRe()}}
+function nMaybe(){if(!(net.meReady&&net.themReady))return;net.meReady=net.themReady=false;if(isCoopKind(net.kind))coStart();else nStart(net.host?"me":"them")}
+function nTick(){if(!net.live||net.spec)return;if(G.mode!=="online"&&!(CO.on&&!CO.host))return;const n=performance.now();if(n-net.padT>33){net.padT=n;nSend(net.kind==="koth"?{t:"p",x:pad.x,y:pad.y,n:gName()}:{t:"p",x:pad.x,y:pad.y})}}
+function nAI(){ai.ox=ai.x;ai.oy=ai.y;ai.px=ai.x;ai.py=ai.y;ai.x+=(net.ox-ai.x)*.6;ai.y+=(net.oy-ai.y)*.6;clampP(ai);ai.vx=ai.x-ai.px;ai.vy=ai.y-ai.py;
+  if(net.spec){pad.x=mouse.x=net.sx===undefined?WX:net.sx;pad.y=mouse.y=net.sy===undefined?WY:net.sy}
+  if(G.state==="oserve"){if(net.spec&&net.specNear){ball.x=ball.px=pad.x;ball.y=ball.py=pad.y;ball.z=ball.pz=0}else{ball.x=ball.px=ai.x;ball.y=ball.py=ai.y;ball.z=ball.pz=DEPTH}}}
+function nHud(i){if(net.kind==="koth"&&G.mode==="online"&&net.ks){const s=net.ks;return i?"NEXT: "+(s.line.length?kname(s.line[0]):"-")+(net.live?"  //  PING "+Math.round(net.rtt):""):"KING "+kname(s.champ)+" "+"★".repeat(s.streak)+"☆".repeat(Math.max(0,s.win-s.streak))+"  VS "+kname(s.chal)}
+  if(CO.on&&i)return (CO.raid?"RAID":"CO-OP")+"  //  LEVEL "+G.level+(net.live?"  //  PING "+Math.round(net.rtt):"  //  SOLO");return null}
+
+/* ---------- KING OF THE HILL (the server runs the queue; the two on court play a normal online point) ---------- */
+function kMsg(m){if(m.t==="ks"){net.ks=m;net.ep=m.ep;net.live=true;if(m.pt){kPoint(m);return}if(net.kPend)return;kApply(m);return}
+  if(m.t==="full"){net.full=true;nLobby("THIS KING OF THE HILL IS FULL ("+(m.max|0)+" PLAYERS).<br>TRY AGAIN WHEN SOMEONE LEAVES.");return}
+  if(m.t==="pong"){const d=performance.now()-Number(m.ts);if(isFinite(d)&&d>=0&&d<10000)net.rtt=net.rtt*.7+d*.3;return}
+  if(m.t==="p"&&m.n&&m.from){net.names=net.names||{};net.names[m.from]=gClean(m.n)||"P"+m.from}
+  if(m.ep!==undefined&&m.ep!==net.ep)return;
+  if(net.spec){const near=m.from===net.near;if(m.t==="p"){const x=nNum(m.x,0,BW),y=nNum(m.y,0,BH);if(x===null||y===null)return;if(near){net.sx=x;net.sy=y}else{net.ox=BW-x;net.oy=y}}
+    else if(m.t==="hit"&&m.b){const b=nBall(m.b);if(!b)return;Object.assign(ball,near?{x:b.x,y:b.y,z:b.z,vx:b.vx,vy:b.vy,vz:b.vz,cx:b.cx,cy:b.cy}:{x:BW-b.x,y:b.y,z:DEPTH-b.z,vx:-b.vx,vy:b.vy,vz:-b.vz,cx:-b.cx,cy:b.cy},{stop:false});ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;G.state="play";S.eHit()}return}
+  if(m.from!==net.opp)return;
+  if(m.t==="p"){const x=nNum(m.x,0,BW),y=nNum(m.y,0,BH);if(x!==null&&y!==null){net.ox=BW-x;net.oy=y}}
+  else if(m.t==="hit"&&m.b&&["play","oserve","between","serve"].includes(G.state)){const b=nBall(m.b);if(!b)return;Object.assign(ball,{x:BW-b.x,y:b.y,z:DEPTH-b.z,vx:-b.vx,vy:b.vy,vz:-b.vz,cx:-b.cx,cy:b.cy,stop:false});ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;G.state="play";ai.hlT=.35;S.eHit()}}
+function kPoint(s){const p=s.pt,me=s.you;G.state="between";ball.stop=true;ball.vz=0;net.kPend=true;
+  if(p.loser===me){S.miss();popup("YOU LOST THE POINT"+(s.line.includes(me)?"  //  BACK OF THE LINE":""),"#ff4455")}
+  else if(p.winner===me){tn(660,.15,"square",.04);setTimeout(()=>tn(990,.25,"square",.04),120);popup("POINT  //  STREAK "+s.streak+"/"+s.win,"#33ff77");G.ripple={sx:Math.max(0,Math.min(BW,ball.x)),sy:Math.max(0,Math.min(BH,ball.y)),t:0}}
+  else popup(kname(p.winner)+" TAKES THE POINT","#ffb000");
+  if(p.won){say(p.won===me?"YOU ARE KING OF THE HILL":kname(p.won)+" IS KING OF THE HILL",3);if(p.won===me){gPost({op:"win",b:"koth"}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});[784,988,1175,1568].forEach((f,i)=>setTimeout(()=>tn(f,.18,"square",.045),i*90))}}
+  const ep=s.ep;setTimeout(()=>{if(net.kPend&&net.ks&&net.kind==="koth"&&net.ks.ep>=ep)kApply(net.ks)},p.won?3000:1000)}
+function kApply(s){net.kPend=false;const me=s.you,n=(s.champ!=null?1:0)+(s.chal!=null?1:0)+s.line.length;
+  if(s.champ==null||s.chal==null){net.spec=false;if(G.mode==="online")G.mode="normal";nLobby("KING OF THE HILL<br>WAITING FOR MORE PLAYERS ("+n+"/"+s.max+")<br>"+(nInDc()?"ANYONE ELSE IN THIS ACTIVITY CAN PICK KING OF THE HILL TO JOIN.":"SEND THE CODE. UP TO "+s.max+" CAN PLAY."),{share:true});return}
+  if(G.mode!=="online"||G.state==="menu"){initAudio();hideAll();newGame("online");G.pl=99;G.el=99}
+  net.spec=me!==s.champ&&me!==s.chal;net.near=net.spec?s.champ:me;net.far=net.spec?s.chal:(me===s.champ?s.chal:s.champ);net.opp=net.spec?null:net.far;
+  G.level=Math.min(9,3+s.streak);G.aiName=kname(net.far);G.tagFade=0;G.tagGo=false;const server=s.serve===net.near?"me":"them";
+  if(net.spec){resetBall();net.specNear=server==="me";net.sx=net.sy=undefined;G.vol=0;G.state="oserve";const pos=s.line.indexOf(me);say("SPECTATING  //  "+(pos===0?"YOU'RE NEXT":"#"+(pos+1)+" IN LINE"),2)}
+  else{nServe(server);say((server==="me"?"YOUR SERVE":"THEY SERVE")+"  //  "+(me===s.champ?"HOLD THE HILL":"TAKE THE HILL"),1.6)}}
+
+/* ---------- CO-OP: the host runs the whole game; the partner sends their paddle and is sent the state 30 times a second ---------- */
+function coStart(){initAudio();hideAll();newGame("coop");CO.on=true;CO.host=net.host;CO.snap=null;CO.raid=net.kind==="raid15"?15:net.kind==="raid40"?40:0;CO.lastMsg="";pad2.cracks=[];G.aiRival=0;
+  if(CO.host&&CO.raid){jumpLevel(CO.raid);if(CO.raid===15){G.el=6;G.elMax=6}else{FACE.eyes.forEach(e=>e.hp=5);G.el=10;G.elMax=10}G.pl=6;say(KIND_NAME[net.kind],3)}
+  else if(CO.host)say("CO-OP  //  SHARED LIVES",2.5);else say("CO-OP  //  WAITING FOR THE HOST",2)}
+function coHit(serve){const sv=[pad.x,pad.y,pad.vx,pad.vy,pad.flip,pad.cracks,pad.flipEnd];pad.x=pad2.x;pad.y=pad2.y;pad.vx=pad2.vx;pad.vy=pad2.vy;pad.flip=null;pad.cracks=pad2.cracks;pad.flipEnd=0;
+  try{playerHit(serve)}finally{pad2.cracks=pad.cracks;pad2.hl=pad.hl;pad2.hlT=.35;[pad.x,pad.y,pad.vx,pad.vy,pad.flip,pad.cracks,pad.flipEnd]=sv}}
+const r2=v=>Math.round(v*100)/100;
+function coHostStep(){pad2.ox=pad2.x;pad2.oy=pad2.y;pad2.px=pad2.x;pad2.py=pad2.y;pad2.x+=(CO.gx-pad2.x)*.6;pad2.y+=(CO.gy-pad2.y)*.6;clampP(pad2);pad2.vx=pad2.x-pad2.px;pad2.vy=pad2.y-pad2.py;pad2.hlT=Math.max(0,pad2.hlT-1/30);
+  if(CO.raid&&(G.level>CO.raid||G.state==="hwin")){coOver({win:1});return}
+  if(!net.live)return;const m={t:"s",b:[r2(ball.x),r2(ball.y),r2(ball.z),r2(ball.vx),r2(ball.vy),r2(ball.vz),r2(ball.cx),r2(ball.cy),ball.stop?1:0],a:[r2(ai.x),r2(ai.y)],p:[r2(pad.x),r2(pad.y)],
+    g:[G.level,G.score,G.pl,G.el,G.elMax||3,G.state,G.vol|0,G.streak|0],n:G.aiName||""};
+  if(CYL.on)m.c={r:r2(CYL.rot),d:CYL.dead?1:0,t:CYL.tiles.map(c=>c.map(t=>t.hp).join("")).join(""),m:CYL.tiles.map(c=>c.map(t=>t.mind?1:0).join("")).join("")};
+  if(FACE.on)m.f={e:FACE.eyes.map(e=>[e.hp,r2(e.shut)]),m:r2(FACE.mouth),x:r2(FACE.sx),y:r2(FACE.sy),d:FACE.dead?1:0};
+  const pp=G.pops.filter(p=>!CO.seen.has(p));if(pp.length){pp.forEach(p=>CO.seen.add(p));m.pp=pp.map(p=>[String(p.t).slice(0,60),p.col])}
+  if(G.msg&&(G.msg!==CO.lastMsg||G.msgT>CO.lastMsgT+.2))m.sy=[String(G.msg).slice(0,60),r2(G.msgT)];CO.lastMsg=G.msg;CO.lastMsgT=G.msgT;nSend(m)}
+function coGuestStep(){pad.h=isMaster(pad)?PH*.8:PH;pad.ox=pad.x;pad.oy=pad.y;pad.px=pad.x;pad.py=pad.y;pad.x-=(pad.x-mouse.x)/1.5;pad.y-=(pad.y-mouse.y)/1.5;clampP(pad);pad.vx=pad.x-pad.px;pad.vy=pad.y-pad.py;
+  ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;ai.ox=ai.x;ai.oy=ai.y;pad2.ox=pad2.x;pad2.oy=pad2.y;spinBall();const s=CO.snap;if(!s||!Array.isArray(s.g)||!Array.isArray(s.b))return;
+  const L=nNum(s.g[0],1,999)|0;if(L&&L!==G.level){jumpLevel(L);say("LEVEL "+L,1.6)}
+  G.score=Number(s.g[1])|0;G.pl=Number(s.g[2])|0;G.el=Number(s.g[3])|0;G.elMax=Number(s.g[4])|0||3;G.vol=Number(s.g[6])|0;G.streak=Number(s.g[7])|0;const st=String(s.g[5]);
+  if(st==="serve"||st==="play")G.state=st;else{G.state="wait";G.waitT=1e9;G.after="serve"}
+  const b=s.b.map(Number);if(b.every(isFinite)){if(Math.sign(b[5])!==Math.sign(CO.lastVz)&&b[5]!==0&&CO.lastVz!==0)(b[5]>0?S.pHit:S.eHit)();CO.lastVz=b[5];
+    if(Math.abs(b[2]-ball.z)>DEPTH*.5){ball.px=b[0];ball.py=b[1];ball.pz=b[2]}Object.assign(ball,{x:b[0],y:b[1],z:b[2],vx:b[3],vy:b[4],vz:b[5],cx:b[6],cy:b[7],stop:!!b[8]})}
+  if(Array.isArray(s.a)){ai.x=Number(s.a[0])||0;ai.y=Number(s.a[1])||0}if(Array.isArray(s.p)){pad2.x=Number(s.p[0])||0;pad2.y=Number(s.p[1])||0}G.aiName=gClean(s.n)||String(s.n||"").slice(0,24);
+  if(s.c&&CYL.on&&typeof s.c.t==="string"){CYL.rot=Number(s.c.r)||0;let k=0;for(const col of CYL.tiles)for(const t of col){t.hp=Number(s.c.t[k])||0;t.mind=s.c.m&&s.c.m[k]==="1";k++}if(s.c.d&&!CYL.dead)cylDie()}
+  if(s.f&&FACE.on&&Array.isArray(s.f.e)){s.f.e.forEach((e,i)=>{if(FACE.eyes[i]){FACE.eyes[i].hp=Number(e[0])||0;FACE.eyes[i].shut=Number(e[1])||0}});FACE.mouth=Number(s.f.m)||0;FACE.sx=Number(s.f.x)||0;FACE.sy=Number(s.f.y)||0;if(s.f.d&&!FACE.dead)faceDie()}
+  if(Array.isArray(s.pp)){s.pp.slice(0,5).forEach(p=>popup(String(p[0]).slice(0,60),/^#[0-9a-f]{6}$/i.test(p[1])?p[1]:"#ffb000"));s.pp=null}
+  if(Array.isArray(s.sy)){say(String(s.sy[0]).slice(0,60),Math.min(5,Number(s.sy[1])||1.5));s.sy=null}}
+function coOver(m){const win=m&&m.win,sc=G.score,lv=G.level;if(CO.host)nSend({t:"cov",win:win?1:0});CO.on=false;G.mode="normal";net.meReady=net.themReady=false;
+  if(win){[784,988,1175,1568].forEach((f,i)=>setTimeout(()=>tn(f,.18,"square",.045),i*90))}
+  nLobby((win?"RAID COMPLETE":CO.raid?"THE RAID FAILED":"CO-OP RUN OVER")+"<br>SCORE "+sc+"  //  LEVEL "+lv+(net.live?"<br>READY UP TO GO AGAIN.":""),{ready:net.live})}
+function coTick(){if(CO.on&&!CO.host&&!net.live){CO.on=false;G.mode="normal"}}
+
+/* ---------- GHOST RACE: the daily run records your paddle; the World Board #1's recording plays back as a faint outline ---------- */
+const GH={rec:null,play:null,i:0};
+const b64e=u=>{let s="";for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)},b64d=s=>{try{const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}catch(e){return null}};
+function ghSet(g,src){if(!g||typeof g.p!=="string"||!Array.isArray(g.sc))return;const p=b64d(g.p);if(!p||p.length<20)return;if(GH.play&&GH.play.s>=(g.s|0))return;GH.play={p,sc:g.sc.slice(0,2000).map(v=>Number(v)|0),n:gClean(g.n)||"GHOST",s:g.s|0,src}}
+function ghStart(mode){GH.rec=null;GH.play=null;GH.i=0;if(mode!=="daily")return;GH.rec={p:[],sc:[]};const day=gDay();
+  try{const l=JSON.parse(localStorage.getItem("hb3_ghost")||"null");if(l&&l.d===day)ghSet(Object.assign({n:"YOUR BEST"},l),"you")}catch(e){}
+  fetch(gAPI()+"?ghost="+encodeURIComponent("daily-"+day)).then(r=>r.json()).then(d=>{if(d&&d.g&&G.mode==="daily"){GH.play=null;ghSet({p:d.g.p,sc:d.g.sc,n:d.n,s:d.s},"world")}}).catch(()=>{})}
+function ghTick(){if(G.mode!=="daily"||!GH.rec||G.state==="menu"||G.state==="over")return;GH.i++;if(GH.rec.p.length<24000&&GH.i%3===0)GH.rec.p.push(Math.round(pad.x/BW*255),Math.round(pad.y/BH*255));if(GH.i%30===0&&GH.rec.sc.length<2000)GH.rec.sc.push(G.score)}
+function ghEnd(){if(G.mode!=="daily"||G.test||!GH.rec||GH.rec.p.length<40)return;const g={d:gDay(),s:G.score,p:b64e(Uint8Array.from(GH.rec.p)),sc:GH.rec.sc};GH.rec=null;
+  try{const l=JSON.parse(localStorage.getItem("hb3_ghost")||"null");if(!l||l.d!==g.d||g.s>l.s)localStorage.setItem("hb3_ghost",JSON.stringify(g))}catch(e){}
+  if(RUN.boardP)RUN.boardP.then(d=>{if(d&&d.you&&d.you.rank===1&&d.you.s===g.s)gPost({op:"ghost",b:"daily-"+g.d,g:{p:g.p,sc:g.sc}}).catch(()=>{})}).catch(()=>{})}
+function drawGhost(t){const g=GH.play;if(!g||G.mode!=="daily"||G.state==="menu"||G.state==="over")return;const f=GH.i/3,i=Math.floor(f),n=g.p.length/2;if(i+1>=n)return;const k=f-i,x=(g.p[i*2]+(g.p[i*2+2]-g.p[i*2])*k)/255*BW,y=(g.p[i*2+1]+(g.p[i*2+3]-g.p[i*2+1])*k)/255*BH,
+    a=P(x-PW/2,y-PH/2,0),b=P(x+PW/2,y+PH/2,0);ctx.save();ctx.strokeStyle="rgba(255,255,255,.3)";ctx.setLineDash([6,5]);ctx.lineWidth=1.5;ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);ctx.setLineDash([]);
+  ctx.font="bold 10px 'Courier New',monospace";ctx.fillStyle="rgba(255,255,255,.55)";ctx.textAlign="center";const sc=g.sc[Math.min(g.sc.length-1,Math.floor(GH.i/30))]||0,d=G.score-sc;
+  ctx.fillText("GHOST  "+g.n+"  "+sc+"  ("+(d>=0?"+":"")+d+")",(a[0]+b[0])/2,a[1]-5);ctx.restore()}
+
+/* ---------- GRUDGE MATCH: a rival who has ended you 3 times calls you out. First to 5. Win and you take their colours ---------- */
+const TROPH=(()=>{try{return JSON.parse(localStorage.getItem("hb3_trophies")||"[]")||[]}catch(e){return[]}})();
+const hueRGB=h=>{const f=n=>{const k=(n+h/30)%12;return Math.round(255*(.6-.4*Math.max(-1,Math.min(k-3,9-k,1))))};return f(0)+","+f(8)+","+f(4)};
+const rgbHex=s=>"#"+s.split(",").map(v=>(+v).toString(16).padStart(2,"0")).join("");
+function trophyAdd(t,i){COS.tint.push({id:"tr"+i,n:String(t.n).toUpperCase().slice(0,16)+" SCALP",rgb:t.rgb,col:rgbHex(t.rgb)})}
+TROPH.forEach(trophyAdd);
+const grudgeTarget=()=>HK.filter(h=>h.w>=3&&!h.g).sort((a,b)=>b.w-a.w)[0]||null;
+const GRUDGE_LINES=["REMEMBER ME?","I OWN YOU","SAME RESULT AS LAST TIME","YOU CAME BACK FOR MORE","I KEEP A LIST. YOU'RE ON IT THREE TIMES","THIS IS PERSONAL NOW","I'LL TAKE YOUR NAME OFF THE BOARD","CRY ABOUT IT","YOU STILL HOLD THE PADDLE WRONG"];
+function grudgeUI(){const h=grudgeTarget(),b=g$("mGrudge"),t=g$("mGrudgeT");b.classList.toggle("hidden",!h);t.classList.toggle("hidden",!h);if(h){b.textContent="GRUDGE: "+String(h.n).toUpperCase().slice(0,14);t.textContent=String(h.n)+" HAS ENDED YOU "+h.w+" TIMES AND IS CALLING YOU OUT. FIRST TO 5. WIN AND YOU TAKE THEIR COLOURS."}}
+function startGrudge(){const h=grudgeTarget();if(!h)return;initAudio();hideAll();G.paused=false;newGame("grudge");G.level=9;G.matrixA=1;G.pl=5;G.el=5;G.elMax=5;G.hk=h;G.aiName=h.n;G.aiRival=h.w;G.tagFade=0;G.tagGo=false;
+  G.grudge={h,rgb:hueRGB(strHash(h.n)%360),sayT:3};droneOn();say("GRUDGE MATCH  //  FIRST TO 5",3)}
+function grudgeTick(dt){const g=G.grudge;if(G.mode!=="grudge"||!g||G.state!=="play")return;g.sayT-=dt;if(g.sayT<=0){g.sayT=7+Math.random()*6;aiSay(pick(GRUDGE_LINES),rgbHex(g.rgb))}}
+function grudgeWin(){const g=G.grudge;if(!g)return;g.h.g=1;g.h.l=(g.h.l||0)+1;hkSave();ach("rival3");G.bossWon=true;G.score+=3000;const t={n:g.h.n,rgb:g.rgb};TROPH.push(t);try{localStorage.setItem("hb3_trophies",JSON.stringify(TROPH))}catch(e){}trophyAdd(t,TROPH.length-1);
+  popup("YOU TOOK "+String(g.h.n).toUpperCase()+"'S COLOURS  (NEW TINT)","#ffb000");[784,988,1175,1568].forEach((f,i)=>setTimeout(()=>tn(f,.18,"square",.045),i*90))}
+const AIC=()=>G.mode==="grudge"&&G.grudge?[rgbHex(G.grudge.rgb),G.grudge.rgb]:["#ff4455","255,68,85"];
+
+g$("mCoop").onclick=()=>{initAudio();nOpen(null,"coop")};g$("mRaid15").onclick=()=>{initAudio();nOpen(null,"raid15")};g$("mRaid40").onclick=()=>{initAudio();nOpen(null,"raid40")};g$("mKoth").onclick=()=>{initAudio();nOpen(null,"koth")};
+g$("mGrudge").onclick=startGrudge;g$("bModes").addEventListener("click",grudgeUI);
+g$("olReady").onclick=()=>{net.meReady=true;nSend({t:"ready"});nLobby("WAITING FOR THE OTHER PLAYER TO READY UP...");nMaybe()};
+g$("olGo").onclick=()=>{const c=g$("olIn").value.toUpperCase().replace(/[^A-Z0-9]/g,"");if(c.length===5)nOpen(c,net.kind==="koth"?"1v1":net.kind);else g$("olStatus").innerHTML="CODES ARE 5 LETTERS / NUMBERS."};
+
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
 function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}musStart();if(MUS.on&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}}
-function showMenu(){G.paused=false;if(G.mode==="online"&&typeof nClose==="function"){nClose();G.mode="normal"}musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
+function showMenu(){G.paused=false;if(CO.on||net.ws){nClose();CO.on=false;if(G.mode==="coop")G.mode="normal"}if(G.mode==="online"&&typeof nClose==="function"){nClose();G.mode="normal"}musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
 const OVS=["menu","cust","achs","modes","lb","over","hkb","pause","olobby","wb"];
 function hideAll(){for(const id of OVS)$(id).classList.add("hidden")}
 function startMode(m){initAudio();G.paused=false;hideAll();newGame(m);droneOn();if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
@@ -1782,19 +1934,19 @@ $("ovAgain").onclick=()=>startMode(G.mode||"normal");$("ovMenu").onclick=()=>sho
 let musWas=false;
 function musPauseRestore(){try{if(MUS.el&&musWas){MUS.el.play()}}catch(e){}musWas=false}
 const inRun=()=>G.state!=="menu"&&G.state!=="over"&&$("over").classList.contains("hidden");
-function pauseOpen(){if(!inRun()||G.paused)return;$("pRestart").classList.toggle("hidden",G.mode==="online");G.paused=G.mode!=="online";try{musWas=!!(MUS.el&&!MUS.el.paused);if(musWas)MUS.el.pause()}catch(e){}$("pause").classList.remove("hidden")}
+function pauseOpen(){if(!inRun()||G.paused)return;$("pRestart").classList.toggle("hidden",G.mode==="online"||CO.on);G.paused=G.mode!=="online"&&!CO.on;try{musWas=!!(MUS.el&&!MUS.el.paused);if(musWas)MUS.el.pause()}catch(e){}$("pause").classList.remove("hidden")}
 function pauseClose(){if(!G.paused&&$("pause").classList.contains("hidden"))return;G.paused=false;$("pause").classList.add("hidden");last=performance.now();acc=0;musPauseRestore()}
 function restartRun(){$("pause").classList.add("hidden");musPauseRestore();startMode(G.mode||"normal")}
 function quitGame(){$("pause").classList.add("hidden");G.paused=false;try{if(window.DISCORD_SDK){window.DISCORD_SDK.close(1000,"Quit");return}}catch(e){}try{window.close()}catch(e){}setTimeout(()=>{showMenu();say("CLOSE THIS WINDOW TO QUIT",3)},150)}
 $("pResume").onclick=pauseClose;$("pRestart").onclick=restartRun;$("pMenu").onclick=()=>{$("pause").classList.add("hidden");showMenu()};$("pQuit").onclick=quitGame;
 addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT"))return;const k=e.key.toLowerCase();
   if(k==="escape"){if(G.paused||!$("pause").classList.contains("hidden"))pauseClose();else if(inRun())pauseOpen();return}
-  if(k==="r"&&G.mode!=="online"&&(inRun()||G.state==="over")){e.preventDefault();restartRun()}});
-addEventListener("blur",()=>{if(inRun()&&G.state==="play"&&G.mode!=="online")pauseOpen()});
-function showOver(){try{gSubmit()}catch(e){}setTimeout(()=>{try{reportOpen()}catch(e){console.warn(e)}},500);const won=!!G.bossWon;if(!won)recordKiller();stInc("games");if(G.mode==="daily")stInc("dailies");
+  if(k==="r"&&G.mode!=="online"&&!CO.on&&(inRun()||G.state==="over")){e.preventDefault();restartRun()}});
+addEventListener("blur",()=>{if(inRun()&&G.state==="play"&&G.mode!=="online"&&!CO.on)pauseOpen()});
+function showOver(){if(CO.on){coOver();return}try{gSubmit()}catch(e){}try{ghEnd()}catch(e){}setTimeout(()=>{try{reportOpen()}catch(e){console.warn(e)}},500);const won=!!G.bossWon;if(!won)recordKiller();stInc("games");if(G.mode==="daily")stInc("dailies");
   if(G.mode==="daily"&&!G.test){let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}if(!db||db.date!==todayKey()||G.score>db.best)try{localStorage.setItem("hb3_daily",JSON.stringify({date:todayKey(),best:Math.max(G.score,db&&db.date===todayKey()?db.best:0)}))}catch(e){}}
-  const rank=G.test?0:lbAdd(G.mode,{s:G.score,l:G.level,d:new Date().toISOString().slice(0,10),k:won?"KILLED THE WARDEN":G.aiName?"ENDED BY "+G.aiName:""});stSave();
-  $("ovT").textContent=won?"THE WARDEN FALLS":"GAME OVER";$("ovT").style.color=won?"#ffb000":"#ff4455";
+  const rank=G.test?0:lbAdd(G.mode,{s:G.score,l:G.level,d:new Date().toISOString().slice(0,10),k:won?(G.mode==="grudge"?"TOOK "+G.aiName+"'S COLOURS":"KILLED THE WARDEN"):G.aiName?"ENDED BY "+G.aiName:""});stSave();
+  $("ovT").textContent=won?(G.mode==="grudge"?"GRUDGE SETTLED":"THE FACE FALLS"):"GAME OVER";$("ovT").style.color=won?"#ffb000":"#ff4455";
   $("ovS").textContent=MODE_NAME[G.mode]+"  //  SCORE "+G.score+"  //  "+(G.mode==="endless"?"DEPTH ":"LEVEL ")+G.level+(rank?"  //  #"+rank+" ON YOUR BOARD":"")+(G.test?"  //  TEST RUN (NOT RECORDED)":"");
   $("ovK").textContent=won?"":G.aiName?"ENDED BY "+G.aiName+(G.hk&&G.hk.w?"  //  IT HAS ENDED YOU "+G.hk.w+"x  //  NOW #"+(boardRanked().findIndex(e=>e.h===G.hk)+1)+" ON THE THREAT BOARD":""):"";
   $("profO").innerHTML=profHTML(G.prevR);$("over").classList.remove("hidden")}
@@ -1939,10 +2091,10 @@ function distTick(dt){const L=G.state==="menu"?0:(G.zone==="face"||G.zone==="hel
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const SCR="ｱｲｳｴｵｶｷ01#%&@$?/\\|";
 function corrupt(txt,k){if(k<=0)return txt;let o="";for(const ch of txt)o+=ch!==" "&&Math.random()<k?SCR[Math.floor(Math.random()*SCR.length)]:ch;return o}
-function scoreText(){if(G.mode==="online")return "YOU "+net.me+"  -  "+net.them+" OPP";const L=G.level,base="SCORE: "+G.score;if(L<7||!G.hg)return corrupt(base,L>=7?Math.min(.06,.004*(L-6)):0);
+function scoreText(){{const x=nHud(0);if(x)return x}if(G.mode==="online")return "YOU "+net.me+"  -  "+net.them+" OPP";const L=G.level,base="SCORE: "+G.score;if(L<7||!G.hg)return corrupt(base,L>=7?Math.min(.06,.004*(L-6)):0);
   const h=G.hg,inT=.45,outT=.45;let k=0;if(h.t<inT)k=1-h.t/inT;else if(h.t>h.d-outT)k=(h.t-(h.d-outT))/outT;
   return k>.5?corrupt(base,k):corrupt(h.line,k)}
-function levelText(){if(G.mode==="online")return "FIRST TO "+NET_WIN+(net.live?"  //  PING "+Math.round(net.rtt):"");const L=G.level;if(L<15)return "LEVEL: "+L;
+function levelText(){{const x=nHud(1);if(x)return x}if(G.mode==="online")return "FIRST TO "+NET_WIN+(net.live?"  //  PING "+Math.round(net.rtt):"");const L=G.level;if(L<15)return "LEVEL: "+L;
   if(G.lvG&&DS.T<G.lvG.u)return G.lvG.t;if(Math.random()<.003*(L-14))G.lvG={t:pick(["LEVEL: ??","LEVEL: YOU","LEVEL: "+(L*7%97),"LEVEL: \u221e","LEVEL: STILL HERE"]),u:DS.T+1.4};return "LEVEL: "+L}
 function drawWhisper(){const w=G.wh;if(!w)return;const p=P(w.x,w.y,w.z),a=Math.sin(Math.min(1,w.t/w.d)*Math.PI)*.55;
   ctx.save();ctx.font="italic "+Math.max(9,Math.round(22*p[2]*view.s/3.2/G.sc))+"px 'Courier New',monospace";ctx.textAlign="center";ctx.fillStyle="rgba(255,68,85,"+a+")";ctx.shadowColor="#ff2244";ctx.shadowBlur=10;ctx.fillText(w.line,p[0],p[1]);ctx.restore()}
@@ -2041,9 +2193,9 @@ function draw(t,dt){
   if(DS.chroma){ctx.save();ctx.globalAlpha=.35;ctx.translate(DS.chroma,0);drawTunnel("255,40,70",1);ctx.translate(-2*DS.chroma,0);drawTunnel("60,120,255",1);ctx.restore()}
   if(G.zone!=="face"){drawTunnel();drawMatrix(dt)}if(G.zone==="hell")drawHellCourt();drawShards(dt);drawDebris(dt);bloom();drawWhisper();drawTrail();
   const hide=G.state==="warp"||G.state==="form"||G.state==="hyper"||G.state==="fold"||G.state==="faceintro"||G.state==="hwin"||(G.after==="warp"||G.after==="form"||G.after==="hyper"||G.after==="fold"||G.after==="faceintro")&&G.state==="wait";
-  if(G.state!=="menu"){if(!hide&&FACE.on)drawFaceBoss(t);if(!hide&&CYL.on)drawCylinder(t);if(!hide&&!CYL.on&&!FACE.on){drawPaddle(ai,DEPTH,"#ff4455","255,68,85",t);if(G.twins)drawPaddle(ai2,DEPTH,"#ff4455","255,68,85",t)}
+  if(G.state!=="menu"){if(!hide&&FACE.on)drawFaceBoss(t);if(!hide&&CYL.on)drawCylinder(t);if(!hide&&!CYL.on&&!FACE.on){drawPaddle(ai,DEPTH,AIC()[0],AIC()[1],t);if(G.twins)drawPaddle(ai2,DEPTH,"#ff4455","255,68,85",t)}
     if(!(hide&&(G.state==="warp"||G.state==="form"||G.state==="hyper"||G.state==="fold"||G.state==="faceintro"||G.state==="hwin"||G.blown)))drawBall(t)}
-  if(G.state!=="menu"){drawAiSay(t);drawPaddle(pad,0,TINT().col,TINT().rgb,t);drawNameTag(t)}   // name tag on top so your paddle never hides it
+  if(G.state!=="menu"){drawAiSay(t);if(CO.on&&net.live)drawPaddle(pad2,0,"#33d6ff","51,214,255",t);drawGhost(t);drawPaddle(pad,0,TINT().col,TINT().rgb,t);drawNameTag(t)}   // name tag on top so your paddle never hides it
   rollEnd();drawTwist();pad.hlT=Math.max(0,pad.hlT-dt);ai.hlT=Math.max(0,ai.hlT-dt);drawVignette(W,H);drawHellChrome(W,H);drawCRT(W,H);drawDescent(W,H,dt);
   const L=view.ox,R=view.ox+BW*view.s,T=view.oy,B=view.oy+BH*view.s;
   ledText(scoreText(),L,T-30,16,G.hg?"#ff4455":"#33ff77");ledText(G.mode==="endless"?levelText().replace("LEVEL","DEPTH"):G.mode==="daily"?"DAILY  "+levelText():levelText(),R,T-30,16,"#33ff77","right");
@@ -2060,12 +2212,12 @@ let acc=0,last=performance.now();
 function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(G.paused){draw(0,0);requestAnimationFrame(loop);return}acc+=dt;
   while(acc>=STEP){step();acc-=STEP;if(G.state==="wait"){G.waitT-=STEP;if(G.waitT<=0)afterWait()}}
   if(G.ripple){G.ripple.t+=dt;if(G.ripple.t>RT)G.ripple=null}
-  trickTick(dt);evTick(dt);qTick(dt);zTick(dt);nTick();rTick();rollTick(dt);cylTick(dt);
+  trickTick(dt);evTick(dt);qTick(dt);zTick(dt);nTick();rTick();coTick();grudgeTick(dt);rollTick(dt);cylTick(dt);
   if(G.zone==="cyber"&&G.state!=="hyper")G.hyCam=(G.hyCam||0)+DEPTH*.5*dt;
   if(G.state==="hyper"){G.hyT+=dt;const ht=G.hyT;G.hyCam=(G.hyCam||0)+DEPTH*(ht<3?2.5:1)*dt;if(ht<2.8)G.cam+=Math.min(1,ht/.8)*90*dt;else{if(G.camT===undefined)G.camT=Math.ceil(G.cam/(DEPTH/10))*(DEPTH/10)+DEPTH/5;G.cam+=(G.camT-G.cam)*Math.min(1,dt*3.5)}
     if(ht>=3.7){G.cam=0;G.camT=undefined;healPaddle();G.level++;G.el=3;G.zone="cyber";say("LEVEL "+G.level+"  //  HYPER LANE  //  CYBER NET",3);startLevel()}}
   if(G.state==="play"){stInc("time",dt);if(G.level>=10)stInc("deep",dt);if(G.matrixA>0)stInc("mtime",dt)}
-  if(!G.test&&G.state!=="menu"&&G.level>(ST.maxL||0))ST.maxL=G.level;
+  if(!G.test&&G.state!=="menu"&&G.mode!=="coop"&&G.mode!=="grudge"&&G.mode!=="online"&&G.level>(ST.maxL||0))ST.maxL=G.level;
   if(G.tagGo)G.tagFade=Math.min(1,(G.tagFade||0)+dt*.8);
   if(G.state==="form"){G.formT+=dt;G.oceanA=Math.min(1,Math.max(0,(G.formT-1.2)/3));if(G.formT>=FORM_END){G.blown=false;G.broken=false;G.oceanA=1;healPaddle();G.level++;G.el=3;say("LEVEL "+G.level+"  //  THE OCEAN",2.8);startLevel()}}
   droneTick(dt);distTick(dt);themeApply();achTick2();musTick(dt);aiTick(dt);codeTick(dt);achCheck();edgeTick(dt);

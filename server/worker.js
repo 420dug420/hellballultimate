@@ -130,6 +130,8 @@ export class Board {
         const rec = (await this.s.get("q:" + prof)) || null;
         return lbJSON({ n: rec ? rec.n : "PLAYER", p: rec ? rec.p : null });
       }
+      const gh = u.searchParams.get("ghost") || "";               // the #1 player's recorded paddle for that board (daily ghost race)
+      if (gh) { if (!LB_BOARD.test(gh)) return lbJSON({ error: "bad board" }, 400); return lbJSON((await this.s.get("g:" + gh)) || { g: null }); }
       const b = u.searchParams.get("b") || "", pid = u.searchParams.get("pid") || "";
       if (!LB_BOARD.test(b)) return lbJSON({ error: "bad board" }, 400);
       return lbJSON(await this.view(b, LB_PID.test(pid) ? pid : ""));
@@ -143,6 +145,14 @@ export class Board {
       if (!m.save || typeof m.save !== "object" || !m.save.seed) return lbJSON({ error: "bad save" }, 400);
       if (JSON.stringify(m.save).length > 200000) return lbJSON({ error: "save too big" }, 413);
       await this.s.put("h:" + m.pid, { t: Date.now(), save: m.save });
+      return lbJSON({ ok: true });
+    }
+    if (m.op === "ghost") {                                      // only the current #1 on that board may store the ghost
+      if (!LB_BOARD.test(m.b || "") || !m.g || typeof m.g.p !== "string" || !Array.isArray(m.g.sc)) return lbJSON({ error: "bad ghost" }, 400);
+      if (m.g.p.length > 70000 || !/^[A-Za-z0-9+/=]*$/.test(m.g.p)) return lbJSON({ error: "bad ghost" }, 413);
+      const top = ((await this.s.get("b:" + m.b)) || [])[0];
+      if (!top || top.p !== m.pid) return lbJSON({ ok: false });
+      await this.s.put("g:" + m.b, { n: name || (await this.s.get("n:" + m.pid)) || "PLAYER", s: top.s, g: { p: m.g.p, sc: m.g.sc.slice(0, 2000).map(v => Math.floor(Number(v)) || 0) } });
       return lbJSON({ ok: true });
     }
     if (m.op === "hwload") { const r = await this.s.get("h:" + m.pid); return lbJSON({ save: r ? r.save : null, t: r ? r.t : 0 }); }
