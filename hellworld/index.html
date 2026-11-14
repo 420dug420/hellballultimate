@@ -120,7 +120,7 @@ footer{display:flex;align-items:center;gap:8px;border:2px solid var(--gd);paddin
 /* HELLBALL ULTIMATE link: one account for both games; the save is kept on the server and pulled when it is newer than this device's copy */
 window.HBU=(()=>{const inDc=/[?&]frame_id=/.test(location.search),API=inDc?"/.proxy/ws/lb/hbu":"https://hellball-ultimate.420dirtydoug420.workers.dev/ws/lb/hbu",KEY="hellworld_v1";
   const g=k=>{try{return localStorage.getItem(k)}catch(e){return null}},st=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
-  const h=location.hash.match(/pid=([a-z0-9]{8,24})/),back=/back=1/.test(location.hash);if(h){st("hb3_pid",h[1]);try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
+  const embed=window.parent!==window&&/[?&]hbe=1/.test(location.search);const h=location.hash.match(/pid=([a-z0-9]{8,24})/),back=/back=1/.test(location.hash);if(h){st("hb3_pid",h[1]);try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
   let pid=g("hb3_pid");if(!/^[a-z0-9]{8,24}$/.test(pid||"")){pid=Array.from({length:12},()=>"abcdefghijklmnopqrstuvwxyz0123456789"[Math.random()*36|0]).join("");st("hb3_pid",pid)}
   const post=o=>fetch(API,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(Object.assign({pid},o))}).then(r=>r.json());
   const api={block:false,pid};let last=0,timer=null;
@@ -128,18 +128,26 @@ window.HBU=(()=>{const inDc=/[?&]frame_id=/.test(location.search),API=inDc?"/.pr
   api.push=()=>{clearTimeout(timer);timer=setTimeout(send,Math.max(1500,15000-(Date.now()-last)))};
   let leaving=false;const home=()=>{const p=location.pathname.replace(/hellworld\/(index\.html)?$/,"");return (inDc?"/index.html":p+"index.html")+location.search};
   api.leave=()=>{if(leaving)return;leaving=true;document.querySelectorAll(".hbuBack").forEach(b=>b.textContent="SAVING...");clearTimeout(timer);try{if(typeof save==="function")save()}catch(e){}clearTimeout(timer);
-    const go=()=>{if(back&&history.length>1){history.back();setTimeout(()=>{location.href=home()},900)}else location.href=home()};Promise.race([send(),new Promise(r=>setTimeout(r,1200))]).then(go,go)};
+    const go=()=>{if(embed){try{parent.postMessage({hbu:"leave"},"*")}catch(e){}setTimeout(()=>{leaving=false;document.querySelectorAll(".hbuBack").forEach(b=>b.innerHTML="&#9668; HELLBALL")},2500);return}if(back&&history.length>1){history.back();setTimeout(()=>{location.href=home()},900)}else location.href=home()};Promise.race([send(),new Promise(r=>setTimeout(r,1200))]).then(go,go)};
+  api.esc=on=>{const m=document.getElementById("hbuEsc");if(m)m.style.display=on?"flex":"none"};
+  addEventListener("keydown",e=>{if(e.key!=="Escape")return;const m=document.getElementById("hbuEsc");if(m&&m.style.display==="flex"){api.esc(false);e.stopImmediatePropagation();return}
+    const n=document.querySelectorAll(".hidden").length,on=document.querySelectorAll(".on").length;setTimeout(()=>{if(document.querySelectorAll(".hidden").length===n&&document.querySelectorAll(".on").length===on)api.esc(true)},0)},true);
   let synced=false;try{synced=sessionStorage.getItem("hbuSync")==="1"}catch(e){}
   if(!synced||h)post({op:"hwload"}).then(d=>{try{sessionStorage.setItem("hbuSync","1")}catch(e){}if(!d||!d.save||!d.save.seed)return;let loc=null;try{loc=JSON.parse(g(KEY)||"null")}catch(e){}
     if(!loc||!loc.seed||(d.save._ts||0)>(loc._ts||0)+3000){api.block=true;st(KEY,JSON.stringify(d.save));location.reload()}}).catch(()=>{});
   return api})();
 </script>
+<div id="hbuEsc" style="display:none;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.72);align-items:center;justify-content:center;flex-direction:column;gap:12px;font:bold 13px 'Courier New',monospace;letter-spacing:3px;color:#33ff77">
+<div style="color:#ff4455;font-size:18px;letter-spacing:6px">PAUSED</div>
+<button onclick="HBU.esc(false)" style="width:240px;background:#000;border:1px solid #33ff77;color:#33ff77;font:inherit;padding:9px;cursor:pointer">RESUME</button>
+<button class="hbuBack" onclick="HBU.leave()" style="width:240px;background:#000;border:1px solid #ff4455;color:#ff4455;font:inherit;padding:9px;cursor:pointer">&#9668; HELLBALL</button>
+<div style="font-size:10px;color:#119944">ESC TO CLOSE</div></div>
 <button class="hbuBack" id="hbuFix" onclick="HBU.leave()" style="display:none;position:fixed;left:14px;top:14px;z-index:9999;background:#000;border:1px solid #ff4455;color:#ff4455;font:bold 11px 'Courier New',monospace;letter-spacing:2px;padding:5px 9px;cursor:pointer">&#9668; HELLBALL</button>
 <!--DISCORD--><script src="../discord-sdk.js"></script>
 <script>
 /* Discord Activity handshake: only runs inside Discord (the iframe URL carries frame_id). App ID comes from <app-id>.discordsays.com */
 (async()=>{try{
-  if(!/[?&]frame_id=/.test(location.search)||!window.DiscordSDK)return;
+  if(!/[?&]frame_id=/.test(location.search)||!window.DiscordSDK||/[?&]hbe=1/.test(location.search))return;
   const id=location.hostname.split(".")[0];
   const sdk=new DiscordSDK(id);await sdk.ready();
 }catch(e){console.warn("Discord SDK:",e)}})();
