@@ -20,3 +20,6 @@ You get `https://hellball-ultimate.<your-account>.workers.dev`.
 - Keep the file named `index.html` - Discord opens the root of the URL mapping.
 - Saves (scores, achievements, cosmetics) live per Discord app, separate from the .exe and browser copies.
 - The HellWORLD save from another activity can't be read here; import your hellbud by seed in CUSTOMIZE.
+
+## HellWORLD
+`hellworld/` is HellWORLD, launched from the HELLWORLD button on the main menu. Both games share one account and the hellbud save is kept on the server (`server/`).

@@ -139,6 +139,13 @@ export class Board {
     const name = lbName(m.n);
     if (name) await this.s.put("n:" + m.pid, name);
     if (m.op === "name") return lbJSON({ ok: true, n: name });
+    if (m.op === "hwsave") {                                     // HELLWORLD: the player's whole save, so the bud follows them between games and devices
+      if (!m.save || typeof m.save !== "object" || !m.save.seed) return lbJSON({ error: "bad save" }, 400);
+      if (JSON.stringify(m.save).length > 200000) return lbJSON({ error: "save too big" }, 413);
+      await this.s.put("h:" + m.pid, { t: Date.now(), save: m.save });
+      return lbJSON({ ok: true });
+    }
+    if (m.op === "hwload") { const r = await this.s.get("h:" + m.pid); return lbJSON({ save: r ? r.save : null, t: r ? r.t : 0 }); }
     if (m.op === "prof") {                                       // HELLBALL ULTIMATE: store the stat sheet (numbers and short strings only, capped)
       const p = m.p && typeof m.p === "object" ? m.p : null;
       if (!p) return lbJSON({ error: "bad profile" }, 400);

@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; font-src 'self' data:; connect-src 'self' https://*.workers.dev wss://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.21</title>
+<title>HELLBALL ULTIMATE v0.22</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -49,7 +49,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.21 // BUILD 20261114.0407 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.22 // BUILD 20261114.0423 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="modes" class="ov hidden"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
@@ -79,6 +79,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <div class="dim" id="cosHint" style="color:#ffb000;min-height:14px">COSMETICS ARE LOOKS ONLY. UNLOCK MORE WITH ACHIEVEMENTS.</div>
  <div class="cl">SUBJECT PROFILE</div><div id="profC" class="pf"></div>
  <div class="cl">YOUR NAME</div><div class="row"><input id="nmIn" class="sb" maxlength="12" spellcheck="false" autocomplete="off" style="width:200px;text-transform:uppercase;letter-spacing:2px"><button class="sb" id="nmSave">SAVE</button></div>
+ <div class="cl">ACCOUNT  //  SAME PLAYER ON ANOTHER DEVICE</div><div class="row"><button class="sb" id="acShow">SHOW MY ACCOUNT CODE</button><input id="acCode" class="sb hidden" readonly style="width:230px"></div><div class="row"><input id="acIn" class="sb" placeholder="PASTE A CODE FROM ANOTHER DEVICE" maxlength="24" autocomplete="off" style="width:300px"><button class="sb" id="acLink">LINK</button></div><div class="dim" id="acMsg" style="max-width:600px;text-align:center">YOUR CODE IS YOUR ACCOUNT. ANYONE WHO HAS IT CAN PLAY AS YOU, SO KEEP IT PRIVATE. LINKING REPLACES THIS DEVICE'S ACCOUNT.</div>
  <div class="cl">HELLBUD  //  FROM HELLWORLD</div><div class="row"><canvas id="budPrev" width="120" height="120" style="width:90px;height:90px;border:1px solid #114422"></canvas><input id="budSeed" class="sb" placeholder="SEED  E.G. YUSP-YKZD-KJ6M" style="width:220px"><input id="budName" class="sb" placeholder="NAME" style="width:110px"><button class="sb" id="budSet">IMPORT</button></div><div class="dim" id="budInfo" style="max-width:600px;text-align:center"></div>
  <button class="mb" id="bBack">DONE</button><input type="file" id="file" accept="image/png,image/*" class="hidden"></div>
 <script>
@@ -1741,6 +1742,28 @@ function drawFX2D(cx,cy,r,c){c=c||ctx;fxStamp();const gl=Math.random()<.06,q=rot
     cell(r*.05,"rgba(255,34,85,.55)");cell(-r*.05,"rgba(34,136,255,.55)");cell(0,"rgba(190,255,205,"+Math.min(1,cs*1.6)+")");c.restore()}
   c.restore();if(gl){c.fillStyle="rgba(255,40,100,.5)";c.fillRect(cx-r,cy+(Math.random()-.5)*r*1.5,r*2,Math.max(1,r*.06))}c.restore()}
 
+/* ---------- v0.22 HELLWORLD link: one account for both games, the bud's save on the server, the bud idling in a corner panel ---------- */
+function budLoad(){BUD.g=null;BUD.s=null;const tryKey=(k,src)=>{if(BUD.g)return;try{const s=JSON.parse(localStorage.getItem(k)||"null");if(s&&s.seed){BUD.seed=hclean(s.seed);BUD.name=String(s.name||"HELLBUD").toUpperCase().slice(0,20);BUD.src=src;BUD.g=budGenome(BUD.seed);BUD.s=s.level!==undefined?s:null}}catch(e){}};
+  let a=null,b=null;try{a=JSON.parse(localStorage.getItem("hellworld_v1")||"null");b=JSON.parse(localStorage.getItem("hb3_hwcache")||"null")}catch(e){}
+  if(a&&b&&(b._ts||0)>(a._ts||0)){tryKey("hb3_hwcache","HELLWORLD SAVE")}tryKey("hellworld_v1","HELLWORLD SAVE");tryKey("hb3_hwcache","HELLWORLD SAVE");tryKey("hellpet_v1","HELLWORLD SAVE");tryKey("hb3_bud","SEED")}
+function budPull(){gPost({op:"hwload"}).then(d=>{if(d&&d.save&&d.save.seed){try{localStorage.setItem("hb3_hwcache",JSON.stringify(d.save))}catch(e){}budLoad()}}).catch(()=>{})}
+setTimeout(budPull,1500);
+function drawBudPanel(R,B){if(!BUD.g||G.state==="menu"||G.state==="over"||G.zone==="face"||G.zone==="hell")return;const w=150,h=92,x=R-w-10,y=B-h-10,t=DS.T,s=BUD.s,g=BUD.g,col=a=>budCol(g,a);
+  ctx.save();ctx.globalAlpha=.8;ctx.fillStyle="rgba(0,6,3,.72)";ctx.fillRect(x,y,w,h);ctx.strokeStyle=col(.7);ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,w,h);
+  ctx.strokeStyle=col(.18);ctx.beginPath();for(let i=0;i<=4;i++){const f=i/4;ctx.moveTo(x+6+f*26,y+h-8-f*9);ctx.lineTo(x+32+f*26,y+h-17+f*9);ctx.moveTo(x+6+f*26,y+h-8+f*9-9);ctx.lineTo(x+32+f*26,y+h-26+f*9+9)}ctx.stroke();
+  ctx.font="bold 9px 'Courier New',monospace";ctx.textAlign="left";ctx.fillStyle=col(1);ctx.fillText(BUD.name.slice(0,14),x+6,y+12);ctx.fillStyle="rgba(255,176,0,.9)";ctx.textAlign="right";ctx.fillText(s?"LV "+(s.level|0):"SEED",x+w-6,y+12);
+  drawBud(ctx,x+32,y+h-10,15,t,BUD);
+  if(s){const bars=[["HP",s.health],["FOOD",s.hunger],["SAN",s.sanity],["JOY",s.happy]];ctx.textAlign="left";bars.forEach(([n,v],i)=>{const by=y+26+i*13,bx=x+70,bw=w-80,k=Math.max(0,Math.min(1,(Number(v)||0)/100));ctx.fillStyle="rgba(51,255,119,.6)";ctx.fillText(n,bx,by+7);
+      ctx.fillStyle="rgba(255,255,255,.08)";ctx.fillRect(bx+28,by,bw-28,7);ctx.fillStyle=k<.25?"rgba(255,68,85,.9)":col(.85);ctx.fillRect(bx+28,by,(bw-28)*k,7)});
+    const m=Math.max(0,(Date.now()-(s.lastTick||s._ts||Date.now()))/6e4);ctx.fillStyle="rgba(51,255,119,.45)";ctx.textAlign="right";ctx.fillText("LAST VISIT "+(m<60?Math.round(m)+"m":m<2880?(m/60).toFixed(1)+"h":Math.round(m/1440)+"d")+" AGO",x+w-6,y+h-5)}
+  else{ctx.fillStyle="rgba(51,255,119,.5)";ctx.textAlign="left";ctx.fillText("VISIT HELLWORLD",x+66,y+40);ctx.fillText("TO RAISE IT",x+66,y+52)}
+  ctx.restore()}
+function openHellworld(){const frag="#pid="+gPid;let u;if(nInDc())u="hellworld/index.html"+location.search;else if(location.protocol==="file:")u="https://420dug420.github.io/hellballultimate/hellworld/index.html"+frag+"&back=1";else u="hellworld/index.html"+frag;
+  try{stSave()}catch(e){}location.href=u}
+g$("bHw").onclick=openHellworld;
+g$("acShow").onclick=()=>{const i=g$("acCode");i.value=gPid;i.classList.toggle("hidden")};
+g$("acLink").onclick=()=>{const v=g$("acIn").value.trim().toLowerCase();if(!/^[a-z0-9]{8,24}$/.test(v)){g$("acMsg").textContent="THAT IS NOT AN ACCOUNT CODE.";return}gStore("hb3_pid",v);try{localStorage.removeItem("hb3_hwcache")}catch(e){}g$("acMsg").textContent="LINKED. RELOADING...";setTimeout(()=>location.reload(),600)};
+
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
 function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}musStart();if(MUS.on&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}}
@@ -2029,7 +2052,7 @@ function draw(t,dt){
   text("BEST: "+G.best+(G.streak>1?"   STREAK x"+G.streak:""),L,B+26,13,"#119944");
   {const pp=P(pad.x,pad.y-PH/2,0),px=Math.max(L+120,Math.min(R-120,pp[0])),py=Math.max(T+80,pp[1]-18);                 // points pop up right above your paddle
    G.pops.forEach((p,i)=>{p.a-=dt;ctx.globalAlpha=Math.max(0,Math.min(1,p.a*2));text(p.t,px,py-(G.pops.length-1-i)*16-(1.4-p.a)*14,12,p.col,"center")});ctx.globalAlpha=1;G.pops=G.pops.filter(p=>p.a>0)}
-  drawTelemetry(L,B,dt);if(G.zone!=="face")drawEdge(W,H,T);drawEventsFront(W,H,DS.T,dt);
+  drawTelemetry(L,B,dt);drawBudPanel(R,B);if(G.zone!=="face")drawEdge(W,H,T);drawEventsFront(W,H,DS.T,dt);
   const mid=(T+B)/2;
   if(G.state==="serve"&&G.msgT<=0)text("PUT YOUR PADDLE ON THE BALL AND CLICK TO SERVE",(L+R)/2,B-12,12,"#119944","center");
   if(G.msgT>0){G.msgT-=dt;ctx.globalAlpha=Math.min(1,G.msgT*2);drawTitle(G.msg,(L+R)/2,T+60,26,G.level>=7?"#ff4455":"#ffb000");ctx.globalAlpha=1}}
