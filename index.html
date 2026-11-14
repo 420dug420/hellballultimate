@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; font-src 'self' data:; connect-src 'self' https://*.workers.dev wss://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.23</title>
+<title>HELLBALL ULTIMATE v0.24</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -49,11 +49,11 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.23 // BUILD 20261114.0444</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.24 // BUILD 20261114.1147</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="modes" class="ov scroll hidden" style="gap:8px"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim">GHOST RACE: THE PADDLE OF THE WORLD #1 PLAYS ALONGSIDE YOU.</div><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
-  <button class="mb" id="mCoop" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">CO-OP CAMPAIGN</button><div class="dim">2 PLAYERS VS THE MACHINE. SHARED LIVES.</div>
+  <button class="mb" id="mCoop" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">CO-OP CAMPAIGN</button><div class="dim">2 PLAYERS, 2 BALLS VS THE MACHINE. SHARED LIVES.</div>
  <div class="row"><button class="mb" id="mRaid15" style="width:230px;font-size:14px;letter-spacing:3px;border-color:#33d6ff;color:#33d6ff">RAID: THE CYLINDER</button><button class="mb" id="mRaid40" style="width:230px;font-size:14px;letter-spacing:3px;border-color:#33d6ff;color:#33d6ff">RAID: THE FACE</button></div><div class="dim">2 PLAYERS VS A BOSS WITH DOUBLE HEALTH.</div>
  <button class="mb" id="mKoth" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">KING OF THE HILL</button><div class="dim">UP TO 4. WINNER STAYS ON. 5 IN A ROW WINS.</div>
  <button class="mb hidden" id="mGrudge" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">GRUDGE MATCH</button><div class="dim hidden" id="mGrudgeT" style="max-width:90vw;text-align:center"></div>
@@ -192,7 +192,7 @@ function stepCore(){
   // AI: chases the ball while it's coming, drifts home while it's leaving
   if(G.mode==="online")nAI();else{const sk=L_SKILL[lv()]*(MOD().aiSlow||1)*(G.mode==="boss"?(G.twins?.85:1.25):1);
   for(const[q,off]of G.twins?[[ai,-38],[ai2,38]]:[[ai,0]]){q.ox=q.x;q.oy=q.y;q.px=q.x;q.py=q.y;
-    if(ball.vz>0){const tg=aiTarget(sk);q.x-=(q.x-(tg[0]+off))/sk;q.y-=(q.y-tg[1])/sk}else{q.x-=(q.x-(WX+off*1.5))/15;q.y-=(q.y-WY)/15}
+    const B2=coAiB2();if(ball.vz>0||B2){const tg=B2?withB2(()=>aiTarget(sk)):aiTarget(sk);q.x-=(q.x-(tg[0]+off))/sk;q.y-=(q.y-tg[1])/sk}else{q.x-=(q.x-(WX+off*1.5))/15;q.y-=(q.y-WY)/15}
     clampP(q);q.vx=q.x-q.px;q.vy=q.y-q.py}}
   ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;spinBall();
   if(G.state!=="play"||ball.stop)return;
@@ -210,7 +210,6 @@ function stepCore(){
   else if(ball.z<0){
     if(G.mode==="online"){if(net.spec){ball.z=0;ball.stop=true}else if(touches(pad)){playerHit(false);nHit(false)}else{ball.stop=true;ball.vz=0;S.miss();if(net.kind==="koth")nSend({t:"kmiss",ep:net.ep});else{nSend({t:"miss"});nPoint("them")}}}
     else if(touches(pad))playerHit(false);
-    else if(CO.on&&CO.host&&net.live&&touches(pad2))coHit(false);
     else{ball.stop=true;ball.vz=0;if(!G.test)G.pl--;S.miss();losePoint();endPoint(false)}}
 }
 function winPoint(){budCheer();if(Math.random()<.35)aiSay(pick(talkTier()>=2?["LUCKY","FUCK","SHIT","FUCKING HELL","THAT DIDN'T COUNT",">|"]:["LUCKY","WHATEVER","THAT DIDN'T COUNT",">|","HMPH","LAG"]));if(G.vol===1){G.score+=15;popup("ACE! +15","#ffb000")}
@@ -304,7 +303,8 @@ cv.addEventListener("pointerdown",e=>{if(G.paused)return;toWorld(e);
   if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}
   if(false){showMenu();return}
   if(G.state==="menu"||G.state==="warp")return;
-  if(G.state==="serve"&&touches(pad)){if(CO.on&&!CO.host){nSend({t:"gsv"});return}G.state="play";playerHit(true);if(G.mode==="online")nHit(true);return}
+  if(CO.on&&!CO.host){if(G.state==="serve"||G.state==="play")nSend({t:"gsv"});return}
+  if(G.state==="serve"&&touches(pad)){G.state="play";playerHit(true);if(G.mode==="online")nHit(true);return}
   press={t:performance.now(),x:e.clientX,y:e.clientY,flip:false,hold:false}});
 addEventListener("pointerup",()=>{if(!press)return;const p=press;press=null;if(p.flip)return;
   if(p.hold){catchSpin();return}
@@ -1807,7 +1807,7 @@ function nMsg(m){if(!m||typeof m.t!=="string")return;
   else if(m.t==="p"){const x=nNum(m.x,0,BW),y=nNum(m.y,0,BH);if(x===null||y===null)return;if(CO.on){CO.gx=x;CO.gy=y}else{net.ox=BW-x;net.oy=y}}
   else if(m.t==="ready"){net.themReady=true;if(!net.meReady)nLobby("THE OTHER PLAYER IS READY.<br>CLICK READY TO START.",{ready:true});nMaybe()}
   else if(m.t==="s"){if(CO.on&&!CO.host)CO.snap=m}
-  else if(m.t==="gsv"){if(CO.on&&CO.host&&G.state==="serve"&&touches(pad2)){G.state="play";coHit(true)}}
+  else if(m.t==="gsv"){b2Serve()}
   else if(m.t==="cov"){if(CO.on&&!CO.host)coOver(m)}
   else if(m.t==="hit"){if(G.mode!=="online"||!["play","oserve","between","serve"].includes(G.state)||!m.b)return;const b=nBall(m.b);if(!b)return;
     Object.assign(ball,{x:BW-b.x,y:b.y,z:DEPTH-b.z,vx:-b.vx,vy:b.vy,vz:-b.vz,cx:-b.cx,cy:b.cy,stop:false});ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;G.state="play";
@@ -1915,6 +1915,46 @@ g$("mCoop").onclick=()=>{initAudio();nOpen(null,"coop")};g$("mRaid15").onclick=(
 g$("mGrudge").onclick=startGrudge;g$("bModes").addEventListener("click",grudgeUI);
 g$("olReady").onclick=()=>{net.meReady=true;nSend({t:"ready"});nLobby("WAITING FOR THE OTHER PLAYER TO READY UP...");nMaybe()};
 g$("olGo").onclick=()=>{const c=g$("olIn").value.toUpperCase().replace(/[^A-Z0-9]/g,"");if(c.length===5)nOpen(c,net.kind==="koth"?"1v1":net.kind);else g$("olStatus").innerHTML="CODES ARE 5 LETTERS / NUMBERS."};
+
+/* ---------- v0.24 CO-OP: TWO BALLS. Each player owns a ball and only their own paddle returns it.
+   The host runs both; the AI chases whichever ball is closest to it. ---------- */
+const ball2={x:WX,y:WY,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,px:WX,py:WY,pz:0,held:true,lastVz:0};
+const BK=["x","y","z","vx","vy","vz","cx","cy","stop","px","py","pz"];
+function withB2(fn){const a={};for(const k of BK){a[k]=ball[k];ball[k]=ball2[k]}try{return fn()}finally{for(const k of BK){ball2[k]=ball[k];ball[k]=a[k]}}}
+const b2Live=()=>CO.on&&(CO.host?net.live:true);
+function coAiB2(){if(!CO.on||!CO.host||ball2.held||ball2.stop||!(ball2.vz>0))return false;return !(G.state==="play"&&!ball.stop&&ball.vz>0)||ball2.z>ball.z}
+function b2Hold(){const x=ball2.x,y=ball2.y,z=ball2.z;Object.assign(ball2,{x:pad2.x,y:pad2.y,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,held:true,px:x,py:y,pz:z})}
+function b2Serve(){if(!CO.on||!CO.host||!net.live||!ball2.held||(G.state!=="serve"&&G.state!=="play"))return;ball2.held=false;Object.assign(ball2,{x:pad2.x,y:pad2.y,z:0,stop:true});withB2(()=>coHit(true))}
+function b2Phys(){if(!net.live||(G.state!=="serve"&&G.state!=="play")){b2Hold();return}if(ball2.held){b2Hold();return}
+  let res=null;withB2(()=>{ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;if(ball.stop)return;
+    ball.vx+=ball.cx;ball.vy+=ball.cy;ball.z+=ball.vz;ball.x+=ball.vx;ball.y-=ball.vy;if(ball.cx)ball.cx/=CURVE_DECAY;if(ball.cy)ball.cy/=CURVE_DECAY;
+    if(G.tube)tubeWalls();else{if(ball.y-BR<0){ball.y=BR;ball.cy/=WALL_SPIN;ball.vy=-ball.vy;S.wall2()}else if(ball.y+BR>BH){ball.y=BH-BR;ball.cy/=WALL_SPIN;ball.vy=-ball.vy;S.wall2()}
+      if(ball.x-BR<0){ball.x=BR;ball.cx/=WALL_SPIN;ball.vx=-ball.vx;S.wall1()}else if(ball.x+BR>BW){ball.x=BW-BR;ball.cx/=WALL_SPIN;ball.vx=-ball.vx;S.wall1()}}
+    if(FACE.on&&!FACE.dead&&ball.vz>0){if(ball.z>=FZ())faceHit()}
+    else if(CYL.on&&ball.vz>0){if(ball.z>=cylZ(ball.x))cylHit()}
+    else if(ball.z>DEPTH){const hA=touches(ai)?ai:null;
+      if(hA){hA.hl=zone(hA);hA.hlT=.35;const cr=impact(hA);ball.z=DEPTH;ball.cx=hA.vx/LC();ball.cy=-hA.vy/LC();ball.vz=-ball.vz;if(!cr)S.eHit()}
+      else{ball.stop=true;ball.vz=0;G.el--;S.miss();winPoint();popup("PARTNER SCORES","#33d6ff");if(G.el<1){endPoint(true);res="end"}else res="hold"}}
+    else if(ball.z<0){if(touches(pad2))coHit(false);
+      else{ball.stop=true;ball.vz=0;G.pl--;S.miss();losePoint();popup("PARTNER MISSED","#ff4455");if(G.pl<1){endPoint(false);res="end"}else res="hold"}}});
+  if(res==="hold")b2Hold();else if(G.state!=="serve"&&G.state!=="play")ball2.held=true}
+function coDrawB2(t){if(!b2Live())return;withB2(()=>drawBall(t))}
+function b2Apply(a){if(!Array.isArray(a))return;const b=a.map(Number);if(!b.every(isFinite))return;
+  if(Math.sign(b[5])!==Math.sign(ball2.lastVz)&&b[5]!==0&&ball2.lastVz!==0)(b[5]>0?S.pHit:S.eHit)();ball2.lastVz=b[5];
+  ball2.px=ball2.x;ball2.py=ball2.y;ball2.pz=ball2.z;if(Math.abs(b[2]-ball2.z)>DEPTH*.5){ball2.px=b[0];ball2.py=b[1];ball2.pz=b[2]}
+  Object.assign(ball2,{x:b[0],y:b[1],z:b[2],vx:b[3],vy:b[4],vz:b[5],cx:b[6],cy:b[7],stop:!!b[8],held:!!b[9]})}
+const _coStart36=coStart;coStart=function(){Object.assign(ball2,{held:true,stop:true,lastVz:0});_coStart36()};
+coHostStep=function(){pad2.ox=pad2.x;pad2.oy=pad2.y;pad2.px=pad2.x;pad2.py=pad2.y;pad2.x+=(CO.gx-pad2.x)*.6;pad2.y+=(CO.gy-pad2.y)*.6;clampP(pad2);pad2.vx=pad2.x-pad2.px;pad2.vy=pad2.y-pad2.py;pad2.hlT=Math.max(0,pad2.hlT-1/30);
+  b2Phys();
+  if(CO.raid&&(G.level>CO.raid||G.state==="hwin")){coOver({win:1});return}
+  if(!net.live)return;const m={t:"s",b:[r2(ball.x),r2(ball.y),r2(ball.z),r2(ball.vx),r2(ball.vy),r2(ball.vz),r2(ball.cx),r2(ball.cy),ball.stop?1:0],a:[r2(ai.x),r2(ai.y)],p:[r2(pad.x),r2(pad.y)],
+    b2:[r2(ball2.x),r2(ball2.y),r2(ball2.z),r2(ball2.vx),r2(ball2.vy),r2(ball2.vz),r2(ball2.cx),r2(ball2.cy),ball2.stop?1:0,ball2.held?1:0],
+    g:[G.level,G.score,G.pl,G.el,G.elMax||3,G.state,G.vol|0,G.streak|0],n:G.aiName||""};
+  if(CYL.on)m.c={r:r2(CYL.rot),d:CYL.dead?1:0,t:CYL.tiles.map(c=>c.map(t=>t.hp).join("")).join(""),m:CYL.tiles.map(c=>c.map(t=>t.mind?1:0).join("")).join("")};
+  if(FACE.on)m.f={e:FACE.eyes.map(e=>[e.hp,r2(e.shut)]),m:r2(FACE.mouth),x:r2(FACE.sx),y:r2(FACE.sy),d:FACE.dead?1:0};
+  const pp=G.pops.filter(p=>!CO.seen.has(p));if(pp.length){pp.forEach(p=>CO.seen.add(p));m.pp=pp.map(p=>[String(p.t).slice(0,60),p.col])}
+  if(G.msg&&(G.msg!==CO.lastMsg||G.msgT>CO.lastMsgT+.2))m.sy=[String(G.msg).slice(0,60),r2(G.msgT)];CO.lastMsg=G.msg;CO.lastMsgT=G.msgT;nSend(m)};
+const _coGuest36=coGuestStep;coGuestStep=function(){const s=CO.snap;_coGuest36();if(s&&s.b2){b2Apply(s.b2);s.b2=null}else{ball2.px=ball2.x;ball2.py=ball2.y;ball2.pz=ball2.z}};
 
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
@@ -2194,7 +2234,7 @@ function draw(t,dt){
   if(G.zone!=="face"){drawTunnel();drawMatrix(dt)}if(G.zone==="hell")drawHellCourt();drawShards(dt);drawDebris(dt);bloom();drawWhisper();drawTrail();
   const hide=G.state==="warp"||G.state==="form"||G.state==="hyper"||G.state==="fold"||G.state==="faceintro"||G.state==="hwin"||(G.after==="warp"||G.after==="form"||G.after==="hyper"||G.after==="fold"||G.after==="faceintro")&&G.state==="wait";
   if(G.state!=="menu"){if(!hide&&FACE.on)drawFaceBoss(t);if(!hide&&CYL.on)drawCylinder(t);if(!hide&&!CYL.on&&!FACE.on){drawPaddle(ai,DEPTH,AIC()[0],AIC()[1],t);if(G.twins)drawPaddle(ai2,DEPTH,"#ff4455","255,68,85",t)}
-    if(!(hide&&(G.state==="warp"||G.state==="form"||G.state==="hyper"||G.state==="fold"||G.state==="faceintro"||G.state==="hwin"||G.blown)))drawBall(t)}
+    if(!(hide&&(G.state==="warp"||G.state==="form"||G.state==="hyper"||G.state==="fold"||G.state==="faceintro"||G.state==="hwin"||G.blown))){drawBall(t);coDrawB2(t)}}
   if(G.state!=="menu"){drawAiSay(t);if(CO.on&&net.live)drawPaddle(pad2,0,"#33d6ff","51,214,255",t);drawGhost(t);drawPaddle(pad,0,TINT().col,TINT().rgb,t);drawNameTag(t)}   // name tag on top so your paddle never hides it
   rollEnd();drawTwist();pad.hlT=Math.max(0,pad.hlT-dt);ai.hlT=Math.max(0,ai.hlT-dt);drawVignette(W,H);drawHellChrome(W,H);drawCRT(W,H);drawDescent(W,H,dt);
   const L=view.ox,R=view.ox+BW*view.s,T=view.oy,B=view.oy+BH*view.s;
