@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.11.1</title>
+<title>HELLBALL ULTIMATE v0.12</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -39,15 +39,15 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.11.1 // BUILD 20261114.0236 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.12 // BUILD 20261114.0238 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="modes" class="ov hidden"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
- <button class="mb" id="mBoss" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">BOSS: THE WARDEN</button><div class="dim">10 HEALTH. IT SPLITS IN TWO AT HALF.</div>
  <button class="mb" id="mOnline" disabled style="opacity:.35;cursor:not-allowed">ONLINE 1V1</button><div class="dim">COMING SOON</div>
  <button class="mb" id="mBack">BACK</button></div>
 <div id="lb" class="ov hidden"><div class="ttl">LOCAL SCORES</div><div class="row" id="lbTabs"></div><div id="lbList" style="width:min(94vw,640px);max-height:58vh;overflow:auto"></div><div class="dim">STORED ON THIS COMPUTER // ONLINE BOARD COMING</div><button class="mb" id="lbBack">BACK</button></div>
 <div id="hkb" class="ov scroll hidden"><div class="ttl" style="color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</div><div class="dim">GLOBAL HACKER RANKING // ☠ = TIMES THEY ENDED YOU // CLICK A USER FOR THEIR DOSSIER</div><div id="hkList" style="width:min(94vw,720px)"></div><button class="mb" id="hkBack">BACK</button></div>
+<div id="pause" class="ov hidden"><div class="ttl" style="font-size:28px">PAUSED</div><button class="mb" id="pResume">RESUME</button><button class="mb" id="pRestart">RESTART RUN</button><button class="mb" id="pMenu">MAIN MENU</button><button class="mb" id="pQuit" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">QUIT GAME</button><div class="dim" style="font-size:11px">ESC  RESUME   //   R  RESTART</div></div>
 <div id="over" class="ov scroll hidden"><div id="ovT" class="ttl" style="font-size:28px;color:#ff4455">GAME OVER</div><div id="ovS" class="dim" style="text-align:center"></div><div id="ovK" class="dim" style="color:#ff4455"></div>
  <div id="profO" class="pf"></div><div class="dim" style="font-size:11px"><span style="color:#ffd23a">YELLOW</span> = WENT UP THIS RUN &nbsp; <span style="color:#ff4455">RED</span> = WENT DOWN</div>
  <div class="row"><button class="mb" id="ovAgain">AGAIN</button><button class="mb" id="ovMenu">MENU</button></div></div>
@@ -274,7 +274,7 @@ function trickTick(dt){
 cv.addEventListener("pointermove",e=>{toWorld(e);
   if(press&&!press.flip&&(G.state==="play"||G.state==="serve"||G.state==="wait")){const dx=e.clientX-press.x,dy=e.clientY-press.y;
     if(Math.hypot(dx,dy)>16){press.flip=true;startFlip(Math.abs(dx)>Math.abs(dy)?"y":"x")}}});
-cv.addEventListener("pointerdown",e=>{toWorld(e);
+cv.addEventListener("pointerdown",e=>{if(G.paused)return;toWorld(e);
   if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}
   if(false){showMenu();return}
   if(G.state==="menu"||G.state==="warp")return;
@@ -1289,17 +1289,30 @@ try{budLoad();const bs=document.getElementById("budSet");if(bs)bs.onclick=()=>{c
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
 function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}musStart();if(MUS.on&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}}
-function showMenu(){G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
-const OVS=["menu","cust","achs","modes","lb","over","hkb"];
+function showMenu(){G.paused=false;musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
+const OVS=["menu","cust","achs","modes","lb","over","hkb","pause"];
 function hideAll(){for(const id of OVS)$(id).classList.add("hidden")}
-function startMode(m){initAudio();hideAll();newGame(m);droneOn();if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
+function startMode(m){initAudio();G.paused=false;hideAll();newGame(m);droneOn();if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
 $("bStart").onclick=()=>startMode("normal");
 $("bModes").onclick=()=>{hideAll();const ms=dailyMods();let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}
   $("dailyInfo").innerHTML="TODAY: "+ms.map(m=>m.n).join("<br>+ ")+"<br>"+(db&&db.date===todayKey()?"YOUR BEST TODAY: "+db.best:"NO RUN YET TODAY");$("modes").classList.remove("hidden")};
-$("mDaily").onclick=()=>startMode("daily");$("mEndless").onclick=()=>startMode("endless");$("mBoss").onclick=()=>startMode("boss");$("mBack").onclick=()=>showMenu();
+$("mDaily").onclick=()=>startMode("daily");$("mEndless").onclick=()=>startMode("endless");$("mBack").onclick=()=>showMenu();
 $("bHk").onclick=()=>{hideAll();hkOpen=-1;hkRender();$("hkb").classList.remove("hidden")};$("hkBack").onclick=()=>showMenu();
 $("bLb").onclick=()=>{hideAll();lbRender("normal");$("lb").classList.remove("hidden")};$("lbBack").onclick=()=>showMenu();
 $("ovAgain").onclick=()=>startMode(G.mode||"normal");$("ovMenu").onclick=()=>showMenu();
+/* pause box (ESC) and instant restart (R) */
+let musWas=false;
+function musPauseRestore(){try{if(MUS.el&&musWas){MUS.el.play()}}catch(e){}musWas=false}
+const inRun=()=>G.state!=="menu"&&G.state!=="over"&&$("over").classList.contains("hidden");
+function pauseOpen(){if(!inRun()||G.paused)return;G.paused=true;try{musWas=!!(MUS.el&&!MUS.el.paused);if(musWas)MUS.el.pause()}catch(e){}$("pause").classList.remove("hidden")}
+function pauseClose(){if(!G.paused)return;G.paused=false;$("pause").classList.add("hidden");last=performance.now();acc=0;musPauseRestore()}
+function restartRun(){$("pause").classList.add("hidden");musPauseRestore();startMode(G.mode||"normal")}
+function quitGame(){$("pause").classList.add("hidden");G.paused=false;try{if(window.DISCORD_SDK){window.DISCORD_SDK.close(1000,"Quit");return}}catch(e){}try{window.close()}catch(e){}setTimeout(()=>{showMenu();say("CLOSE THIS WINDOW TO QUIT",3)},150)}
+$("pResume").onclick=pauseClose;$("pRestart").onclick=restartRun;$("pMenu").onclick=()=>{$("pause").classList.add("hidden");showMenu()};$("pQuit").onclick=quitGame;
+addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT"))return;const k=e.key.toLowerCase();
+  if(k==="escape"){if(G.paused)pauseClose();else if(inRun())pauseOpen();return}
+  if(k==="r"&&(inRun()||G.state==="over")){e.preventDefault();restartRun()}});
+addEventListener("blur",()=>{if(inRun()&&G.state==="play")pauseOpen()});
 function showOver(){const won=!!G.bossWon;if(!won)recordKiller();stInc("games");if(G.mode==="daily")stInc("dailies");
   if(G.mode==="daily"&&!G.test){let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}if(!db||db.date!==todayKey()||G.score>db.best)try{localStorage.setItem("hb3_daily",JSON.stringify({date:todayKey(),best:Math.max(G.score,db&&db.date===todayKey()?db.best:0)}))}catch(e){}}
   const rank=G.test?0:lbAdd(G.mode,{s:G.score,l:G.level,d:new Date().toISOString().slice(0,10),k:won?"KILLED THE WARDEN":G.aiName?"ENDED BY "+G.aiName:""});stSave();
@@ -1327,7 +1340,7 @@ function saveCustom(){store("hb3_etch",ETCH.has?ETCH.c.toDataURL("image/png"):nu
     ex.strokeStyle="rgba(240,255,245,.6)";ex.lineWidth=1;ex.beginPath();ex.moveTo(x0,y0);ex.lineTo(x1,y1);ex.stroke();
     if(Math.random()<.5){ex.fillStyle="rgba(255,255,255,.55)";ex.fillRect(x1+(Math.random()-.5)*6,y1+(Math.random()-.5)*6,1.2,1.2)}
     ETCH.has=true;ach("etched");const n=performance.now();if(n-lastS>45){lastS=n;S.scratch()}};
-  ec.addEventListener("pointerdown",e=>{down=true;ec.setPointerCapture(e.pointerId);[lx,ly]=pos(e)});
+  ec.addEventListener("pointerdown",e=>{if(G.paused)return;down=true;ec.setPointerCapture(e.pointerId);[lx,ly]=pos(e)});
   ec.addEventListener("pointermove",e=>{if(!down)return;const[x,y]=pos(e);scratch(lx,ly,x,y);lx=x;ly=y});
   const up=()=>{if(down){down=false;saveCustom()}};ec.addEventListener("pointerup",up);ec.addEventListener("pointercancel",up);
   $("bClr").onclick=()=>{ex.clearRect(0,0,540,360);ETCH.has=false;saveCustom()};
@@ -1566,7 +1579,7 @@ function draw(t,dt){
   if(G.state==="serve"&&G.msgT<=0)text("PUT YOUR PADDLE ON THE BALL AND CLICK TO SERVE",(L+R)/2,B-12,12,"#119944","center");
   if(G.msgT>0){G.msgT-=dt;ctx.globalAlpha=Math.min(1,G.msgT*2);drawTitle(G.msg,(L+R)/2,T+60,26,G.level>=7?"#ff4455":"#ffb000");ctx.globalAlpha=1}}
 let acc=0,last=performance.now();
-function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;acc+=dt;
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(G.paused){draw(0,0);requestAnimationFrame(loop);return}acc+=dt;
   while(acc>=STEP){step();acc-=STEP;if(G.state==="wait"){G.waitT-=STEP;if(G.waitT<=0)afterWait()}}
   if(G.ripple){G.ripple.t+=dt;if(G.ripple.t>RT)G.ripple=null}
   trickTick(dt);evTick(dt);qTick(dt);zTick(dt);rollTick(dt);cylTick(dt);
