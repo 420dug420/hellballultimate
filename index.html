@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en"><head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; font-src 'self' data:; connect-src 'self' https://*.workers.dev wss://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.17</title>
+<title>HELLBALL ULTIMATE v0.18</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -39,7 +40,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.17 // BUILD 20261114.0309 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.18 // BUILD 20261114.0324 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="modes" class="ov hidden"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
@@ -1405,7 +1406,7 @@ function makeCrack(p,u,v,pw){u=Math.max(-PW/2,Math.min(PW/2,u));v=Math.max(-PH/2
 
 /* ---------- online 1v1 ---------- */
 const g$=id=>document.getElementById(id);
-const NET_RELAY="wss://hellball.hellball-discord.workers.dev",NET_WIN=7,NET_AB="ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+const NET_RELAY="wss://hellball-ultimate.420dirtydoug420.workers.dev",NET_WIN=7,NET_AB="ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 const net={ws:null,host:false,live:false,code:"",room:"",me:0,them:0,server:"me",lastLoser:"them",meReady:false,themReady:false,meRe:false,themRe:false,ox:150,oy:100,rtt:120,padT:0,lastMsg:0,leaving:false,full:false,over:false};
 const nInDc=()=>/[?&]frame_id=/.test(location.search);
 const nCode=()=>{let s="";for(let i=0;i<5;i++)s+=NET_AB[Math.floor(Math.random()*NET_AB.length)];return s};
@@ -1426,17 +1427,18 @@ function nOpen(code){nClose();net.leaving=false;net.full=false;net.live=false;ne
   ws.onmessage=e=>{if(net.ws!==ws)return;let m;try{m=JSON.parse(e.data)}catch(_){return}net.lastMsg=performance.now();nMsg(m)};
   ws.onclose=()=>{if(net.ws!==ws)return;net.ws=null;const was=net.live;net.live=false;if(net.leaving||net.full)return;
     nLobby((was?"CONNECTION LOST.":"COULD NOT REACH THE GAME SERVER.")+"<br>PRESS BACK AND TRY AGAIN.")}}
-function nMsg(m){if(!m||!m.t)return;
+const nNum=(v,lo,hi)=>{v=Number(v);return isFinite(v)?Math.max(lo,Math.min(hi,v)):null};
+function nMsg(m){if(!m||typeof m.t!=="string")return;
   if(m.t==="wait"){net.host=true;if(G.mode!=="online"||G.state==="menu")nLobby(nWait(),{share:true,join:true})}
   else if(m.t==="peer"){net.host=!!m.host;net.live=true;nSend({t:"nm",n:gName()});net.meReady=net.themReady=false;nLobby("OPPONENT CONNECTED<br>CLICK READY WHEN YOU ARE.",{ready:true})}
   else if(m.t==="left"||m.t==="bye"){if(net.live){net.live=false;G.mode="normal";nLobby("YOUR OPPONENT LEFT.<br>"+nWait().split("<br>")[1],{share:true,join:true})}}
   else if(m.t==="full"){net.full=true;nLobby(nInDc()?"TWO PEOPLE IN THIS ACTIVITY ARE ALREADY PLAYING.<br>WAIT FOR THEIR MATCH TO END.":"THAT LOBBY ALREADY HAS TWO PLAYERS.")}
   else if(m.t==="nm"){net.oname=gClean(m.n);if(G.mode==="online"&&net.oname)G.aiName=net.oname}
-  else if(m.t==="ping")nSend({t:"pong",ts:m.ts});
-  else if(m.t==="pong")net.rtt=net.rtt*.7+(performance.now()-m.ts)*.3;
-  else if(m.t==="p"){net.ox=BW-m.x;net.oy=m.y}
+  else if(m.t==="ping"){if(isFinite(Number(m.ts)))nSend({t:"pong",ts:Number(m.ts)})}
+  else if(m.t==="pong"){const d=performance.now()-Number(m.ts);if(isFinite(d)&&d>=0&&d<10000)net.rtt=net.rtt*.7+d*.3}
+  else if(m.t==="p"){const x=nNum(m.x,0,BW),y=nNum(m.y,0,BH);if(x!==null&&y!==null){net.ox=BW-x;net.oy=y}}
   else if(m.t==="ready"){net.themReady=true;if(!net.meReady)nLobby("YOUR OPPONENT IS READY.<br>CLICK READY TO START.",{ready:true});nMaybe()}
-  else if(m.t==="hit"){if(G.mode!=="online"||!["play","oserve","between","serve"].includes(G.state))return;const b=m.b;
+  else if(m.t==="hit"){if(G.mode!=="online"||!["play","oserve","between","serve"].includes(G.state)||!m.b)return;const r=m.b,V=LS()*2.5,b={x:nNum(r.x,0,BW),y:nNum(r.y,0,BH),z:nNum(r.z,-5,DEPTH+5),vx:nNum(r.vx,-60,60),vy:nNum(r.vy,-60,60),vz:nNum(r.vz,.5,V),cx:nNum(r.cx,-8,8),cy:nNum(r.cy,-8,8)};if(Object.values(b).some(v=>v===null))return;
     Object.assign(ball,{x:BW-b.x,y:b.y,z:DEPTH-b.z,vx:-b.vx,vy:b.vy,vz:-b.vz,cx:-b.cx,cy:b.cy,stop:false});ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;G.state="play";
     ai.hl=zone(ai);ai.hlT=.35;S.eHit();const n=Math.min(6,Math.round(net.rtt/2/(1000/30)));for(let i=0;i<n;i++)nAdvance()}
   else if(m.t==="miss"){if(G.mode==="online"&&G.state==="play"){ball.stop=true;nPoint("me")}}
@@ -1473,7 +1475,7 @@ setTimeout(()=>{const j=location.hash.match(/join=([A-Z0-9]{5})/i);if(j&&!nInDc(
 
 /* ---------- v0.17 NAMES + WORLD BOARD: your name, world leaderboards and public stat sheets, kept on the same server as online 1v1 ---------- */
 const GB={scope:"hbu",tab:"normal",seq:0,lastProf:0};
-const gAPI=()=>nInDc()?"/.proxy/ws/lb/"+GB.scope:"https://hellball.hellball-discord.workers.dev/ws/lb/"+GB.scope;
+const gAPI=()=>nInDc()?"/.proxy/ws/lb/"+GB.scope:"https://hellball-ultimate.420dirtydoug420.workers.dev/ws/lb/"+GB.scope;
 const gStore=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}return v};
 let gPid=gStore("hb3_pid");if(!/^[a-z0-9]{8,24}$/.test(gPid||""))gPid=gStore("hb3_pid",Array.from({length:12},()=>"abcdefghijklmnopqrstuvwxyz0123456789"[Math.random()*36|0]).join(""));
 const gClean=n=>String(n||"").toUpperCase().replace(/[^A-Z0-9 _.-]/g,"").trim().slice(0,12);
@@ -1496,9 +1498,9 @@ function gLoad(b){GB.tab=b;g$("wbTabs").innerHTML=GB_TABS.map(([k,t])=>'<button 
   const n=++GB.seq;g$("wbList").innerHTML='<div class="dim">LOADING...</div>';g$("wbYou").textContent="";
   fetch(gAPI()+"?b="+encodeURIComponent(gKey(b))+"&pid="+gPid).then(r=>r.json()).then(d=>{if(n!==GB.seq)return;if(!d||!d.top){g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>';return}
     const unit=b==="classic"?"LV":b==="1v1"?"WINS":"";
-    g$("wbList").innerHTML=d.top.length?d.top.map((e,i)=>'<div class="lbr wbr'+(e.me?" me":"")+'"'+(e.id?' data-pid="'+e.id+'"':"")+'><span>'+String(i+1).padStart(2,"0")+'</span><span>'+gEsc(e.n)+'</span><span>'+e.s+(unit?" "+unit:"")+'</span><span>'+(b!=="classic"&&b!=="1v1"&&e.l?"LV "+e.l:"")+'</span></div>').join(""):'<div class="dim">NO SCORES YET. BE THE FIRST.</div>';
-    g$("wbYou").textContent=d.you?(d.you.rank>10?"YOU: #"+d.you.rank+" OF "+d.total+"   "+d.you.s:""):"YOU ARE NOT ON THIS BOARD YET"},()=>{if(n===GB.seq)g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>'})}
-function gShowProfile(pid){const box=g$("wbProf");box.classList.remove("hidden");box.innerHTML='<div class="dim">PULLING SUBJECT FILE...</div>';
+    g$("wbList").innerHTML=d.top.length?d.top.map((e,i)=>'<div class="lbr wbr'+(e.me?" me":"")+'"'+(/^[a-f0-9]{12}$/.test(e.id||"")?' data-pid="'+e.id+'"':"")+'><span>'+String(i+1).padStart(2,"0")+'</span><span>'+gEsc(e.n)+'</span><span>'+(Number(e.s)|0)+(unit?" "+unit:"")+'</span><span>'+(b!=="classic"&&b!=="1v1"&&e.l?"LV "+(Number(e.l)|0):"")+'</span></div>').join(""):'<div class="dim">NO SCORES YET. BE THE FIRST.</div>';
+    g$("wbYou").textContent=d.you?(d.you.rank>10?"YOU: #"+(d.you.rank|0)+" OF "+(d.total|0)+"   "+(d.you.s|0):""):"YOU ARE NOT ON THIS BOARD YET"},()=>{if(n===GB.seq)g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>'})}
+function gShowProfile(pid){if(!/^[a-f0-9]{12}$/.test(pid))return;const box=g$("wbProf");box.classList.remove("hidden");box.innerHTML='<div class="dim">PULLING SUBJECT FILE...</div>';
   fetch(gAPI()+"?prof="+encodeURIComponent(pid)).then(r=>r.json()).then(d=>{if(!d||!d.p){box.innerHTML='<div class="dim">NO SUBJECT FILE ON RECORD'+(d&&d.error?" (THE SERVER NEEDS ITS PROFILE UPDATE)":"")+'.</div>';return}
     const p=d.p,names=readouts().map(x=>x[0]),bar=v=>"█".repeat(Math.round(v/5))+"░".repeat(20-Math.round(v/5));
     box.innerHTML='<div class="pf-h">// FATALIX TERMINAL // SUBJECT FILE HB-'+gEsc(p.id||"????")+' // '+gEsc(d.n||"PLAYER")+' //</div>'+

@@ -12,7 +12,7 @@ You get `https://hellball-ultimate.<your-account>.workers.dev`.
 1. https://discord.com/developers/applications -> New Application ("HELLBALL ULTIMATE").
 2. Activities -> URL Mappings:
    - Root mapping `/` -> `420dug420.github.io/hellballultimate`
-   - Add a Proxy Path Mapping: prefix `/ws` -> `hellball.hellball-discord.workers.dev/ws` (ONLINE 1V1 uses HELLBALL 2's relay server)
+   - Add a Proxy Path Mapping: prefix `/ws` -> `hellball-ultimate.420dirtydoug420.workers.dev` (the game's own server, deployed from `server/`)
 3. Activities -> Settings: enable Activities. Supported platforms: Desktop (and Mobile if you want it).
 4. Installation: add the app to your server. Start it from the voice channel rocket / Activities button.
 
