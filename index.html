@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; font-src 'self' data:; connect-src 'self' https://*.workers.dev wss://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.18</title>
+<title>HELLBALL ULTIMATE v0.18.1</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -40,7 +40,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.18 // BUILD 20261114.0324 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.18.1 // BUILD 20261114.0330 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="modes" class="ov hidden"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
@@ -144,7 +144,7 @@ const BIG_SPIN=7;                                            // paddle speed (un
 const hitValue=()=>5*(1+Math.floor((G.vol-1)/3)),hitValue1=()=>5*(1+Math.floor(G.vol/3));
 /* ---------- GLASS PADDLES: no physical effect, but hard, fast impacts crack them (the cracks stay for the game) ---------- */
 function impact(p){if(p!==pad&&!(Math.abs(ball.vz)/LS()<1.3&&Math.hypot(ball.vx,ball.vy)<6))stInc("aicracks");const base=LS(),r=Math.abs(ball.vz)/base,side=Math.hypot(ball.vx,ball.vy);
-  const gj=MOD().glass&&p===pad?MOD().glass:1;if(r<1.3*gj&&side<6*gj)return false;if(p===pad)stInc("cracks");const pw=Math.max(.25,Math.min(1,(r-1.2)*1.4+side/14));makeCrack(p,ball.x-p.x,ball.y-p.y,pw);S.crack(pw);return true}
+  const gj=MOD().glass&&p===pad?MOD().glass:1;if(!(r>=1.66*gj||side>=13*gj||(r>=1.55*gj&&side>=9*gj)))return false;if(p===pad)stInc("cracks");const pw=Math.max(.25,Math.min(1,(r-1.2)*1.4+side/14));makeCrack(p,ball.x-p.x,ball.y-p.y,pw);S.crack(pw);return true}
 function makeCrack(p,u,v,pw){u=Math.max(-PW/2,Math.min(PW/2,u));v=Math.max(-PH/2,Math.min(PH/2,v));const L=[],n=4+Math.round(pw*5);
   for(let i=0;i<n;i++){let a=i/n*Math.PI*2+Math.random()*.6,x=u,y=v,d=0;const pts=[[x,y]],len=6+pw*26*(.5+Math.random());
     while(d<len){const st=1.6+Math.random()*2.4;a+=(Math.random()-.5)*.7;x+=Math.cos(a)*st;y+=Math.sin(a)*st;d+=st;pts.push([x,y]);
