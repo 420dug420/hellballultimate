@@ -128,7 +128,11 @@ window.HBU=(()=>{const inDc=/[?&]frame_id=/.test(location.search),API=inDc?"/.pr
   api.push=()=>{clearTimeout(timer);timer=setTimeout(send,Math.max(1500,15000-(Date.now()-last)))};
   let leaving=false;const home=()=>{const p=location.pathname.replace(/hellworld\/(index\.html)?$/,"");return (inDc?"/index.html":p+"index.html")+location.search};
   api.leave=()=>{if(leaving)return;leaving=true;document.querySelectorAll(".hbuBack").forEach(b=>b.textContent="SAVING...");clearTimeout(timer);try{if(typeof save==="function")save()}catch(e){}clearTimeout(timer);
-    const go=()=>{if(embed){try{parent.postMessage({hbu:"leave"},"*")}catch(e){}setTimeout(()=>{leaving=false;document.querySelectorAll(".hbuBack").forEach(b=>b.innerHTML="&#9668; HELLBALL")},2500);return}if(back&&history.length>1){history.back();setTimeout(()=>{location.href=home()},900)}else location.href=home()};Promise.race([send(),new Promise(r=>setTimeout(r,1200))]).then(go,go)};
+    const go=()=>{if(embed){try{parent.postMessage({hbu:"saved"},"*")}catch(e){}setTimeout(()=>{leaving=false;document.querySelectorAll(".hbuBack").forEach(b=>b.innerHTML="&#9668; HELLBALL")},2500);return}if(back&&history.length>1){history.back();setTimeout(()=>{location.href=home()},900)}else location.href=home()};Promise.race([send(),new Promise(r=>setTimeout(r,1200))]).then(go,go)};
+  if(embed){addEventListener("message",e=>{if(e.source!==parent||!e.data||e.data.hbu!=="save")return;clearTimeout(timer);try{if(typeof save==="function")save()}catch(_){}clearTimeout(timer);
+      Promise.race([send(),new Promise(r=>setTimeout(r,1200))]).then(()=>{try{parent.postMessage({hbu:"saved"},"*")}catch(_){}})});
+    api.leave=()=>{try{parent.postMessage({hbu:"leave"},"*")}catch(e){}};
+    addEventListener("DOMContentLoaded",()=>{const n=document.querySelector("nav .hbuBack");if(n)n.style.display="none";const l=document.querySelector("#logo,.logo,header h1");})}
   api.esc=on=>{const m=document.getElementById("hbuEsc");if(m)m.style.display=on?"flex":"none"};
   addEventListener("keydown",e=>{if(e.key!=="Escape")return;const m=document.getElementById("hbuEsc");if(m&&m.style.display==="flex"){api.esc(false);e.stopImmediatePropagation();return}
     const n=document.querySelectorAll(".hidden").length,on=document.querySelectorAll(".on").length;setTimeout(()=>{if(document.querySelectorAll(".hidden").length===n&&document.querySelectorAll(".on").length===on)api.esc(true)},0)},true);
