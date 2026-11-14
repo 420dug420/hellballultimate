@@ -115,8 +115,11 @@ export class Board {
     const names = top.length ? await this.s.get(top.map(e => "n:" + e.p)) : new Map();
     const i = pid ? list.findIndex(e => e.p === pid) : -1;
     const ids = await Promise.all(top.map(e => pubId(e.p)));
+    let near = [];                                             // the players just above and below you, for the end-of-run comparison
+    if (i >= 0) { const lo = Math.max(0, i - 3), sl = list.slice(lo, Math.min(list.length, i + 4)), nm = await this.s.get(sl.map(e => "n:" + e.p));
+      near = sl.map((e, k) => ({ r: lo + k + 1, n: nm.get("n:" + e.p) || "PLAYER", s: e.s, l: e.l || 0, me: e.p === pid })); }
     return { board: b, top: top.map((e, k) => ({ n: names.get("n:" + e.p) || "PLAYER", s: e.s, l: e.l || 0, me: e.p === pid, id: ids[k] })),
-      you: i >= 0 ? { rank: i + 1, s: list[i].s } : null, total: list.length };
+      you: i >= 0 ? { rank: i + 1, s: list[i].s } : null, total: list.length, near };
   }
   async fetch(req) {
     const u = new URL(req.url);

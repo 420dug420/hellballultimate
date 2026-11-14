@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; font-src 'self' data:; connect-src 'self' https://*.workers.dev wss://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.18.1</title>
+<title>HELLBALL ULTIMATE v0.19</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -28,7 +28,16 @@ input[type=range]{accent-color:#33ff77;vertical-align:middle}
 .pf{width:min(94vw,660px);box-sizing:border-box;border:1px solid #114422;background:rgba(0,10,4,.75);padding:10px 12px;font-size:12px;white-space:pre;overflow-x:auto;box-shadow:inset 0 0 22px rgba(51,255,119,.07)}
 .pf-h{color:#33ff77;letter-spacing:2px}.pf-s{color:#119944;margin:2px 0 8px}.pf-r{display:flex;gap:10px;line-height:1.5}.pf-b{color:#1f9a4c}
 .pf-r.up,.pf-r.up .pf-b{color:#ffd23a;text-shadow:0 0 6px rgba(255,210,58,.5)}.pf-r.dn,.pf-r.dn .pf-b{color:#ff4455;text-shadow:0 0 6px rgba(255,68,85,.5)}
-.wbr{cursor:pointer}.wbr span{white-space:nowrap}.wbr span:nth-child(2){min-width:10em}.wbr:hover{background:rgba(51,214,255,.08)}.wbr.me{color:#ffb000;text-shadow:0 0 6px rgba(255,176,0,.6)}html,body{overscroll-behavior:none}canvas{touch-action:none;-webkit-user-select:none;user-select:none}</style></head><body>
+.wbr{cursor:pointer}.wbr span{white-space:nowrap}.wbr span:nth-child(2){min-width:10em}.wbr:hover{background:rgba(51,214,255,.08)}.wbr.me{color:#ffb000;text-shadow:0 0 6px rgba(255,176,0,.6)}#rep{position:fixed;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(20,0,0,.45);padding:10px;box-sizing:border-box}#rep.hidden{display:none}
+#repWin{position:relative;width:min(96vw,960px);max-height:94vh;overflow:auto;background:linear-gradient(rgba(70,0,0,.9),rgba(28,0,0,.94));border:1px solid rgba(255,60,60,.8);box-shadow:0 0 40px rgba(255,0,0,.25),inset 0 0 60px rgba(255,0,0,.15);color:#ffd2d2;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;padding:14px 18px;box-sizing:border-box;text-shadow:0 0 6px rgba(255,80,80,.6)}
+#repWin::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
+#repWin::before{content:"";position:absolute;left:0;right:0;height:70px;top:-70px;pointer-events:none;background:linear-gradient(transparent,rgba(255,80,80,.07),transparent);animation:rpSweep 6s linear infinite}
+@keyframes rpSweep{to{top:100%}}.rp-l{opacity:0;animation:rpIn .2s forwards}#repWin.now .rp-l{animation:none;opacity:1}@keyframes rpIn{to{opacity:1}}
+.rp-dim{color:rgba(255,150,150,.65);font-size:10px;letter-spacing:2px}.rp-top{display:flex;gap:28px;align-items:center;margin:8px 0}.rp-big{font-size:64px;font-weight:bold;line-height:1}.rp-sum{line-height:1.7}
+.rp-unl{border:1px solid rgba(255,255,255,.6);padding:6px 10px;margin:6px 0;color:#fff;line-height:1.7}.rp-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}@media(max-width:700px){.rp-cols{grid-template-columns:1fr}}
+.rp-h{color:#fff;letter-spacing:3px;border-bottom:1px solid rgba(255,80,80,.5);margin:6px 0 4px}.rp-row{display:grid;grid-template-columns:1fr auto 34px;gap:10px;line-height:1.75}.rp-g{text-align:right;font-weight:bold}
+.gSS,.gS{color:#fff;text-shadow:0 0 10px #fff}.gA{color:#ffe0e0}.gB{color:#ffb0b0}.gC{color:#ff8080}.gD{color:#ff5050}.gF{color:#a01818}#repWin canvas{width:100%;max-width:440px;height:auto}
+.rp-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px}#repX{border-color:#ff5050;color:#ffd0d0}html,body{overscroll-behavior:none}canvas{touch-action:none;-webkit-user-select:none;user-select:none}</style></head><body>
 <!--DISCORD--><script src="discord-sdk.js"></script>
 <script>
 /* Discord Activity handshake: only runs inside Discord (the iframe URL carries frame_id). The app id comes from <app-id>.discordsays.com */
@@ -40,7 +49,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.18.1 // BUILD 20261114.0330 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.19 // BUILD 20261114.0339 // DISCORD</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="bTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST START</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="modes" class="ov hidden"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
@@ -50,6 +59,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 <div id="hkb" class="ov scroll hidden"><div class="ttl" style="color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</div><div class="dim">GLOBAL HACKER RANKING // ☠ = TIMES THEY ENDED YOU // CLICK A USER FOR THEIR DOSSIER</div><div id="hkList" style="width:min(94vw,720px)"></div><button class="mb" id="hkBack">BACK</button></div>
 <div id="wb" class="ov scroll hidden"><div class="ttl">WORLD BOARD</div><div class="dim">EVERY PLAYER, EVERYWHERE // CLICK A NAME FOR THEIR SUBJECT FILE</div><div class="row" id="wbTabs"></div><div id="wbList" style="width:min(94vw,640px)"></div><div class="dim" id="wbYou"></div><div id="wbProf" class="pf hidden" style="max-width:min(94vw,760px)"></div><button class="mb" id="wbBack">BACK</button></div>
 <div id="nameAsk" class="ov hidden" style="z-index:9;background:rgba(2,8,4,.97)"><div class="ttl">WHAT DO THEY CALL YOU?</div><div class="dim" style="text-align:center;max-width:90vw">YOUR NAME SHOWS ON THE WORLD BOARD AND IN ONLINE 1V1. YOU CAN CHANGE IT IN CUSTOMIZE.</div><input id="naIn" class="sb" maxlength="12" spellcheck="false" autocomplete="off" style="width:260px;text-transform:uppercase;font-size:18px;text-align:center;letter-spacing:3px"><button class="mb" id="naGo">ENTER</button></div>
+<div id="rep" class="hidden"><div id="repWin"></div></div>
 <div id="olobby" class="ov hidden"><div class="ttl">ONLINE 1V1</div><div id="olCode" class="ttl" style="font-size:24px;color:#ffb000;letter-spacing:6px"></div><div id="olStatus" class="dim" style="text-align:center;max-width:90vw;line-height:1.8"></div>
  <div class="row" id="olShare"><input id="olLink" class="sb" readonly style="width:min(70vw,320px)"><button class="sb" id="olCopy">COPY INVITE LINK</button></div>
  <div class="row" id="olJoin"><input id="olIn" class="sb" placeholder="FRIEND'S CODE" maxlength="5" style="width:150px;text-transform:uppercase"><button class="sb" id="olGo">JOIN</button></div>
@@ -102,7 +112,7 @@ function spinBall(){if(G.state!=="play"||ball.stop){rotAxis(0,1,0,.012);return}
   rotAxis(1,0,0,-ball.vy*.045+ball.cy*7+ball.vz*.03)} // up/down drift + top spin + rolling down the tunnel
 function resetBall(){Object.assign(ball,{x:WX,y:WY,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,px:WX,py:WY,pz:0})}
 function startLevel(){G.vol=0;resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck()}
-function newGame(mode){mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
+function newGame(mode){runStart();mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
   G.mod={};G.modNames=[];if(mode==="daily"){const ms=dailyMods();ms.forEach(m=>Object.assign(G.mod,m));G.modNames=ms.map(m=>m.n.split(":")[0]);RNG=mulberry(todayKey())}else RNG=Math.random;
   G.level=G.mod.start||1;G.score=0;G.pl=mode==="endless"?3:(G.mod.lives||5);G.el=(mode==="endless"||mode==="boss")?99:3;G.epts=0;G.bossWon=false;G.bossLost=false;G.zone=null;G.tube=false;G.tubeK=0;G.elMax=3;G.oceanA=1;ABYSS.length=0;EV.list=[];EV.t=8;BLK.length=0;G.hyCam=0;G.twins=false;ai.w=PW;ai.h=PH;
   G.streak=0;G.matrixA=G.level>=6?1:0;G.cam=0;G.shards=[];G.debris=[];G.blown=false;G.hg=null;G.wh=null;setField(1);droneOn();pad.cracks=[];ai.cracks=[];
@@ -427,7 +437,7 @@ const BALLSTY={wire:{w:()=>WIRE,f:"rgba(140,255,180,.8)",b:"rgba(51,255,119,.13)
   glitch:{w:()=>WIRE,f:"rgba(140,255,180,.75)",b:"rgba(255,40,80,.12)",o:"#33ff77",st:"#ff4455",glitch:1},
   gold:{w:()=>WIRE,f:"rgba(255,205,90,.85)",b:"rgba(255,176,0,.12)",o:"#ffb000",st:"#ffffff"},
   eye:{w:()=>WIRE,f:"rgba(140,255,180,.6)",b:"rgba(51,255,119,.1)",o:"#33ff77",st:null,eye:1}};
-function drawWireBall(cx,cy,r,c){c=c||ctx;if(cosGet("ball").id==="b3d")return drawBall3D(cx,cy,r,c);const S2=BALLSTY[cosGet("ball").id]||BALLSTY.wire;
+function drawWireBall(cx,cy,r,c){c=c||ctx;{const bid=cosGet("ball").id;if(bid==="fxorb")return drawFXOrb(cx,cy,r,c);if(bid==="b3d")return drawBall3D(cx,cy,r,c)}const S2=BALLSTY[cosGet("ball").id]||BALLSTY.wire;
   c.save();c.fillStyle="rgba(2,12,6,.88)";c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.fill();
   const back=new Path2D(),front=new Path2D(),fine=r>7,j=S2.glitch?()=>(Math.random()<.04?(Math.random()-.5)*r*.25:0):()=>0;
   for(const line of S2.w()){let prev=null;for(const v of line){const q=rot(v);if(prev){const tgt=(prev[2]+q[2])>0?front:back,g=j();tgt.moveTo(cx+prev[0]*r+g,cy+prev[1]*r);tgt.lineTo(cx+q[0]*r+g,cy+q[1]*r)}prev=q}}
@@ -1490,16 +1500,16 @@ function gProfile(){const R=readouts();return{v:1,id:ST.id,best:Math.max(G.best|
   ball:SEL.ball,tint:SEL.tint,border:SEL.border,bud:(BUD&&BUD.g)?BUD.name:"",d:gDay()}}
 function gSendProfile(force){const n=performance.now();if(!force&&n-GB.lastProf<120000)return;GB.lastProf=n;gPost({op:"prof",p:gProfile()}).catch(()=>{})}
 function gSubmit(){if(G.test)return;const b=G.mode==="normal"?"normal":G.mode==="daily"?"daily-"+gDay():G.mode==="endless"?"hard":null;
-  if(b&&G.score>0)gPost({op:"score",b,s:G.score,l:G.level}).then(d=>{if(d&&d.you&&d.you.rank<=10)say("WORLD RANK #"+d.you.rank,3)}).catch(()=>{});
-  const deep=Math.max(ST.maxL||0,G.level||0);if(G.mode!=="online"&&deep>0)gPost({op:"score",b:"classic",s:deep,l:deep}).catch(()=>{});gSendProfile(true)}
-function gWin(){ST.w1v1=(ST.w1v1||0)+1;stSave();gPost({op:"win",b:"1v1"}).catch(()=>{});gSendProfile(true)}
+  if(b&&G.score>0){RUN.boardP=gPost({op:"score",b,s:G.score,l:G.level});RUN.boardP.then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{})}
+  const deep=Math.max(ST.maxL||0,G.level||0);if(G.mode!=="online"&&deep>0)gPost({op:"score",b:"classic",s:deep,l:deep}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
+function gWin(){ST.w1v1=(ST.w1v1||0)+1;stSave();gPost({op:"win",b:"1v1"}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
 function gOpen(){hideAll();g$("wb").classList.remove("hidden");g$("wbProf").classList.add("hidden");gLoad(GB.tab)}
 function gLoad(b){GB.tab=b;g$("wbTabs").innerHTML=GB_TABS.map(([k,t])=>'<button class="sb'+(k===b?" on":"")+'" data-wb="'+k+'">'+t+'</button>').join("");
   const n=++GB.seq;g$("wbList").innerHTML='<div class="dim">LOADING...</div>';g$("wbYou").textContent="";
   fetch(gAPI()+"?b="+encodeURIComponent(gKey(b))+"&pid="+gPid).then(r=>r.json()).then(d=>{if(n!==GB.seq)return;if(!d||!d.top){g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>';return}
     const unit=b==="classic"?"LV":b==="1v1"?"WINS":"";
     g$("wbList").innerHTML=d.top.length?d.top.map((e,i)=>'<div class="lbr wbr'+(e.me?" me":"")+'"'+(/^[a-f0-9]{12}$/.test(e.id||"")?' data-pid="'+e.id+'"':"")+'><span>'+String(i+1).padStart(2,"0")+'</span><span>'+gEsc(e.n)+'</span><span>'+(Number(e.s)|0)+(unit?" "+unit:"")+'</span><span>'+(b!=="classic"&&b!=="1v1"&&e.l?"LV "+(Number(e.l)|0):"")+'</span></div>').join(""):'<div class="dim">NO SCORES YET. BE THE FIRST.</div>';
-    g$("wbYou").textContent=d.you?(d.you.rank>10?"YOU: #"+(d.you.rank|0)+" OF "+(d.total|0)+"   "+(d.you.s|0):""):"YOU ARE NOT ON THIS BOARD YET"},()=>{if(n===GB.seq)g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>'})}
+    if(d.top[0]&&d.top[0].me)ach("world_one");g$("wbYou").textContent=d.you?(d.you.rank>10?"YOU: #"+(d.you.rank|0)+" OF "+(d.total|0)+"   "+(d.you.s|0):""):"YOU ARE NOT ON THIS BOARD YET"},()=>{if(n===GB.seq)g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>'})}
 function gShowProfile(pid){if(!/^[a-f0-9]{12}$/.test(pid))return;const box=g$("wbProf");box.classList.remove("hidden");box.innerHTML='<div class="dim">PULLING SUBJECT FILE...</div>';
   fetch(gAPI()+"?prof="+encodeURIComponent(pid)).then(r=>r.json()).then(d=>{if(!d||!d.p){box.innerHTML='<div class="dim">NO SUBJECT FILE ON RECORD'+(d&&d.error?" (THE SERVER NEEDS ITS PROFILE UPDATE)":"")+'.</div>';return}
     const p=d.p,names=readouts().map(x=>x[0]),bar=v=>"█".repeat(Math.round(v/5))+"░".repeat(20-Math.round(v/5));
@@ -1517,6 +1527,75 @@ g$("naIn").addEventListener("keydown",e=>{if(e.key==="Enter")g$("naGo").click()}
 g$("nmSave").onclick=()=>{if(gSetName(g$("nmIn").value)){g$("nmSave").textContent="SAVED";setTimeout(()=>g$("nmSave").textContent="SAVE",1200)}};
 g$("nmIn").value=gStore("hb3_name")||"";
 if(!gStore("hb3_name"))setTimeout(()=>{g$("nameAsk").classList.remove("hidden");g$("naIn").focus()},400);else setTimeout(()=>gSendProfile(),3000);
+
+/* =====================================================================================================
+   v0.19: FX ORB (glowing orb + glitch ball, stamped FX, unlocked by #1 on any World Board) and the
+   post-run HOLOGRAM REPORT: unlocks, letter grades for real + esoteric stats, charts, nearby players
+   ===================================================================================================== */
+let FXSTAMP=null;
+function fxStamp(){if(FXSTAMP)return FXSTAMP;GLY.F=["11111","10000","10000","11110","10000","10000","10000"];GLY.X=["10001","10001","01010","00100","01010","10001","10001"];
+  const pts=[],word="FX",cols=word.length*6-1;[...word].forEach((ch,i)=>GLY[ch].forEach((row,r)=>[...row].forEach((v,c)=>{if(v==="1"){
+  const lon=((i*6+c)-(cols-1)/2)*5.6*Math.PI/180,lat=(3-r)*6.4*Math.PI/180;pts.push([Math.cos(lat)*Math.sin(lon),-Math.sin(lat),Math.cos(lat)*Math.cos(lon)])}})));
+  return FXSTAMP=pts.concat(pts.map(([x,y,z])=>[-x,y,-z]))}
+ACH.push({id:"world_one",name:"NUMBER ONE",desc:"Reach #1 on any World Board."});
+COS.ball.push({id:"fxorb",n:"FX ORB",un:"world_one"});
+function drawFXOrb(cx,cy,r,c){c=c||ctx;const t=performance.now()/1000,gl=Math.random()<.07;
+  c.save();c.globalCompositeOperation="lighter";for(const[col,dx]of[["255,30,80",r*.09],["40,120,255",-r*.09]]){const g=c.createRadialGradient(cx+dx,cy,r*.2,cx+dx,cy,r*1.05);g.addColorStop(0,"rgba("+col+",.0)");g.addColorStop(.8,"rgba("+col+",.28)");g.addColorStop(1,"rgba("+col+",0)");c.fillStyle=g;c.beginPath();c.arc(cx+dx,cy,r*1.05,0,TAU2);c.fill()}c.restore();
+  drawBall3D(cx,cy,r,c);
+  if(r>4){const s=Math.max(1,r*.075);c.save();c.beginPath();c.arc(cx,cy,r,0,TAU2);c.clip();c.globalCompositeOperation="lighter";
+    const jit=gl?(Math.random()-.5)*r*.3:0;for(const[col,ox,a]of[["255,40,90",r*.05,.55],["60,140,255",-r*.05,.55],["255,255,255",0,.95]])
+      {c.fillStyle="rgba("+col+","+a+")";for(const v of fxStamp()){const q=rot(v);if(q[2]<=.12)continue;const f=(.5+.5*q[2])*s;c.globalAlpha=Math.min(1,q[2]*2.5);c.fillRect(cx+q[0]*r-f/2+ox+(Math.abs(q[1])<.15?jit:0),cy+q[1]*r-f/2,f,f)}}
+    c.globalAlpha=1;if(gl){c.fillStyle="rgba(255,60,200,.5)";c.fillRect(cx-r,cy+(Math.random()-.5)*r*1.6,r*2,Math.max(1,r*.06));c.fillStyle="rgba(60,255,220,.4)";c.fillRect(cx-r,cy+(Math.random()-.5)*r*1.6,r*2,Math.max(1,r*.04))}
+    c.restore()}}
+
+/* ---------- run tracking ---------- */
+const RUN={st0:{},ach0:new Set(),maxVol:0,maxMult:1,board:null,boardP:null};
+function runStart(){RUN.st0=Object.assign({},ST);RUN.ach0=new Set(Object.keys(ACHD||{}));RUN.maxVol=0;RUN.maxMult=1;RUN.board=null;RUN.boardP=null}
+function rTick(){if(G.state==="play"||G.state==="serve"){RUN.maxVol=Math.max(RUN.maxVol,G.vol||0);RUN.maxMult=Math.max(RUN.maxMult,G.lastMult||1)}}
+
+/* ---------- the hologram report ---------- */
+const GRADE=v=>v>=97?"SS":v>=90?"S":v>=80?"A":v>=70?"B":v>=55?"C":v>=40?"D":"F";
+const cl100=v=>Math.max(0,Math.min(100,Math.round(isFinite(v)?v:0)));
+function runStats(){const d=k=>(ST[k]||0)-(RUN.st0[k]||0),R=Object.fromEntries(readouts()),time=d("time"),hits=d("hits"),pw=d("pw"),pl=d("plost");
+  const real=[["SCORE",G.score,cl100(Math.log10(G.score+1)/Math.log10(60000)*100)],["DEPTH REACHED","LV "+G.level,cl100((G.level-1)/24*100)],
+    ["PRECISION",Math.round(d("sweet")/Math.max(1,hits)*100)+"% SWEET",cl100(d("sweet")/Math.max(1,hits)*250)],["COMPOSURE",pw+" / "+(pw+pl)+" PTS",cl100(pw/Math.max(1,pw+pl)*100)],
+    ["ACES",d("aces"),cl100(d("aces")/Math.max(1,pw)*350)],["LONGEST VOLLEY",RUN.maxVol,cl100(RUN.maxVol/30*100)],["PEAK MULTIPLIER","x"+RUN.maxMult.toFixed(1),cl100((RUN.maxMult-1)/2.5*100)],
+    ["FLAIR",d("tricks")+" TRICKS / "+d("flips")+" FLIPS",cl100((d("tricks")+d("flips")*4)/Math.max(.5,time/60)*8)],["ENDURANCE",hits+" HITS",cl100(hits/Math.max(1,pl)*6)]];
+  const g=k=>R[k]||0,eso=[["SANITY RETAINED",g("SANITY")],["VOID AFFINITY",g("VOID AFFINITY")],["PSYCHIC RESONANCE",g("PSYCHIC RESONANCE")],["CODE CORRUPTION",g("CODE CORRUPTION")],
+    ["OCCULT EXPOSURE",g("OCCULT EXPOSURE")],["GREY CONTACT INDEX",cl100(G.level*3.2+d("deep")/20)],["MIB SURVEILLANCE",g("PARANOIA")],["SIGNAL INTEGRITY",cl100(100-g("CODE CORRUPTION"))],
+    ["ABDUCTION PROBABILITY",cl100(g("VOID AFFINITY")*.6+g("PSYCHIC RESONANCE")*.4)],["TEMPORAL DRIFT",cl100(time/600*100)]];
+  const avg=real.reduce((a,x)=>a+x[2],0)/real.length;return{real,eso,overall:GRADE(avg+4),avg,time}}
+function repUnlocks(){const fresh=ACH.filter(a=>ACHD[a.id]&&!RUN.ach0.has(a.id)),ids=new Set(fresh.map(a=>a.id)),cos=[];
+  for(const k of["border","paddle","tint","ball"])for(const it of COS[k]||[])if(it.un&&ids.has(it.un))cos.push(k.toUpperCase()+": "+it.n);return{fresh,cos}}
+function reportOpen(){if(G.mode==="online")return;const S2=runStats(),U=repUnlocks(),box=g$("rep"),w=g$("repWin");let n=0;const L=(h,cls)=>'<div class="rp-l '+(cls||"")+'" style="animation-delay:'+(0.04*n++)+'s">'+h+'</div>';
+  const gr=v=>'<span class="rp-g g'+GRADE(v)+'">'+GRADE(v)+'</span>';
+  let h=L('<span class="rp-dim">FATALIX TACTICAL OVERLAY // POST-RUN ANALYSIS // SUBJECT HB-'+gEsc(ST.id||"????")+' // '+gEsc(gName())+'</span>');
+  h+=L('<div class="rp-top"><div><div class="rp-dim">THREAT ASSESSMENT</div><div class="rp-big g'+S2.overall+'">'+S2.overall+'</div></div><div class="rp-sum">MODE: '+gEsc((G.mode||"normal").toUpperCase())+'<br>FINAL SCORE: '+G.score+'<br>DEPTH: LEVEL '+G.level+'<br>RUN TIME: '+Math.floor(S2.time/60)+'m '+Math.round(S2.time%60)+'s<br>'+(G.aiName?"TERMINATED BY: "+gEsc(G.aiName):"")+'</div></div>');
+  h+=L('<div id="repUnl"></div>');
+  h+='<div class="rp-cols"><div>'+L('<div class="rp-h">COMBAT METRICS</div>')+S2.real.map(([k,v,s])=>L('<div class="rp-row"><span>'+k+'</span><span>'+gEsc(v)+'</span>'+gr(s)+'</div>')).join("")+'</div>';
+  h+='<div>'+L('<div class="rp-h">ESOTERIC READINGS</div>')+S2.eso.map(([k,v])=>L('<div class="rp-row"><span>'+k+'</span><span>'+v+'%</span>'+gr(v)+'</div>')).join("")+'</div></div>';
+  h+='<div class="rp-cols">'+L('<div class="rp-h">GRADE PROFILE</div><canvas id="repC1" width="440" height="170"></canvas>')+L('<div class="rp-h" id="repNearH">NEARBY SUBJECTS // WORLD BOARD</div><canvas id="repC2" width="440" height="170"></canvas><div class="rp-dim" id="repNearT">ACQUIRING NEARBY SUBJECTS...</div>')+'</div>';
+  h+=L('<div class="rp-foot"><span class="rp-dim">CLICK, ESC OR ANY KEY TO DISMISS</span><button class="sb" id="repX">DISMISS</button></div>');
+  w.innerHTML=h;w.classList.remove("now");box.classList.remove("hidden");repUnlFill();repChart1(S2.real);repNear(null);
+  const p=RUN.boardP;if(p)p.then(d=>{if(!box.classList.contains("hidden")){repNear(d);setTimeout(repUnlFill,100)}},()=>repNear({err:1}));else repNear({none:1});
+  g$("repX").onclick=reportClose}
+function repUnlFill(){const el=g$("repUnl");if(!el)return;const U=repUnlocks();el.className=U.fresh.length||U.cos.length?"rp-unl":"";
+  el.innerHTML=U.fresh.length||U.cos.length?'<div>// UNLOCKED THIS RUN //</div>'+U.fresh.map(a=>'<div>ACHIEVEMENT: '+gEsc(a.name)+'</div>').join("")+U.cos.map(c=>'<div>COSMETIC: '+gEsc(c)+'</div>').join(""):""}
+function reportClose(){g$("rep").classList.add("hidden")}
+function repChart1(real){const c=g$("repC1");if(!c)return;const x=c.getContext("2d"),W=c.width,H=c.height,n=real.length,bw=W/n;x.clearRect(0,0,W,H);x.font="9px 'Courier New',monospace";x.textAlign="center";
+  x.strokeStyle="rgba(255,60,60,.25)";for(let i=0;i<=4;i++){const y=12+(H-40)*i/4;x.beginPath();x.moveTo(0,y);x.lineTo(W,y);x.stroke()}
+  real.forEach(([k,,s],i)=>{const h=(H-40)*s/100,X=i*bw+bw*.2;x.fillStyle="rgba(255,40,40,.25)";x.fillRect(X,H-28-h,bw*.6,h);x.strokeStyle="rgba(255,120,120,.9)";x.strokeRect(X,H-28-h,bw*.6,h);
+    x.fillStyle="#ffe0e0";x.fillText(GRADE(s),X+bw*.3,H-31-h);x.fillStyle="rgba(255,150,150,.8)";x.fillText(k.split(" ")[0].slice(0,7),X+bw*.3,H-14)})}
+function repNear(d){const c=g$("repC2"),t=g$("repNearT");if(!c)return;const x=c.getContext("2d"),W=c.width,H=c.height;x.clearRect(0,0,W,H);
+  if(!d){return}if(d.err||d.none||(!d.near&&!d.top)){t.textContent=d.none?"NO BOARD FOR THIS MODE.":"WORLD BOARD UNREACHABLE.";return}
+  const list=(d.near&&d.near.length?d.near:d.top.map((e,i)=>Object.assign({r:i+1},e))).slice(0,7),mx=Math.max(1,...list.map(e=>Number(e.s)||0)),rh=(H-6)/Math.max(4,list.length);
+  x.font="10px 'Courier New',monospace";list.forEach((e,i)=>{const y=3+i*rh,w=(W-170)*(Number(e.s)||0)/mx;x.fillStyle=e.me?"rgba(255,255,255,.85)":"rgba(255,40,40,.35)";x.fillRect(150,y+2,w,rh-5);
+    if(!e.me){x.strokeStyle="rgba(255,120,120,.8)";x.strokeRect(150,y+2,w,rh-5)}x.fillStyle=e.me?"#fff":"#ffb0b0";x.textAlign="left";x.fillText(("#"+(e.r|0)).padEnd(5)+String(e.n||"").slice(0,12),4,y+rh/2+3);
+    x.textAlign="right";x.fillText(String(Number(e.s)|0),W-4,y+rh/2+3)});
+  const me=list.findIndex(e=>e.me);if(me>0){const up=list[me-1];t.textContent="NEXT TARGET: "+String(up.n).slice(0,12)+"  //  "+((up.s|0)-(list[me].s|0))+" POINTS AHEAD";}
+  else if(me===0)t.textContent=(list[0].r|0)===1?"YOU ARE NUMBER ONE.":"NO ONE ABOVE YOU IN RANGE.";else t.textContent=d.you?"YOUR RANK: #"+(d.you.rank|0):"YOU ARE NOT ON THIS BOARD YET."}
+g$("rep").addEventListener("click",e=>{if(e.target.id==="rep"||e.target.id==="repX")reportClose();else g$("repWin").classList.add("now")});
+addEventListener("keydown",e=>{if(g$("rep").classList.contains("hidden"))return;e.preventDefault();e.stopImmediatePropagation();reportClose()},true);
 
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
@@ -1545,7 +1624,7 @@ addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT
   if(k==="escape"){if(G.paused||!$("pause").classList.contains("hidden"))pauseClose();else if(inRun())pauseOpen();return}
   if(k==="r"&&G.mode!=="online"&&(inRun()||G.state==="over")){e.preventDefault();restartRun()}});
 addEventListener("blur",()=>{if(inRun()&&G.state==="play"&&G.mode!=="online")pauseOpen()});
-function showOver(){try{gSubmit()}catch(e){}const won=!!G.bossWon;if(!won)recordKiller();stInc("games");if(G.mode==="daily")stInc("dailies");
+function showOver(){try{gSubmit()}catch(e){}setTimeout(()=>{try{reportOpen()}catch(e){console.warn(e)}},500);const won=!!G.bossWon;if(!won)recordKiller();stInc("games");if(G.mode==="daily")stInc("dailies");
   if(G.mode==="daily"&&!G.test){let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}if(!db||db.date!==todayKey()||G.score>db.best)try{localStorage.setItem("hb3_daily",JSON.stringify({date:todayKey(),best:Math.max(G.score,db&&db.date===todayKey()?db.best:0)}))}catch(e){}}
   const rank=G.test?0:lbAdd(G.mode,{s:G.score,l:G.level,d:new Date().toISOString().slice(0,10),k:won?"KILLED THE WARDEN":G.aiName?"ENDED BY "+G.aiName:""});stSave();
   $("ovT").textContent=won?"THE WARDEN FALLS":"GAME OVER";$("ovT").style.color=won?"#ffb000":"#ff4455";
@@ -1775,7 +1854,7 @@ function drawBall(t){
   const x=ball.px+(ball.x-ball.px)*t,y=ball.py+(ball.y-ball.py)*t,z=Math.max(0,ball.pz+(ball.z-ball.pz)*t);
   // the depth ring that rides along with the ball (Curveball's marker), fading with distance
   frame(z,"rgba(255,176,0,"+Math.max(.15,(1-z/DEPTH*.75)*.9)+")",1.6);
-  if(cosGet("ball").id==="b3d")ballShadow(x,y,z);const p=P(x,y,z);drawWireBall(p[0],p[1],BR*p[2]*view.s)}
+  if(cosGet("ball").id==="b3d"||cosGet("ball").id==="fxorb")ballShadow(x,y,z);const p=P(x,y,z);drawWireBall(p[0],p[1],BR*p[2]*view.s)}
 /* 5x7 terminal glyphs for the stamp */
 const GLY={H:["10001","10001","10001","11111","10001","10001","10001"],E:["11111","10000","10000","11110","10000","10000","11111"],
   L:["10000","10000","10000","10000","10000","10000","11111"],B:["11110","10001","10001","11110","10001","10001","11110"],A:["01110","10001","10001","11111","10001","10001","10001"]};
@@ -1815,7 +1894,7 @@ let acc=0,last=performance.now();
 function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(G.paused){draw(0,0);requestAnimationFrame(loop);return}acc+=dt;
   while(acc>=STEP){step();acc-=STEP;if(G.state==="wait"){G.waitT-=STEP;if(G.waitT<=0)afterWait()}}
   if(G.ripple){G.ripple.t+=dt;if(G.ripple.t>RT)G.ripple=null}
-  trickTick(dt);evTick(dt);qTick(dt);zTick(dt);nTick();rollTick(dt);cylTick(dt);
+  trickTick(dt);evTick(dt);qTick(dt);zTick(dt);nTick();rTick();rollTick(dt);cylTick(dt);
   if(G.zone==="cyber"&&G.state!=="hyper")G.hyCam=(G.hyCam||0)+DEPTH*.5*dt;
   if(G.state==="hyper"){G.hyT+=dt;const ht=G.hyT;G.hyCam=(G.hyCam||0)+DEPTH*(ht<3?2.5:1)*dt;if(ht<2.8)G.cam+=Math.min(1,ht/.8)*90*dt;else{if(G.camT===undefined)G.camT=Math.ceil(G.cam/(DEPTH/10))*(DEPTH/10)+DEPTH/5;G.cam+=(G.camT-G.cam)*Math.min(1,dt*3.5)}
     if(ht>=3.7){G.cam=0;G.camT=undefined;healPaddle();G.level++;G.el=3;G.zone="cyber";say("LEVEL "+G.level+"  //  HYPER LANE  //  CYBER NET",3);startLevel()}}
