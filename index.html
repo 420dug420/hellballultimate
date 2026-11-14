@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; font-src 'self' data:; connect-src 'self' https://*.workers.dev wss://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>HELLBALL ULTIMATE v0.24.1</title>
+<title>HELLBALL ULTIMATE v0.25</title>
 <style>
 html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #c{display:block;width:100vw;height:100vh;cursor:none}
@@ -49,7 +49,11 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.24.1 // BUILD 20261114.1318</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.25 // BUILD 20261114.1327</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="startm" class="ov hidden" style="gap:10px"><div class="ttl">START</div>
+ <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
+ <button class="mb" id="sClassic">CLASSIC</button><div class="dim">LEVEL 1 FOREVER. NO TRANSITIONS, NO BOSSES. IT JUST GETS FASTER. MUSIC OFF (M TO TURN IT ON).</div>
+ <button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:8px"><div class="ttl">MODES</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim">GHOST RACE: THE PADDLE OF THE WORLD #1 PLAYS ALONGSIDE YOU.</div><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
@@ -102,7 +106,7 @@ const K=z=>(90-Math.atan(z/VA)*180/Math.PI)/90;            // Curveball's depth 
 let WX=BW/2,WY=BH/2;
 const G={state:"menu",sc:1,spd:1,debris:[],trail:[],cam:0,matrixA:0,shards:[],level:1,score:0,pl:5,el:3,vol:0,streak:0,mult:1,lastMult:1,msg:"",msgT:0,pops:[],best:0,waitT:0};
 try{G.best=+localStorage.getItem("hb3_best")||0}catch(e){}
-const lv=()=>Math.min(G.level,12)-1,LS=()=>L_SPEED[lv()]*(G.spd||1);
+const lv=()=>Math.min(G.mode==="classic"?(G.cl||1):G.level,12)-1,LS=()=>L_SPEED[lv()]*(G.spd||1);
 let mouse={x:WX,y:WY};
 const pad={x:WX,y:WY,ox:WX,oy:WY,vx:0,vy:0,px:WX,py:WY,hl:null,hlT:0,cracks:[]};
 const ai ={x:WX,y:WY,ox:WX,oy:WY,vx:0,vy:0,px:WX,py:WY,hl:null,hlT:0,cracks:[]};
@@ -115,13 +119,13 @@ function spinBall(){if(G.state!=="play"||ball.stop){rotAxis(0,1,0,.012);return}
   rotAxis(0,1,0,ball.vx*.045+ball.cx*7);            // sideways drift + side spin
   rotAxis(1,0,0,-ball.vy*.045+ball.cy*7+ball.vz*.03)} // up/down drift + top spin + rolling down the tunnel
 function resetBall(){Object.assign(ball,{x:WX,y:WY,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,px:WX,py:WY,pz:0})}
-function startLevel(){G.vol=0;resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck();G.dark=G.mode!=="online"&&G.level>=41&&Math.random()<.45;if(G.dark)setTimeout(()=>{if(G.dark)popup("LIGHTS OUT","#ff4455")},2600)}
-function newGame(mode){runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
+function startLevel(){G.vol=0;if(G.mode==="classic")G.spd=1+Math.min(.5,Math.max(0,(G.cl||1)-12)*.025);resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck();G.dark=G.mode!=="online"&&G.level>=41&&Math.random()<.45;if(G.dark)setTimeout(()=>{if(G.dark)popup("LIGHTS OUT","#ff4455")},2600)}
+function newGame(mode){if(mode!=="classic"&&G.clsMute)setTimeout(clsMusicBack,0);G.cl=1;runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
   G.mod={};G.modNames=[];if(mode==="daily"){const ms=dailyMods();ms.forEach(m=>Object.assign(G.mod,m));G.modNames=ms.map(m=>m.n.split(":")[0]);RNG=mulberry(todayKey())}else RNG=Math.random;
   G.level=G.mod.start||1;G.score=0;G.pl=mode==="endless"?3:(G.mod.lives||5);G.el=(mode==="endless"||mode==="boss")?99:3;G.epts=0;G.bossWon=false;G.bossLost=false;G.zone=null;G.tube=false;G.tubeK=0;G.elMax=3;G.oceanA=1;ABYSS.length=0;EV.list=[];EV.t=8;BLK.length=0;G.hyCam=0;G.twins=false;ai.w=PW;ai.h=PH;
   G.streak=0;G.matrixA=G.level>=6?1:0;G.cam=0;G.shards=[];G.debris=[];G.blown=false;G.hg=null;G.wh=null;setField(1);droneOn();pad.cracks=[];ai.cracks=[];
   if(mode==="boss")bossSetup();G.prevR=readouts();
-  startLevel();say(mode==="boss"?"THE WARDEN AWAITS":mode==="daily"?"DAILY  //  "+G.modNames.join("  +  "):mode==="endless"?"ENDLESS  //  HOW DEEP?":"LEVEL "+G.level,2.6)}
+  startLevel();say(mode==="boss"?"THE WARDEN AWAITS":mode==="daily"?"DAILY  //  "+G.modNames.join("  +  "):mode==="endless"?"ENDLESS  //  HOW DEEP?":mode==="classic"?"CLASSIC  //  LEVEL 1":"LEVEL "+G.level,2.6)}
 function say(t,d){G.msg=t;G.msgT=d||1.5}
 function popup(t,col){G.pops.push({t,col:col||"#ffb000",a:1.4});if(G.pops.length>5)G.pops.shift();if(G.matrixA>0&&G.state!=="menu")inject(t)}
 /* ---- sound: short synth blips (HELLBALL style) ---- */
@@ -158,7 +162,7 @@ const BIG_SPIN=7;                                            // paddle speed (un
 const hitValue=()=>5*(1+Math.floor((G.vol-1)/3)),hitValue1=()=>5*(1+Math.floor(G.vol/3));
 /* ---------- GLASS PADDLES: no physical effect, but hard, fast impacts crack them (the cracks stay for the game) ---------- */
 function impact(p){if(p!==pad&&!(Math.abs(ball.vz)/LS()<1.3&&Math.hypot(ball.vx,ball.vy)<6))stInc("aicracks");const base=LS(),r=Math.abs(ball.vz)/base,side=Math.hypot(ball.vx,ball.vy);
-  const gj=MOD().glass&&p===pad?MOD().glass:1;if(!(r>=1.66*gj||side>=13*gj||(r>=1.55*gj&&side>=9*gj)))return false;if(p===pad)stInc("cracks");const pw=Math.max(.25,Math.min(1,(r-1.2)*1.4+side/14));makeCrack(p,ball.x-p.x,ball.y-p.y,pw);S.crack(pw);return true}
+  const gj=MOD().glass&&p===pad?MOD().glass:1;if(Math.random()>=.05)return false;if(!(r>=1.66*gj||side>=13*gj||(r>=1.55*gj&&side>=9*gj)))return false;if(p===pad)stInc("cracks");const pw=Math.max(.25,Math.min(1,(r-1.2)*1.4+side/14));makeCrack(p,ball.x-p.x,ball.y-p.y,pw);S.crack(pw);return true}
 function makeCrack(p,u,v,pw){u=Math.max(-PW/2,Math.min(PW/2,u));v=Math.max(-PH/2,Math.min(PH/2,v));const L=[],n=4+Math.round(pw*5);
   for(let i=0;i<n;i++){let a=i/n*Math.PI*2+Math.random()*.6,x=u,y=v,d=0;const pts=[[x,y]],len=6+pw*26*(.5+Math.random());
     while(d<len){const st=1.6+Math.random()*2.4;a+=(Math.random()-.5)*.7;x+=Math.cos(a)*st;y+=Math.sin(a)*st;d+=st;pts.push([x,y]);
@@ -215,7 +219,7 @@ function stepCore(){
 function winPoint(){budCheer();if(Math.random()<.35)aiSay(pick(talkTier()>=2?["LUCKY","FUCK","SHIT","FUCKING HELL","THAT DIDN'T COUNT",">|"]:["LUCKY","WHATEVER","THAT DIDN'T COUNT",">|","HMPH","LAG"]));if(G.vol===1){G.score+=15;popup("ACE! +15","#ffb000")}
   stInc("pw");if(G.vol===1)stInc("aces");G.streak++;const p=25*G.streak;G.score+=p;popup(G.streak>1?"POINT  STREAK x"+G.streak+"  +"+p:"POINT +25","#33ff77");G.vol=0}
 function losePoint(){if(FACE.on)FACE.lostPt=true;budSad();stInc("plost");if(G.mode==="boss")G.bossLost=true;setTimeout(()=>aiMock(true),250);const lost=Math.ceil(G.score*.25);G.score-=lost;if(lost)popup("-25%  (-"+lost+")","#ff4455");G.streak=0;G.vol=0}
-function endPoint(won){G.tagGo=true;if(G.mode==="grudge"&&won&&G.el<1){grudgeWin();G.state="wait";G.waitT=2.2;G.after="over";return}if(won&&G.el<1&&FACE.on&&!FACE.dead){faceDie();G.state="wait";G.waitT=3.6;G.after="hellworld";return}
+function endPoint(won){G.tagGo=true;if(G.mode==="classic"){G.state="wait";G.waitT=1.1;G.after=won?(G.el<1?"clslevel":"serve"):(G.pl<1?"over":"serve");return}if(G.mode==="grudge"&&won&&G.el<1){grudgeWin();G.state="wait";G.waitT=2.2;G.after="over";return}if(won&&G.el<1&&FACE.on&&!FACE.dead){faceDie();G.state="wait";G.waitT=3.6;G.after="hellworld";return}
   if(won&&G.el<1&&G.level===29){G.state="wait";G.waitT=1;G.after="fold";return}
   if(won&&G.el<1&&G.level===39){G.state="wait";G.waitT=.5;G.after="faceintro";return}
   if(won&&G.el<1&&CYL.on&&!CYL.dead){cylDie();G.state="wait";G.waitT=3.4;G.after="level";return}
@@ -240,7 +244,7 @@ function drawDebris(dt){if(!G.debris.length)return;ctx.save();ctx.shadowColor="#
     if(d.al<=0)continue;const c=Math.cos(d.r),s2=Math.sin(d.r),pt=q=>P(d.m[0]+q[0]*c-q[1]*s2,d.m[1]+q[0]*s2+q[1]*c,Math.max(-8,d.m[2]+q[2]));
     const A=pt(d.a),B=pt(d.b);ctx.strokeStyle="rgba(120,255,160,"+(d.al*.8)+")";ctx.beginPath();ctx.moveTo(A[0],A[1]);ctx.lineTo(B[0],B[1]);ctx.stroke()}
   G.debris=G.debris.filter(d=>d.al>0);ctx.restore()}
-function afterWait(){
+function afterWait(){if(G.after==="clslevel"){clsLevelUp();return}
   if(G.after==="form"){levelBeaten();G.debris=[];G.shards=[];setField(2);G.state="form";G.formT=0;G.oceanA=0;G.zone="ocean";S.form();descentSfx();BUB.length=0;DEEP.ev=null;DEEP.evT=4;return}
   if(G.after==="hyper"){levelBeaten();G.state="hyper";G.hyT=0;G.camT=undefined;BLK.length=0;S.warp();setTimeout(()=>S.form(),600);return}
   if(G.after==="fold"){levelBeaten();G.state="fold";G.foldT=0;S.warp();return}
@@ -474,7 +478,7 @@ function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a
 function dailyMods(){const r=mulberry(todayKey()*7+13),a=Math.floor(r()*MODS.length);let b=Math.floor(r()*MODS.length);if(b===a)b=(b+3)%MODS.length;return[MODS[a],MODS[b]]}
 const MOD=()=>G.mod||{};
 const LC=()=>L_CURVE[lv()]/(MOD().curve||1);
-const MODE_NAME={grudge:"GRUDGE MATCH",coop:"CO-OP",online:"ONLINE",normal:"NORMAL",daily:"DAILY",endless:"ENDLESS",boss:"BOSS",test:"TEST"};
+const MODE_NAME={classic:"CLASSIC",grudge:"GRUDGE MATCH",coop:"CO-OP",online:"ONLINE",normal:"NORMAL",daily:"DAILY",endless:"ENDLESS",boss:"BOSS",test:"TEST"};
 
 /* ---- THE WARDEN: 10 health. A giant paddle; at half health it splits into twins ---- */
 const ai2={x:0,y:0,ox:0,oy:0,vx:0,vy:0,px:0,py:0,hl:null,hlT:0,cracks:[],rot:0};
@@ -537,7 +541,7 @@ function pickOpponent(){G.tagT=0;G.tagFade=0;G.tagGo=false;G.hk=null;
   const r=G.mode==="daily"?RNG:Math.random;
   if(r()<.015){const n=UN_RARE[Math.floor(r()*UN_RARE.length)];let h=HK.find(x=>x.n===n);if(!h){h=mkHacker(Math.random,n,2600);HK.push(h)}G.hk=h}            // very rare visitors
   else{const riv=HK.filter(h=>h.w>0);if(riv.length&&r()<.3&&G.mode!=="daily")G.hk=riv[Math.floor(r()*riv.length)];
-    else{const sorted=HK.slice().sort((a,b)=>hkScore(a)-hkScore(b)),f=Math.min(1,(G.level-1)/12),i=Math.max(0,Math.min(sorted.length-1,Math.round(f*(sorted.length-1)+(r()-.5)*8)));G.hk=sorted[i]}}  // deeper = scarier users
+    else{const sorted=HK.slice().sort((a,b)=>hkScore(a)-hkScore(b)),f=Math.min(1,(LVL()-1)/12),i=Math.max(0,Math.min(sorted.length-1,Math.round(f*(sorted.length-1)+(r()-.5)*8)));G.hk=sorted[i]}}  // deeper = scarier users
   G.hk.met=(G.hk.met||0)+1;G.aiName=G.hk.n;G.aiRival=G.hk.w;if(G.aiRival){stInc("rivalsMet");setTimeout(()=>{if(G.state!=="menu"){say("RIVAL  //  "+G.aiName,2.2);popup("IT HAS ENDED YOU "+G.aiRival+"x","#ff4455")}},1900)}
   if(UN_RARE.includes(G.aiName))setTimeout(()=>{if(G.state!=="menu")say("!! "+G.aiName.toUpperCase()+" HAS ENTERED THE TUNNEL !!",2.6)},2000)}
 function levelBeaten(){if(G.test||!G.hk)return;if(G.hk.w>=3)ach("rival3");G.hk.l++;G.hk.rep=Math.max(100,G.hk.rep-25);hkSave();if(boardRanked()[0].you)ach("top1")}
@@ -606,7 +610,7 @@ function drawAbyss(W,H,dt){if(G.zone!=="ocean"||G.state==="menu")return;if(!ABYS
    ===================================================================================================== */
 const LB=(()=>{try{return JSON.parse(localStorage.getItem("hb3_lb")||"{}")}catch(e){return{}}})();
 function lbAdd(mode,e){const a=LB[mode]=LB[mode]||[];a.push(e);a.sort((x,y)=>y.s-x.s);a.length=Math.min(a.length,10);try{localStorage.setItem("hb3_lb",JSON.stringify(LB))}catch(err){}return a.indexOf(e)+1}
-function lbRender(mode){$("lbTabs").innerHTML=["normal","daily","endless","boss"].map(m=>'<button class="sb'+(m===mode?" on":"")+'" data-lb="'+m+'">'+MODE_NAME[m]+'</button>').join("");
+function lbRender(mode){$("lbTabs").innerHTML=["normal","classic","daily","endless","boss"].map(m=>'<button class="sb'+(m===mode?" on":"")+'" data-lb="'+m+'">'+MODE_NAME[m]+'</button>').join("");
   const a=LB[mode]||[];$("lbList").innerHTML=a.length?a.map((e,i)=>'<div class="lbr"><span>'+String(i+1).padStart(2,"0")+'</span><span>'+e.s+'</span><span>LV '+e.l+'</span><span>'+e.d+'</span><span class="kl">'+(e.k||"")+'</span></div>').join(""):'<div class="dim">NO RECORDS. PLAY.</div>'}
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-lb]");if(b)lbRender(b.dataset.lb)});
 
@@ -1499,15 +1503,15 @@ const gName=()=>gStore("hb3_name")||"PLAYER-"+gPid.slice(0,4).toUpperCase();
 const gEsc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const gPost=o=>fetch(gAPI(),{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(Object.assign({pid:gPid,n:gName()},o))}).then(r=>r.json());
 const gDay=()=>new Date().toISOString().slice(0,10);
-const GB_TABS=[["normal","NORMAL"],["hard","ENDLESS"],["daily","DAILY"],["classic","DEEPEST LEVEL"],["1v1","1V1 WINS"],["koth","KOTH CROWNS"]];
+const GB_TABS=[["normal","NORMAL"],["hard","ENDLESS"],["daily","DAILY"],["classic","DEEPEST LEVEL"],["1v1","1V1 WINS"],["koth","KOTH CROWNS"],["cls","CLASSIC"]];
 const gKey=b=>b==="daily"?"daily-"+gDay():b;
-function gProfile(){const R=readouts();return{v:1,id:ST.id,best:Math.max(G.best||0,(G.mode==="normal"||G.mode==="daily"||G.mode==="endless")?G.score||0:0),maxL:ST.maxL||0,games:ST.games||0,hits:ST.hits||0,aces:ST.aces||0,sweet:ST.sweet||0,flips:ST.flips||0,
+function gProfile(){const R=readouts();return{v:1,id:ST.id,best:Math.max(G.best||0,(G.mode==="normal"||G.mode==="daily"||G.mode==="endless"||G.mode==="classic")?G.score||0:0),maxL:ST.maxL||0,games:ST.games||0,hits:ST.hits||0,aces:ST.aces||0,sweet:ST.sweet||0,flips:ST.flips||0,
   tricks:ST.tricks||0,min:Math.floor((ST.time||0)/60),pw:ST.pw||0,plost:ST.plost||0,w1:ST.w1v1||0,ach:Object.keys(ACHD||{}).length,r:R.map(x=>x[1]),
   ball:SEL.ball,tint:SEL.tint,border:SEL.border,bud:(BUD&&BUD.g)?BUD.name:"",d:gDay()}}
 function gSendProfile(force){const n=performance.now();if(!force&&n-GB.lastProf<120000)return;GB.lastProf=n;gPost({op:"prof",p:gProfile()}).catch(()=>{})}
-function gSubmit(){if(G.test)return;const b=G.mode==="normal"?"normal":G.mode==="daily"?"daily-"+gDay():G.mode==="endless"?"hard":null;
-  if(b&&G.score>0){RUN.boardP=gPost({op:"score",b,s:G.score,l:G.level});RUN.boardP.then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{})}
-  const deep=Math.max(ST.maxL||0,G.level||0);if(G.mode!=="online"&&G.mode!=="coop"&&G.mode!=="grudge"&&deep>0)gPost({op:"score",b:"classic",s:deep,l:deep}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
+function gSubmit(){if(G.test)return;const b=G.mode==="classic"?"cls":G.mode==="normal"?"normal":G.mode==="daily"?"daily-"+gDay():G.mode==="endless"?"hard":null;
+  if(b&&G.score>0){RUN.boardP=gPost({op:"score",b,s:G.score,l:LVL()});RUN.boardP.then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{})}
+  const deep=Math.max(ST.maxL||0,G.level||0);if(G.mode!=="online"&&G.mode!=="coop"&&G.mode!=="grudge"&&G.mode!=="classic"&&deep>0)gPost({op:"score",b:"classic",s:deep,l:deep}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
 function gWin(){ST.w1v1=(ST.w1v1||0)+1;stSave();gPost({op:"win",b:"1v1"}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
 function gOpen(){hideAll();g$("wb").classList.remove("hidden");g$("wbProf").classList.add("hidden");gLoad(GB.tab)}
 function gLoad(b){GB.tab=b;g$("wbTabs").innerHTML=GB_TABS.map(([k,t])=>'<button class="sb'+(k===b?" on":"")+'" data-wb="'+k+'">'+t+'</button>').join("");
@@ -1572,7 +1576,7 @@ function rTick(){if(G.state==="play"||G.state==="serve"){RUN.maxVol=Math.max(RUN
 const GRADE=v=>v>=97?"SS":v>=90?"S":v>=80?"A":v>=70?"B":v>=55?"C":v>=40?"D":"F";
 const cl100=v=>Math.max(0,Math.min(100,Math.round(isFinite(v)?v:0)));
 function runStats(){const d=k=>(ST[k]||0)-(RUN.st0[k]||0),R=Object.fromEntries(readouts()),time=d("time"),hits=d("hits"),pw=d("pw"),pl=d("plost");
-  const real=[["SCORE",G.score,cl100(Math.log10(G.score+1)/Math.log10(60000)*100)],["DEPTH REACHED","LV "+G.level,cl100((G.level-1)/24*100)],
+  const real=[["SCORE",G.score,cl100(Math.log10(G.score+1)/Math.log10(60000)*100)],["DEPTH REACHED","LV "+LVL(),cl100((LVL()-1)/24*100)],
     ["PRECISION",Math.round(d("sweet")/Math.max(1,hits)*100)+"% SWEET",cl100(d("sweet")/Math.max(1,hits)*250)],["COMPOSURE",pw+" / "+(pw+pl)+" PTS",cl100(pw/Math.max(1,pw+pl)*100)],
     ["ACES",d("aces"),cl100(d("aces")/Math.max(1,pw)*350)],["LONGEST VOLLEY",RUN.maxVol,cl100(RUN.maxVol/30*100)],["PEAK MULTIPLIER","x"+RUN.maxMult.toFixed(1),cl100((RUN.maxMult-1)/2.5*100)],
     ["FLAIR",d("tricks")+" TRICKS / "+d("flips")+" FLIPS",cl100((d("tricks")+d("flips")*4)/Math.max(.5,time/60)*8)],["ENDURANCE",hits+" HITS",cl100(hits/Math.max(1,pl)*6)]];
@@ -1585,7 +1589,7 @@ function repUnlocks(){const fresh=ACH.filter(a=>ACHD[a.id]&&!RUN.ach0.has(a.id))
 function reportOpen(){if(G.mode==="online")return;const S2=runStats(),U=repUnlocks(),box=g$("rep"),w=g$("repWin");let n=0;const L=(h,cls)=>'<div class="rp-l '+(cls||"")+'" style="animation-delay:'+(0.04*n++)+'s">'+h+'</div>';
   const gr=v=>'<span class="rp-g g'+GRADE(v)+'">'+GRADE(v)+'</span>';
   let h=L('<span class="rp-dim">FATALIX TACTICAL OVERLAY // POST-RUN ANALYSIS // SUBJECT HB-'+gEsc(ST.id||"????")+' // '+gEsc(gName())+'</span>');
-  h+=L('<div class="rp-top"><div><div class="rp-dim">THREAT ASSESSMENT</div><div class="rp-big g'+S2.overall+'">'+S2.overall+'</div></div><div class="rp-sum">MODE: '+gEsc((G.mode||"normal").toUpperCase())+'<br>FINAL SCORE: '+G.score+'<br>DEPTH: LEVEL '+G.level+'<br>RUN TIME: '+Math.floor(S2.time/60)+'m '+Math.round(S2.time%60)+'s<br>'+(G.aiName?"TERMINATED BY: "+gEsc(G.aiName):"")+'</div></div>');
+  h+=L('<div class="rp-top"><div><div class="rp-dim">THREAT ASSESSMENT</div><div class="rp-big g'+S2.overall+'">'+S2.overall+'</div></div><div class="rp-sum">MODE: '+gEsc((G.mode||"normal").toUpperCase())+'<br>FINAL SCORE: '+G.score+'<br>DEPTH: LEVEL '+LVL()+'<br>RUN TIME: '+Math.floor(S2.time/60)+'m '+Math.round(S2.time%60)+'s<br>'+(G.aiName?"TERMINATED BY: "+gEsc(G.aiName):"")+'</div></div>');
   h+=L('<div id="repUnl"></div>');
   h+='<div class="rp-cols"><div>'+L('<div class="rp-h">COMBAT METRICS</div>')+S2.real.map(([k,v,s])=>L('<div class="rp-row"><span>'+k+'</span><span>'+gEsc(v)+'</span>'+gr(s)+'</div>')).join("")+'</div>';
   h+='<div>'+L('<div class="rp-h">ESOTERIC READINGS</div>')+S2.eso.map(([k,v])=>L('<div class="rp-row"><span>'+k+'</span><span>'+v+'%</span>'+gr(v)+'</div>')).join("")+'</div></div>';
@@ -1956,14 +1960,24 @@ coHostStep=function(){pad2.ox=pad2.x;pad2.oy=pad2.y;pad2.px=pad2.x;pad2.py=pad2.
   if(G.msg&&(G.msg!==CO.lastMsg||G.msgT>CO.lastMsgT+.2))m.sy=[String(G.msg).slice(0,60),r2(G.msgT)];CO.lastMsg=G.msg;CO.lastMsgT=G.msgT;nSend(m)};
 const _coGuest36=coGuestStep;coGuestStep=function(){const s=CO.snap;_coGuest36();if(s&&s.b2){b2Apply(s.b2);s.b2=null}else{ball2.px=ball2.x;ball2.py=ball2.y;ball2.pz=ball2.z}};
 
+/* ---------- v0.25 CLASSIC: the court never changes from level 1 (no transitions, bosses, ripples or zones),
+   only the speed and the AI keep climbing. Music starts off (M turns it on). ---------- */
+const LVL=()=>G.mode==="classic"?(G.cl||1):G.level;
+function clsLevelUp(){levelBeaten();healPaddle();G.cl=(G.cl||1)+1;G.el=3;say("LEVEL "+G.cl,1.8);tn(660,.15,"square",.04);setTimeout(()=>tn(990,.25,"square",.04),120);startLevel()}
+function clsMusicOff(){G.clsMute=true;try{if(MUS.el&&!MUS.el.paused)MUS.el.pause()}catch(e){}}
+function clsMusicBack(){if(!G.clsMute)return;G.clsMute=false;try{if(MUS.on&&MUS.el){musStart();MUS.el.play().catch(()=>{})}}catch(e){}}
+g$("sHell").onclick=()=>startMode("normal");
+g$("sClassic").onclick=()=>{clsMusicOff();startMode("classic")};
+g$("sBack").onclick=()=>showMenu();
+
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
-function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}musStart();if(MUS.on&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}}
-function showMenu(){G.paused=false;if(CO.on||net.ws){nClose();CO.on=false;if(G.mode==="coop")G.mode="normal"}if(G.mode==="online"&&typeof nClose==="function"){nClose();G.mode="normal"}musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
-const OVS=["menu","cust","achs","modes","lb","over","hkb","pause","olobby","wb"];
+function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}musStart();if(MUS.on&&!G.clsMute&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}}
+function showMenu(){G.paused=false;if(G.clsMute)setTimeout(clsMusicBack,0);if(CO.on||net.ws){nClose();CO.on=false;if(G.mode==="coop")G.mode="normal"}if(G.mode==="online"&&typeof nClose==="function"){nClose();G.mode="normal"}musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
+const OVS=["startm","menu","cust","achs","modes","lb","over","hkb","pause","olobby","wb"];
 function hideAll(){for(const id of OVS)$(id).classList.add("hidden")}
 function startMode(m){initAudio();G.paused=false;hideAll();newGame(m);droneOn();if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
-$("bStart").onclick=()=>startMode("normal");
+$("bStart").onclick=()=>{hideAll();$("startm").classList.remove("hidden")};
 $("bModes").onclick=()=>{hideAll();const ms=dailyMods();let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}
   $("dailyInfo").innerHTML="TODAY: "+ms.map(m=>m.n).join("<br>+ ")+"<br>"+(db&&db.date===todayKey()?"YOUR BEST TODAY: "+db.best:"NO RUN YET TODAY");$("modes").classList.remove("hidden")};
 $("mDaily").onclick=()=>startMode("daily");$("mEndless").onclick=()=>startMode("endless");$("mBack").onclick=()=>showMenu();
@@ -1985,9 +1999,9 @@ addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT
 addEventListener("blur",()=>{if(inRun()&&G.state==="play"&&G.mode!=="online"&&!CO.on)pauseOpen()});
 function showOver(){if(CO.on){coOver();return}try{gSubmit()}catch(e){}try{ghEnd()}catch(e){}setTimeout(()=>{try{reportOpen()}catch(e){console.warn(e)}},500);const won=!!G.bossWon;if(!won)recordKiller();stInc("games");if(G.mode==="daily")stInc("dailies");
   if(G.mode==="daily"&&!G.test){let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}if(!db||db.date!==todayKey()||G.score>db.best)try{localStorage.setItem("hb3_daily",JSON.stringify({date:todayKey(),best:Math.max(G.score,db&&db.date===todayKey()?db.best:0)}))}catch(e){}}
-  const rank=G.test?0:lbAdd(G.mode,{s:G.score,l:G.level,d:new Date().toISOString().slice(0,10),k:won?(G.mode==="grudge"?"TOOK "+G.aiName+"'S COLOURS":"KILLED THE WARDEN"):G.aiName?"ENDED BY "+G.aiName:""});stSave();
+  const rank=G.test?0:lbAdd(G.mode,{s:G.score,l:LVL(),d:new Date().toISOString().slice(0,10),k:won?(G.mode==="grudge"?"TOOK "+G.aiName+"'S COLOURS":"KILLED THE WARDEN"):G.aiName?"ENDED BY "+G.aiName:""});stSave();
   $("ovT").textContent=won?(G.mode==="grudge"?"GRUDGE SETTLED":"THE FACE FALLS"):"GAME OVER";$("ovT").style.color=won?"#ffb000":"#ff4455";
-  $("ovS").textContent=MODE_NAME[G.mode]+"  //  SCORE "+G.score+"  //  "+(G.mode==="endless"?"DEPTH ":"LEVEL ")+G.level+(rank?"  //  #"+rank+" ON YOUR BOARD":"")+(G.test?"  //  TEST RUN (NOT RECORDED)":"");
+  $("ovS").textContent=MODE_NAME[G.mode]+"  //  SCORE "+G.score+"  //  "+(G.mode==="endless"?"DEPTH ":"LEVEL ")+LVL()+(rank?"  //  #"+rank+" ON YOUR BOARD":"")+(G.test?"  //  TEST RUN (NOT RECORDED)":"");
   $("ovK").textContent=won?"":G.aiName?"ENDED BY "+G.aiName+(G.hk&&G.hk.w?"  //  IT HAS ENDED YOU "+G.hk.w+"x  //  NOW #"+(boardRanked().findIndex(e=>e.h===G.hk)+1)+" ON THE THREAT BOARD":""):"";
   $("profO").innerHTML=profHTML(G.prevR);$("over").classList.remove("hidden")}
 addEventListener("beforeunload",stSave);
@@ -2134,7 +2148,7 @@ function corrupt(txt,k){if(k<=0)return txt;let o="";for(const ch of txt)o+=ch!==
 function scoreText(){{const x=nHud(0);if(x)return x}if(G.mode==="online")return "YOU "+net.me+"  -  "+net.them+" OPP";const L=G.level,base="SCORE: "+G.score;if(L<7||!G.hg)return corrupt(base,L>=7?Math.min(.06,.004*(L-6)):0);
   const h=G.hg,inT=.45,outT=.45;let k=0;if(h.t<inT)k=1-h.t/inT;else if(h.t>h.d-outT)k=(h.t-(h.d-outT))/outT;
   return k>.5?corrupt(base,k):corrupt(h.line,k)}
-function levelText(){{const x=nHud(1);if(x)return x}if(G.mode==="online")return "FIRST TO "+NET_WIN+(net.live?"  //  PING "+Math.round(net.rtt):"");const L=G.level;if(L<15)return "LEVEL: "+L;
+function levelText(){{const x=nHud(1);if(x)return x}if(G.mode==="online")return "FIRST TO "+NET_WIN+(net.live?"  //  PING "+Math.round(net.rtt):"");const L=G.level;if(G.mode==="classic")return "CLASSIC  //  LEVEL: "+LVL();if(L<15)return "LEVEL: "+L;
   if(G.lvG&&DS.T<G.lvG.u)return G.lvG.t;if(Math.random()<.003*(L-14))G.lvG={t:pick(["LEVEL: ??","LEVEL: YOU","LEVEL: "+(L*7%97),"LEVEL: \u221e","LEVEL: STILL HERE"]),u:DS.T+1.4};return "LEVEL: "+L}
 function drawWhisper(){const w=G.wh;if(!w)return;const p=P(w.x,w.y,w.z),a=Math.sin(Math.min(1,w.t/w.d)*Math.PI)*.55;
   ctx.save();ctx.font="italic "+Math.max(9,Math.round(22*p[2]*view.s/3.2/G.sc))+"px 'Courier New',monospace";ctx.textAlign="center";ctx.fillStyle="rgba(255,68,85,"+a+")";ctx.shadowColor="#ff2244";ctx.shadowBlur=10;ctx.fillText(w.line,p[0],p[1]);ctx.restore()}
@@ -2163,13 +2177,13 @@ function musGraph(){if(MUS.wa||!AC)return;if(location.protocol==="file:"&&!/[?&]
     MUS.W=W;MUS.wa=true;MUS.check=3}catch(e){MUS.wa=false}}
 function musTaintCheck(dt){if(!MUS.wa||MUS.check===undefined||MUS.el.paused)return;MUS.check-=dt;if(MUS.check>0)return;MUS.check=undefined;
   const d=new Float32Array(512);MUS.W.an.getFloatTimeDomainData(d);if(d.some(v=>Math.abs(v)>1e-5))return;
-  const t=MUS.el.currentTime,src=MUS.el.src;MUS.el.pause();MUS.wa=false;MUS.el=musMake();MUS.el.src=src;MUS.el.currentTime=t;if(MUS.on)MUS.el.play().catch(()=>{})}   // silent through Web Audio: fall back to plain playback
+  const t=MUS.el.currentTime,src=MUS.el.src;MUS.el.pause();MUS.wa=false;MUS.el=musMake();MUS.el.src=src;MUS.el.currentTime=t;if(MUS.on&&!G.clsMute)MUS.el.play().catch(()=>{})}   // silent through Web Audio: fall back to plain playback
 function musReverse(){const W=MUS.W,sr=AC.sampleRate,len=Math.floor(sr*(2+Math.random()*1.5)),N=W.ring[0].length,b=AC.createBuffer(2,len,sr);
   for(let c=0;c<2;c++){const o=b.getChannelData(c),r=W.ring[c];for(let i=0;i<len;i++)o[i]=r[(W.pos-1-i+N*2)%N]}
   const s2=AC.createBufferSource(),g=AC.createGain(),t=AC.currentTime;s2.buffer=b;s2.playbackRate.value=MUS.rate;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(MUS.vol*1.6,t+.4);g.gain.linearRampToValueAtTime(0,t+len/sr/MUS.rate);
   s2.connect(g);g.connect(W.lp);s2.start();MUS.duck=.2;setTimeout(()=>{MUS.duck=1;MUS.fast=1;setTimeout(()=>MUS.fast=0,1500)},len/sr/MUS.rate*1000-300)}
 function musTick(dt){if(!MUS.el)return;const L=G.state==="menu"?0:G.level;
-  const tgt=MUS.on&&MUS.cur?MUS_VOL*MUS.duck:0;MUS.vol=tgt>MUS.vol?Math.min(tgt,MUS.vol+MUS_VOL*dt/(MUS.duck<1||MUS.fast?1.2:9)):MUS.vol+(tgt-MUS.vol)*Math.min(1,dt*3);   // ~9 s fade in, quick duck
+  const tgt=MUS.on&&MUS.cur&&!G.clsMute?MUS_VOL*MUS.duck:0;MUS.vol=tgt>MUS.vol?Math.min(tgt,MUS.vol+MUS_VOL*dt/(MUS.duck<1||MUS.fast?1.2:9)):MUS.vol+(tgt-MUS.vol)*Math.min(1,dt*3);   // ~9 s fade in, quick duck
   if(MUS.wa){MUS.el.volume=1;MUS.W.g.gain.setTargetAtTime(MUS.vol,AC.currentTime,.05)}else MUS.el.volume=Math.max(0,Math.min(1,MUS.vol));
   let r=1;if(L>=8)r=1-Math.min(.32,.018*(L-7))+Math.sin(DS.T*.7)*Math.min(.03,.004*(L-7));                   // slower + lower, with tape warble
   if(L>=15){MUS.stopT-=dt;if(MUS.stopT<=0&&G.state==="play"&&Math.random()<dt*.02){MUS.stopT=40;MUS.grind=2.2}}
@@ -2179,11 +2193,12 @@ function musTick(dt){if(!MUS.el)return;const L=G.state==="menu"?0:G.level;
     MUS.revT=(MUS.revT===undefined?20:MUS.revT)-dt;if(L>=12&&MUS.revT<=0&&!MUS.el.paused&&MUS.vol>.02){MUS.revT=Math.max(12,38-(L-12)*1.5)+Math.random()*12;musReverse()}}
   musTaintCheck(dt)}
 function musNext(){if(MUS.fails>=TRACKS.length)return;if(!MUS.order.length){MUS.order=TRACKS.map((_,i)=>i).sort(()=>Math.random()-.5);if(MUS.cur&&TRACKS[MUS.order[0]]===MUS.cur&&TRACKS.length>1)MUS.order.push(MUS.order.shift())}
-  MUS.cur=TRACKS[MUS.order.shift()];MUS.el.src=MUS.cur.f;MUS.vol=Math.min(MUS.vol,.02);try{MUS.el.playbackRate=MUS.rate}catch(e){}if(MUS.on)MUS.el.play().catch(()=>{});musLabel()}
+  MUS.cur=TRACKS[MUS.order.shift()];MUS.el.src=MUS.cur.f;MUS.vol=Math.min(MUS.vol,.02);try{MUS.el.playbackRate=MUS.rate}catch(e){}if(MUS.on&&!G.clsMute)MUS.el.play().catch(()=>{});musLabel()}
 function musStart(){musGraph();if(MUS.started)return;MUS.started=true;musNext()}
 function musLabel(){const t=MUS.on&&MUS.cur?"\u266a "+MUS.cur.n:"MUSIC OFF";$("mMus").textContent=t;if(G.state!=="menu"&&MUS.on&&MUS.cur)popup(t,"#33d6ff")}
 addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT"))return;const k=e.key.toLowerCase();
-  if(k==="m"){MUS.on=!MUS.on;try{localStorage.setItem("hb3_music",MUS.on?"on":"off")}catch(_){}if(MUS.on){musStart();MUS.el.play().catch(()=>{})}else MUS.el.pause();musLabel()}
+  if(k==="m"&&G.clsMute){G.clsMute=false;MUS.on=true;try{localStorage.setItem("hb3_music","on")}catch(_){}musStart();MUS.el.play().catch(()=>{});musLabel()}
+  else if(k==="m"){MUS.on=!MUS.on;try{localStorage.setItem("hb3_music",MUS.on?"on":"off")}catch(_){}if(MUS.on){musStart();MUS.el.play().catch(()=>{})}else MUS.el.pause();musLabel()}
   if(k==="n"&&MUS.on){musStart();musNext()}});
 /* ominous drone (very low until level 7, then it grows), heartbeat from level 10 */
 const DR={on:false};let beatT=0;
