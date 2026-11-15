@@ -49,7 +49,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.28 // BUILD 20261115.1900</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.29 // BUILD 20261115.1930</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="startm" class="ov hidden" style="gap:10px"><div class="ttl">START</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
  <button class="mb" id="sClassic">CLASSIC</button><div class="dim">LEVEL 1 FOREVER. NO TRANSITIONS, NO BOSSES. IT JUST GETS FASTER. MUSIC OFF (M TO TURN IT ON).</div>
@@ -120,7 +120,7 @@ function spinBall(){if(G.state!=="play"||ball.stop){rotAxis(0,1,0,.012);return}
   rotAxis(1,0,0,-ball.vy*.045+ball.cy*7+ball.vz*.03)} // up/down drift + top spin + rolling down the tunnel
 function resetBall(){Object.assign(ball,{x:WX,y:WY,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,px:WX,py:WY,pz:0})}
 function startLevel(){G.vol=0;if(G.mode==="classic")G.spd=1+Math.min(.5,Math.max(0,(G.cl||1)-12)*.025);resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck();G.dark=G.mode!=="online"&&G.level>=41&&Math.random()<.45;if(G.dark)setTimeout(()=>{if(G.dark)popup("LIGHTS OUT","#ff4455")},2600)}
-function newGame(mode){if(mode!=="classic"&&G.clsMute)setTimeout(clsMusicBack,0);G.cl=1;runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
+function newGame(mode){SV.pts=[];SV.said=false;if(mode!=="classic"&&G.clsMute)setTimeout(clsMusicBack,0);G.cl=1;runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
   G.mod={};G.modNames=[];if(mode==="daily"){const ms=dailyMods();ms.forEach(m=>Object.assign(G.mod,m));G.modNames=ms.map(m=>m.n.split(":")[0]);RNG=mulberry(todayKey())}else RNG=Math.random;
   G.level=G.mod.start||1;G.score=0;G.pl=mode==="endless"?3:(G.mod.lives||5);G.el=(mode==="endless"||mode==="boss")?99:3;G.epts=0;G.bossWon=false;G.bossLost=false;G.zone=null;G.tube=false;G.tubeK=0;G.elMax=3;G.oceanA=1;ABYSS.length=0;EV.list=[];EV.t=8;BLK.length=0;G.hyCam=0;G.twins=false;ai.w=PW;ai.h=PH;
   G.streak=0;G.matrixA=G.level>=6?1:0;G.cam=0;G.shards=[];G.debris=[];G.blown=false;G.hg=null;G.wh=null;setField(1);droneOn();pad.cracks=[];ai.cracks=[];
@@ -196,7 +196,7 @@ function stepCore(){
   // AI: chases the ball while it's coming, drifts home while it's leaving
   if(G.mode==="online")nAI();else{const sk=L_SKILL[lv()]*(MOD().aiSlow||1)*(G.mode==="boss"?(G.twins?.85:1.25):1);
   for(const[q,off]of G.twins?[[ai,-38],[ai2,38]]:[[ai,0]]){q.ox=q.x;q.oy=q.y;q.px=q.x;q.py=q.y;
-    const B2=coAiB2();if(ball.vz>0||B2){const tg=B2?withB2(()=>aiTarget(sk)):aiTarget(sk);q.x-=(q.x-(tg[0]+off))/sk;q.y-=(q.y-tg[1])/sk}else{q.x-=(q.x-(WX+off*1.5))/15;q.y-=(q.y-WY)/15}
+    const B2=coAiB2();if(ball.vz>0||B2){let tg=B2?withB2(()=>aiTarget(sk)):aiTarget(sk);if(!B2&&!G.twins)tg=aiHumanTarget(tg);q.x-=(q.x-(tg[0]+off))/sk;q.y-=(q.y-tg[1])/sk}else{const hm=G.twins||G.mode==="boss"?[WX,WY]:aiHumanHome(WX,WY);q.x-=(q.x-(hm[0]+off*1.5))/15;q.y-=(q.y-hm[1])/15}
     clampP(q);q.vx=q.x-q.px;q.vy=q.y-q.py}}
   ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;spinBall();
   if(G.state!=="play"||ball.stop)return;
@@ -208,7 +208,7 @@ function stepCore(){
   else if(CYL.on&&ball.vz>0){if(ball.z>=cylZ(ball.x))cylHit()}
   else if(G.mode==="online"&&ball.z>DEPTH){ball.z=DEPTH;ball.stop=true}
   else if(ball.z>DEPTH){
-    const hA=touches(ai)?ai:G.twins&&touches(ai2)?ai2:null;
+    if(G.vol===1)svRecord();const hA=touches(ai)?ai:G.twins&&touches(ai2)?ai2:null;
     if(hA){hA.hl=zone(hA);hA.hlT=.35;const cr=impact(hA),bk=G.mode==="boss"?.6:1;ball.z=DEPTH;ball.cx=hA.vx/(LC()*bk);ball.cy=-hA.vy/(LC()*bk);ball.vz=-ball.vz;if(!cr)S.eHit()}
     else{ball.stop=true;ball.vz=0;if(G.mode==="boss")bossDamage();else if(G.mode==="endless"){G.epts++;if(G.epts%3===0)G.el=0}else G.el--;S.miss();winPoint();endPoint(true)}}
   else if(ball.z<0){
@@ -295,13 +295,15 @@ function drawAiSay(t){const s2=G.aiSay;if(!s2||G.state==="warp"||G.state==="form
   ctx.beginPath();ctx.moveTo(p[0]-5,p[1]-12);ctx.lineTo(p[0],p[1]-5);ctx.lineTo(p[0]+5,p[1]-12);ctx.stroke();
   ctx.fillStyle=s2.col;ctx.shadowColor=s2.col;ctx.shadowBlur=8;ctx.fillText(txt,p[0],p[1]-18);ctx.restore()}
 function trickTick(dt){
-  if(press&&!press.flip&&!press.hold&&performance.now()-press.t>260){press.hold=true;pad.tw=null}
+  if(press&&!press.flip&&!press.hold&&!press.slow&&pad.tw&&performance.now()-press.t>150)press.slow=true;
+  if(press&&!press.flip&&!press.hold&&!press.slow&&performance.now()-press.t>260){press.hold=true;pad.tw=null}
+  pad.ts=pad.ts||1;pad.ts+=((press&&press.slow&&pad.tw?.16:1)-pad.ts)*Math.min(1,dt*9);if(!pad.tw)pad.ts=1;
   if(press&&press.hold&&!press.flip){pad.holdV=Math.min(7,pad.holdV+dt*5);pad.rot+=pad.holdV*dt}
-  if(pad.tw){const w=pad.tw;w.t+=dt;const k=Math.min(1,w.t/w.d);pad.rot=w.from+(w.to-w.from)*w.ease(k);if(k>=1){pad.rot=0;pad.tw=null}}
+  if(pad.tw){const w=pad.tw;w.t+=dt*(pad.ts||1);const k=Math.min(1,w.t/w.d);pad.rot=w.from+(w.to-w.from)*w.ease(k);if(k>=1){pad.rot=0;pad.tw=null}}
   if(pad.flip){pad.flip.t+=dt;if(pad.flip.t>=pad.flip.d){pad.flip=null;pad.flipEnd=performance.now()}}
   if(pad.heal){const h=pad.heal;h.t+=dt;pad.cracks.length=Math.max(0,Math.floor(h.n0*(1-Math.min(1,h.t/(h.d*.85)))));if(h.t>=h.d)pad.heal=null}}
 cv.addEventListener("pointermove",e=>{toWorld(e);
-  if(press&&!press.flip&&(G.state==="play"||G.state==="serve"||G.state==="wait")){const dx=e.clientX-press.x,dy=e.clientY-press.y;
+  if(press&&!press.flip&&!press.slow&&(G.state==="play"||G.state==="serve"||G.state==="wait")){const dx=e.clientX-press.x,dy=e.clientY-press.y;
     if(Math.hypot(dx,dy)>16){press.flip=true;startFlip(Math.abs(dx)>Math.abs(dy)?"y":"x")}}});
 cv.addEventListener("pointerdown",e=>{if(G.paused)return;toWorld(e);
   if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}
@@ -309,8 +311,8 @@ cv.addEventListener("pointerdown",e=>{if(G.paused)return;toWorld(e);
   if(G.state==="menu"||G.state==="warp")return;
   if(CO.on&&!CO.host){if(G.state==="serve"||G.state==="play")nSend({t:"gsv"});return}
   if(G.state==="serve"&&touches(pad)){G.state="play";playerHit(true);if(G.mode==="online")nHit(true);return}
-  press={t:performance.now(),x:e.clientX,y:e.clientY,flip:false,hold:false}});
-addEventListener("pointerup",()=>{if(!press)return;const p=press;press=null;if(p.flip)return;
+  press={t:performance.now(),x:e.clientX,y:e.clientY,flip:false,hold:false,slow:false}});
+addEventListener("pointerup",()=>{if(!press)return;const p=press;press=null;if(p.flip||p.slow)return;
   if(p.hold){catchSpin();return}
   const now=performance.now();if(now-lastClick<300&&pad.kind==="single"&&pad.tw){doubleSpin();lastClick=0}else{singleSpin();lastClick=now}});
 /* ---------- ACHIEVEMENTS ----------
@@ -2021,6 +2023,24 @@ AI_POOL_EXTRA=function(p){if(G.hk&&G.hk.n){let h=0;for(const ch of G.hk.n)h=(h*3
 (function topUp(){const seen={};HK.forEach(h=>seen[h.n]=1);const r=mulberry(4242);let added=0;
   for(const raw of UN_NEW){let n;const names=[raw,raw.replace(/ /g,"_"),raw.replace(/ /g,"")];n=names[Math.floor(r()*3)];if(seen[n])continue;seen[n]=1;HK.push(mkHacker(r,n,Math.round(300+r()*1900)));added++}
   if(added)hkSave()})();
+
+/* ---------- v0.29: the AI learns where you serve, and moves like a person ---------- */
+const SV={pts:[],said:false};
+function svRecord(){if(G.test)return;SV.pts.push([ball.x/BW,ball.y/BH]);if(SV.pts.length>8)SV.pts.shift()}
+function svLearn(){const n=SV.pts.length;if(n<4)return null;let cx=0,cy=0;for(const p of SV.pts){cx+=p[0];cy+=p[1]}cx/=n;cy/=n;let s=0;for(const p of SV.pts)s+=Math.hypot(p[0]-cx,p[1]-cy);s/=n;
+  const w=Math.max(0,Math.min(1,1-s/.2))*Math.min(1,(n-3)/4)*.6;if(w>.3&&!SV.said&&G.state!=="menu"){SV.said=true;setTimeout(()=>{if(G.state!=="menu")aiSay(pick(["I KNOW WHERE YOU LIKE TO SERVE","SAME SPOT AGAIN?","PREDICTABLE","I'VE BEEN WATCHING YOUR SERVE"]),"#ffb000")},400)}
+  return{x:cx*BW,y:cy*BH,w}}
+const AIH={n:0,hold:1,last:null,ph:Math.random()*9,key:"",bx:0,by:0,wob:.7,slow:1};
+function aiPers(){const k=G.aiName||"";if(AIH.key===k)return;AIH.key=k;let h=2166136261;for(const c of k){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0}
+  AIH.bx=((h%200)/100-1);AIH.by=(((h>>8)%200)/100-1)*.6;AIH.wob=.35+((h>>16)%70)/100;AIH.slow=((h>>20)%3)}      // favourite side, wobble amount, reaction habit
+function aiHumanTarget(tg){if(G.mode==="boss"||G.mode==="online")return tg;aiPers();
+  if(++AIH.n>=AIH.hold||!AIH.last){AIH.n=0;AIH.last=tg.slice();AIH.hold=1+(AIH.slow&&Math.random()<.5?Math.min(2,AIH.slow):0)}
+  const near=Math.max(0,Math.min(1,ball.z/DEPTH)),far=1-near,t=performance.now()/1000,fat=Math.min(.6,(G.vol||0)/60);
+  let x=AIH.last[0],y=AIH.last[1];const amp=Math.pow(far,1.5)*BW*.045*AIH.wob*(1+fat);
+  x+=Math.sin(t*1.7+AIH.ph)*amp+AIH.bx*BW*.03*far;y+=Math.sin(t*1.3+AIH.ph*1.7)*amp*.8+AIH.by*BH*.03*far;
+  if(G.vol===1){const s=svLearn();if(s){const k=s.w*far*.7;x+=(s.x-x)*k;y+=(s.y-y)*k}}
+  return[x,y]}
+function aiHumanHome(hx,hy){const o=[hx+AIH.bx*BW*.05,hy+AIH.by*BH*.05],s=svLearn();if(s){o[0]+=(s.x-o[0])*s.w*.6;o[1]+=(s.y-o[1])*s.w*.6}return o}
 
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
