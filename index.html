@@ -49,7 +49,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.27 // BUILD 20261114.1350</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.28 // BUILD 20261115.1900</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="startm" class="ov hidden" style="gap:10px"><div class="ttl">START</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
  <button class="mb" id="sClassic">CLASSIC</button><div class="dim">LEVEL 1 FOREVER. NO TRANSITIONS, NO BOSSES. IT JUST GETS FASTER. MUSIC OFF (M TO TURN IT ON).</div>
@@ -96,7 +96,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
    Ball, paddle and AI physics are a straight port of Curveball (engineering.com, Flash, 30 fps):
    300 x 200 box, depth 75, 60 x 40 paddles, 30 px ball, arctan depth scaling.
    Simulation runs at a fixed 30 steps/second exactly like the original; drawing is interpolated. */
-const cv=document.getElementById("c"),ctx=cv.getContext("2d");
+const cv=document.getElementById("c");let ctx=cv.getContext("2d");
 let BW=300,BH=200,DEPTH=75,VA=31.066017;const PW=60,PH=40,BR=15,STEP=1/30;
 const L_SPEED=[2,2.4,2.8,3.1,3.4,3.7,4.0,4.15,4.3,4.4,4.4,4.4];
 const L_SKILL=[17,14,11,9,7,5.5,4.6,4.1,3.7,3.4,3.4,3.4];
@@ -406,7 +406,7 @@ function drawBorder(c,st,x,y,w,h,u,col,rgb,t){const k=u/3;c.save();c.lineJoin="r
     c.fillStyle="#eef1f5";for(const f of[.25,.5,.75]){for(const[px,py]of[[x+w*f,y],[x+w*f,y+h],[x,y+h*f],[x+w,y+h*f]]){c.beginPath();c.arc(px,py,Math.max(.8,1.1*k),0,7);c.fill()}}}
   else if(st==="sigil"){                                          // marching runes on every edge, circled planetary sigils with heptagrams, pulsing ley lines
     c.strokeStyle="rgba("+rgb+",.55)";c.lineWidth=Math.max(.5,.6*k);c.strokeRect(x,y,w,h);c.strokeRect(x-3*k,y-3*k,w+6*k,h+6*k);
-    c.fillStyle=col;c.shadowColor=col;c.shadowBlur=8;c.textAlign="center";c.textBaseline="middle";const fs=Math.max(6,Math.round(2.8*k*1.8));c.font=fs+"px serif";
+    c.fillStyle=col;c.textAlign="center";c.textBaseline="middle";const fs=Math.max(6,Math.round(2.8*k*1.8));c.font=fs+"px serif";
     const per=2*(w+h+12*k),sp=fs*1.4;for(let s=0;s<per;s+=sp){const p=perim(x-1.5*k,y-1.5*k,w+3*k,h+3*k,s+t*8);c.globalAlpha=.45+.45*Math.sin(t*1.7+s*.05);c.fillText(RUNE[Math.floor(s/sp)%RUNE.length],p[0],p[1])}c.globalAlpha=1;
     const r=7*k;[[x,y],[x+w,y],[x+w,y+h],[x,y+h]].forEach(([px,py],i)=>{c.save();c.translate(px,py);c.lineWidth=Math.max(.6,.8*k);c.strokeStyle=col;c.beginPath();c.arc(0,0,r,0,7);c.stroke();
       c.rotate(t*.4*(i%2?-1:1));c.beginPath();for(let j=0;j<=7;j++){const a=j*3/7*Math.PI*2-Math.PI/2;j?c.lineTo(Math.cos(a)*r*.86,Math.sin(a)*r*.86):c.moveTo(Math.cos(a)*r*.86,Math.sin(a)*r*.86)}c.stroke();
@@ -503,7 +503,7 @@ const INSULT_PACKS=[{un:"level5",l:["YOU BROKE THE GLASS. CONGRATS, IDIOT","I'VE
   {un:"level15",l:["THE OCEAN TOOK BETTER THAN YOU","NOBODY IS COMING TO SAVE YOU","I CAN HEAR YOUR HEART, FUCKFACE","YOU WILL DROWN IN HERE","STAY. FOREVER. LOSER"]},
   {un:"boss",l:["THE WARDEN SAYS HI, BITCH","I REMEMBER YOU","WORTHLESS MEAT PADDLE","THE WARDEN WAS MY COUSIN, ASSHOLE"]}];
 function talkTier(){const L=G.level;return L>=11?3:L>=7?2:L>=4?1:0}
-function aiPool(){const t=talkTier();let p=TALK[t].slice();if(t>0&&Math.random()<.35)p=TALK[t-1].slice();if(t>=2)p=p.concat(...INSULT_PACKS.filter(q=>ACHD[q.un]).map(q=>q.l));return p}
+let AI_POOL_EXTRA=p=>p;function aiPool(){return AI_POOL_EXTRA(aiPool0())}function aiPool0(){const t=talkTier();let p=TALK[t].slice();if(t>0&&Math.random()<.35)p=TALK[t-1].slice();if(t>=2)p=p.concat(...INSULT_PACKS.filter(q=>ACHD[q.un]).map(q=>q.l));return p}
 
 /* =====================================================================================================
    HACKERS: the AI opponents are persistent "users" on a threat board. Whoever ends your run climbs it.
@@ -789,16 +789,26 @@ function neon(pathFn,rgb,a,w){ctx.globalCompositeOperation="lighter";ctx.lineCap
   pathFn();ctx.strokeStyle="rgba("+rgb+","+(.07*a)+")";ctx.lineWidth=w*7;ctx.stroke();
   ctx.strokeStyle="rgba("+rgb+","+(.22*a)+")";ctx.lineWidth=w*3;ctx.stroke();
   ctx.strokeStyle="rgba(235,255,240,"+(.85*a)+")";ctx.lineWidth=w;ctx.stroke();ctx.globalCompositeOperation="source-over"}
-function drawSigil(sg,W,H,t){const a=Math.min(1,sg.t/1.6,(sg.d-sg.t)/1.6)*(.75+.08*Math.sin(t*1.3)),rgb=zoneRGB(),cx=W/2,cy=H/2,R=Math.min(W,H)*.4,w=Math.max(1.2,R/180),
-    S0=SIGILS[Math.floor(sg.seed*SIGILS.length)],txt=SG_TXT[Math.floor(sg.seed*97)%SG_TXT.length];
-  ctx.save();ctx.translate(cx,cy);
-  const g=ctx.createRadialGradient(0,0,R*.1,0,0,R*1.15);g.addColorStop(0,"rgba("+rgb+","+(.07*a)+")");g.addColorStop(1,"rgba("+rgb+",0)");ctx.fillStyle=g;ctx.fillRect(-R*1.2,-R*1.2,R*2.4,R*2.4);
-  neon(()=>{ctx.beginPath();ctx.arc(0,0,R,0,TAU2);ctx.moveTo(R*.82,0);ctx.arc(0,0,R*.82,0,TAU2)},rgb,a,w*1.1);
-  ctx.save();ctx.rotate(-t*.05);ctx.font="600 "+Math.round(R*.105)+"px Georgia,'Times New Roman',serif";ctx.textAlign="center";ctx.textBaseline="middle";
+/* v0.28: sigil ring text is baked once per sigil, then rotated as one image */
+const SGC={k:"",c:null};
+function sigilRing(txt,R,rgb){const k=txt+"|"+Math.round(R)+"|"+rgb;if(SGC.k===k)return SGC.c;
+  const S=Math.ceil(R*2.3),c=document.createElement("canvas");c.width=c.height=S;const x=c.getContext("2d");x.translate(S/2,S/2);
+  x.font="600 "+Math.round(R*.105)+"px Georgia,'Times New Roman',serif";x.textAlign="center";x.textBaseline="middle";
   const n=Math.max(1,Math.floor(TAU2*R*.91/(R*.105*.95)));let s="";while(s.length<n)s+=txt;
-  ctx.globalCompositeOperation="lighter";for(let i=0;i<n;i++){ctx.save();ctx.rotate(i/n*TAU2);ctx.fillStyle="rgba("+rgb+","+(.18*a)+")";ctx.fillText(s[i],0,-R*.91+1);ctx.fillText(s[i],1,-R*.91);
-    ctx.fillStyle="rgba(235,255,240,"+(.75*a)+")";ctx.fillText(s[i],0,-R*.91);ctx.restore()}ctx.restore();ctx.globalCompositeOperation="source-over";
-  neon(()=>sigilPath(S0,R*.72),rgb,a,w*1.5);
+  x.globalCompositeOperation="lighter";for(let i=0;i<n;i++){x.save();x.rotate(i/n*TAU2);x.fillStyle="rgba("+rgb+",.18)";x.fillText(s[i],0,-R*.91+1);x.fillText(s[i],1,-R*.91);
+    x.fillStyle="rgba(235,255,240,.75)";x.fillText(s[i],0,-R*.91);x.restore()}
+  SGC.k=k;SGC.c=c;return c}
+const SGS={k:"",c:null};
+function sigilStatic(S0,R,rgb,w,key){const k=key+"|"+Math.round(R)+"|"+rgb;if(SGS.k===k)return SGS.c;
+  const S=Math.ceil(R*2.5),c=document.createElement("canvas");c.width=c.height=S;const x=c.getContext("2d"),oc=ctx;ctx=x;
+  try{x.translate(S/2,S/2);const g=x.createRadialGradient(0,0,R*.1,0,0,R*1.15);g.addColorStop(0,"rgba("+rgb+",.07)");g.addColorStop(1,"rgba("+rgb+",0)");x.fillStyle=g;x.fillRect(-R*1.2,-R*1.2,R*2.4,R*2.4);
+  neon(()=>{x.beginPath();x.arc(0,0,R,0,TAU2);x.moveTo(R*.82,0);x.arc(0,0,R*.82,0,TAU2)},rgb,1,w*1.1);neon(()=>sigilPath(S0,R*.72),rgb,1,w*1.5)}finally{ctx=oc}
+  SGS.k=k;SGS.c=c;return c}
+function drawSigil(sg,W,H,t){const a=Math.min(1,sg.t/1.6,(sg.d-sg.t)/1.6)*(.75+.08*Math.sin(t*1.3)),rgb=zoneRGB(),cx=W/2,cy=H/2,R=Math.min(W,H)*.4,w=Math.max(1.2,R/180),
+    si=Math.floor(sg.seed*SIGILS.length),S0=SIGILS[si],txt=SG_TXT[Math.floor(sg.seed*97)%SG_TXT.length];
+  ctx.save();ctx.translate(cx,cy);ctx.globalAlpha=Math.min(1,a);
+  const sc=sigilStatic(S0,R,rgb,w,si);ctx.globalCompositeOperation="lighter";ctx.drawImage(sc,-sc.width/2,-sc.height/2);
+  const rc=sigilRing(txt,R,rgb);ctx.save();ctx.rotate(-t*.05);ctx.drawImage(rc,-rc.width/2,-rc.height/2);ctx.restore();
   ctx.restore()}
 
 /* ---------- THE DEEP: murk, falling snow, shapes that block the light, and faces ---------- */
@@ -1887,11 +1897,11 @@ function coTick(){if(CO.on&&!CO.host&&!net.live){CO.on=false;G.mode="normal"}}
 const GH={rec:null,play:null,i:0};
 const b64e=u=>{let s="";for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)},b64d=s=>{try{const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}catch(e){return null}};
 function ghSet(g,src){if(!g||typeof g.p!=="string"||!Array.isArray(g.sc))return;const p=b64d(g.p);if(!p||p.length<20)return;if(GH.play&&GH.play.s>=(g.s|0))return;GH.play={p,sc:g.sc.slice(0,2000).map(v=>Number(v)|0),n:gClean(g.n)||"GHOST",s:g.s|0,src}}
-function ghStart(mode){GH.rec=null;GH.play=null;GH.i=0;if(mode!=="daily")return;GH.rec={p:[],sc:[]};const day=gDay();
+function ghStart(mode){GH.rec=null;GH.play=null;GH.i=0;try{gpStart(mode)}catch(e){}if(mode!=="daily")return;GH.rec={p:[],sc:[]};const day=gDay();
   try{const l=JSON.parse(localStorage.getItem("hb3_ghost")||"null");if(l&&l.d===day)ghSet(Object.assign({n:"YOUR BEST"},l),"you")}catch(e){}
   fetch(gAPI()+"?ghost="+encodeURIComponent("daily-"+day)).then(r=>r.json()).then(d=>{if(d&&d.g&&G.mode==="daily"){GH.play=null;ghSet({p:d.g.p,sc:d.g.sc,n:d.n,s:d.s},"world")}}).catch(()=>{})}
-function ghTick(){if(G.mode!=="daily"||!GH.rec||G.state==="menu"||G.state==="over")return;GH.i++;if(GH.rec.p.length<24000&&GH.i%3===0)GH.rec.p.push(Math.round(pad.x/BW*255),Math.round(pad.y/BH*255));if(GH.i%30===0&&GH.rec.sc.length<2000)GH.rec.sc.push(G.score)}
-function ghEnd(){if(G.mode!=="daily"||G.test||!GH.rec||GH.rec.p.length<40)return;const g={d:gDay(),s:G.score,p:b64e(Uint8Array.from(GH.rec.p)),sc:GH.rec.sc};GH.rec=null;
+function ghTick(){if(GP.pr&&G.state!=="menu"&&G.state!=="over"){GH.i++;gpTick(GH.i)}if(G.mode!=="daily"||!GH.rec||G.state==="menu"||G.state==="over")return;GH.i++;if(GH.rec.p.length<24000&&GH.i%3===0)GH.rec.p.push(Math.round(pad.x/BW*255),Math.round(pad.y/BH*255));if(GH.i%30===0&&GH.rec.sc.length<2000)GH.rec.sc.push(G.score)}
+function ghEnd(){try{gpEnd()}catch(e){}if(G.mode!=="daily"||G.test||!GH.rec||GH.rec.p.length<40)return;const g={d:gDay(),s:G.score,p:b64e(Uint8Array.from(GH.rec.p)),sc:GH.rec.sc};GH.rec=null;
   try{const l=JSON.parse(localStorage.getItem("hb3_ghost")||"null");if(!l||l.d!==g.d||g.s>l.s)localStorage.setItem("hb3_ghost",JSON.stringify(g))}catch(e){}
   if(RUN.boardP)RUN.boardP.then(d=>{if(d&&d.you&&d.you.rank===1&&d.you.s===g.s)gPost({op:"ghost",b:"daily-"+g.d,g:{p:g.p,sc:g.sc}}).catch(()=>{})}).catch(()=>{})}
 function drawGhost(t){const g=GH.play;if(!g||G.mode!=="daily"||G.state==="menu"||G.state==="over")return;const f=GH.i/3,i=Math.floor(f),n=g.p.length/2;if(i+1>=n)return;const k=f-i,x=(g.p[i*2]+(g.p[i*2+2]-g.p[i*2])*k)/255*BW,y=(g.p[i*2+1]+(g.p[i*2+3]-g.p[i*2+1])*k)/255*BH,
@@ -1985,6 +1995,32 @@ function hwBack(){if(!HWF.el||HWF.going)return;HWF.going=true;if(HWF.btn)HWF.btn
 function closeHellworld(){clearTimeout(HWF.t);HWF.going=false;if(HWF.btn){HWF.btn.remove();HWF.btn=null}if(!HWF.el)return;HWF.el.remove();HWF.el=null;try{budLoad();budPull()}catch(e){}try{if(HWF.mus&&MUS.on){MUS.el.play().catch(()=>{})}}catch(e){}HWF.mus=false;showMenu()}
 addEventListener("message",e=>{if(!HWF.el||e.source!==HWF.el.contentWindow||!e.data)return;if(e.data.hbu==="leave")hwBack();else if(e.data.hbu==="saved"&&HWF.going)closeHellworld()});
 g$("bHw").onclick=openHellworld;
+
+/* ---------- v0.28 PLAYER GHOSTS: every finished run leaves a short copy of your paddle on the server; other players meet up to 3 of them as faint named paddles ---------- */
+const GP={ok:["normal","hard","gef","classic"],pr:null,list:[],MAX:1500};
+function gpStart(mode){GP.pr=null;GP.list=[];mode=mode||"normal";if(!GP.ok.includes(mode))return;GP.pr=[];
+  fetch(gAPI()+"?pool=1&pid="+encodeURIComponent(gPid)).then(r=>r.json()).then(d=>{if(!d||!Array.isArray(d.list)||!GP.ok.includes(G.mode))return;
+    GP.list=d.list.slice(0,3).map(g=>({p:typeof g.p==="string"?b64d(g.p):null,n:gClean(g.n)||"GHOST",s:g.s|0})).filter(g=>g.p&&g.p.length>=40)}).catch(()=>{})}
+function gpTick(i){if(!GP.pr||G.state==="menu"||G.state==="over")return;if(i%3===0&&GP.pr.length<GP.MAX*2)GP.pr.push(Math.round(pad.x/BW*255),Math.round(pad.y/BH*255))}
+function gpEnd(){const r=GP.pr;GP.pr=null;if(!r||G.test||r.length<60||G.score<50)return;try{gPost({op:"gpool",g:{p:b64e(Uint8Array.from(r)),s:G.score,l:LVL()}}).catch(()=>{})}catch(e){}}
+function gpDraw(){if(!GP.list.length||!GP.ok.includes(G.mode)||G.state==="menu"||G.state==="over")return;const f=GH.i/3,i=Math.floor(f),k=f-i;
+  ctx.save();ctx.setLineDash([4,6]);ctx.lineWidth=1.2;ctx.font="bold 10px 'Courier New',monospace";ctx.textAlign="center";
+  for(const g of GP.list){const n=g.p.length/2;if(i+1>=n)continue;const fade=Math.min(1,(n-i)/30),x=(g.p[i*2]+(g.p[i*2+2]-g.p[i*2])*k)/255*BW,y=(g.p[i*2+1]+(g.p[i*2+3]-g.p[i*2+1])*k)/255*BH,
+    a=P(x-PW/2,y-PH/2,0),b=P(x+PW/2,y+PH/2,0);ctx.strokeStyle="rgba(180,220,255,"+(.28*fade)+")";ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);
+    ctx.fillStyle="rgba(180,220,255,"+(.5*fade)+")";ctx.fillText("GHOST  "+g.n,(a[0]+b[0])/2,a[1]-5)}ctx.restore()}
+
+/* ---------- v0.28 MORE AI: new names, extra insults, and a catchphrase per user ---------- */
+const UN_NEW=["gravy","clown shoes","bagman","sir pongsalot","wet sock","hamlet","dr chaos","nightcrawler","pixel pete","big shoe","mr pong","kevin","lunchbox","gristle","hobgoblin","tin foil","spoonman","captain crunch","the janitor","maxwell","dentist","pigeon","sock puppet","ratking","deep fryer","bonk","lord nibbles","nana","gus","hellmouth","paddlelord","brick","bigfoot","ghostface","drain","sludge","moonpie","the intern","carl","trashpanda"];
+const AI_SIG=["I HAVE DONE THIS BEFORE","TELL YOUR FRIENDS","THIS IS MY TUNNEL","I DON'T EVEN BLINK","SMILE. IT HELPS.","THE BALL FEARS ME","BORN IN THIS TUNNEL","SEND IT BACK. I DARE YOU","I'M NOT EVEN TRYING","NOT AGAIN","YOU LOOK TIRED","I'LL BE HERE ALL DAY","KEEP SWINGING","NOTHING PERSONAL","MY PADDLE, MY RULES","SEE YOU AT THE BOTTOM","NO REFUNDS","I AM THE WALL","WATCH YOUR EDGES","THE TUNNEL REMEMBERS","DON'T BLINK","I TAUGHT THE BALL EVERYTHING","LAG. SURE. LAG.","ARE WE HAVING FUN","I NEVER MISS TWICE","STOP SPINNING","YOU DROPPED SOMETHING. YOUR POINT.","THIS ONE'S FOR MOM","PRESS F","THAT'S THE SPIRIT. NOW LOSE.","I CAN SMELL THE SWEAT","BREATHE. IT WON'T HELP.","GOOD LUCK. YOU'LL NEED A LOT","FEEL THAT? THAT'S DESTINY","I'M ON MY LUNCH BREAK","YOU HIT LIKE A WET NOODLE","TOO EASY. TOO EASY.","THE GRAY ONES SENT ME","ONE MORE. ONE MORE.","I'M JUST A GUY"];
+TALK[0].push("HAHA","LOOK OUT","BOING","NOT TODAY","ALMOST","WHEEEE","HELLO??","WAKE UP","BONK","THAT'S ADORABLE","TOO FAR LEFT","TOO FAR RIGHT","BLINK","SNOOZE");
+TALK[1].push("LOOK AT YOU GO. BADLY","YOUR PADDLE IS A SUGGESTION","PRACTICE MODE IS OVER THERE","IS THIS YOUR FIRST DAY","HIT THE BALL, GENIUS","DID YOU EVEN TRY","WOW. JUST WOW","NICE FINGERS. USE THEM","LAUGH TRACK GOES HERE","YOU'RE THE REASON FOR THE CRACKS","BALLS DON'T HIT THEMSELVES");
+TALK[2].push("WHAT A STEAMING PILE OF A SWING","FUCK OFF BACK TO THE MENU","YOU PADDLE LIKE A DAMN GHOST","I'VE SHAT BETTER RETURNS","COCKSURE AND WRONG","YOU ABSOLUTE WALNUT","DIPSHIT ENERGY","SWING AND A FUCKING MISS","THE BALL SENT ME A POSTCARD. IT SAID LOSE","PISS-POOR EFFORT");
+TALK[3].push("I'LL FUCK UP YOUR STREAK","YOUR HANDS ARE SHIT AND YOU SHOULD FEEL SHIT","HOLY HELL YOU'RE A DISASTER","CRAWL BACK TO LEVEL ONE, CUNT","YOUR ANCESTORS WATCH AND CRINGE","AND THAT'S WHY THEY CALL IT HELLBALL, FUCKER","EVEN THE DEEP LAUGHS AT YOU","SOMEBODY CALL AN AMBULANCE. FOR YOUR SKILL");
+INSULT_PACKS.push({un:"level15",l:["THE CYLINDER SPINS. YOU DON'T","YOU CAME ALL THIS WAY TO LOSE TO ME","I'VE SEEN SMARTER BALLS","THE DEEP LOVES TO WATCH YOU FAIL"]},{un:"boss",l:["THE WARDEN KEEPS A FILE ON YOU","SIT. STAY. LOSE.","YOUR NUMBER IS UP, PRISONER"]});
+AI_POOL_EXTRA=function(p){if(G.hk&&G.hk.n){let h=0;for(const ch of G.hk.n)h=(h*31+ch.charCodeAt(0))>>>0;const s=AI_SIG[h%AI_SIG.length];p.push(s,s,s)}return p};
+(function topUp(){const seen={};HK.forEach(h=>seen[h.n]=1);const r=mulberry(4242);let added=0;
+  for(const raw of UN_NEW){let n;const names=[raw,raw.replace(/ /g,"_"),raw.replace(/ /g,"")];n=names[Math.floor(r()*3)];if(seen[n])continue;seen[n]=1;HK.push(mkHacker(r,n,Math.round(300+r()*1900)));added++}
+  if(added)hkSave()})();
 
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
@@ -2266,7 +2302,7 @@ function draw(t,dt){
   const hide=G.state==="warp"||G.state==="form"||G.state==="hyper"||G.state==="fold"||G.state==="faceintro"||G.state==="hwin"||(G.after==="warp"||G.after==="form"||G.after==="hyper"||G.after==="fold"||G.after==="faceintro")&&G.state==="wait";
   if(G.state!=="menu"){if(!hide&&FACE.on)drawFaceBoss(t);if(!hide&&CYL.on)drawCylinder(t);if(!hide&&!CYL.on&&!FACE.on){drawPaddle(ai,DEPTH,AIC()[0],AIC()[1],t);if(G.twins)drawPaddle(ai2,DEPTH,"#ff4455","255,68,85",t)}
     if(!(hide&&(G.state==="warp"||G.state==="form"||G.state==="hyper"||G.state==="fold"||G.state==="faceintro"||G.state==="hwin"||G.blown))){drawBall(t);coDrawB2(t)}}
-  if(G.state!=="menu"){drawAiSay(t);if(CO.on&&net.live)drawPaddle(pad2,0,"#33d6ff","51,214,255",t);drawGhost(t);drawPaddle(pad,0,TINT().col,TINT().rgb,t);drawNameTag(t)}   // name tag on top so your paddle never hides it
+  if(G.state!=="menu"){drawAiSay(t);if(CO.on&&net.live)drawPaddle(pad2,0,"#33d6ff","51,214,255",t);drawGhost(t);gpDraw();drawPaddle(pad,0,TINT().col,TINT().rgb,t);drawNameTag(t)}   // name tag on top so your paddle never hides it
   rollEnd();drawTwist();pad.hlT=Math.max(0,pad.hlT-dt);ai.hlT=Math.max(0,ai.hlT-dt);drawVignette(W,H);drawHellChrome(W,H);drawCRT(W,H);drawDescent(W,H,dt);
   const L=view.ox,R=view.ox+BW*view.s,T=view.oy,B=view.oy+BH*view.s;
   ledText(scoreText(),L,T-30,16,G.hg?"#ff4455":"#33ff77");ledText(G.mode==="endless"?levelText().replace("LEVEL","DEPTH"):G.mode==="daily"?"DAILY  "+levelText():levelText(),R,T-30,16,"#33ff77","right");

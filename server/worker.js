@@ -130,6 +130,11 @@ export class Board {
         const rec = (await this.s.get("q:" + prof)) || null;
         return lbJSON({ n: rec ? rec.n : "PLAYER", p: rec ? rec.p : null });
       }
+      if (u.searchParams.get("pool")) {                          // v0.28: recent players' paddle copies, a few at random (never your own)
+        const me = u.searchParams.get("pid") || "", all = ((await this.s.get("gp")) || []).filter(x => x.pid !== me);
+        for (let i = all.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [all[i], all[j]] = [all[j], all[i]]; }
+        return lbJSON({ list: all.slice(0, 3).map(x => ({ n: x.n, s: x.s, l: x.l, p: x.p })) });
+      }
       const gh = u.searchParams.get("ghost") || "";               // the #1 player's recorded paddle for that board (daily ghost race)
       if (gh) { if (!LB_BOARD.test(gh)) return lbJSON({ error: "bad board" }, 400); return lbJSON((await this.s.get("g:" + gh)) || { g: null }); }
       const b = u.searchParams.get("b") || "", pid = u.searchParams.get("pid") || "";
@@ -145,6 +150,14 @@ export class Board {
       if (!m.save || typeof m.save !== "object" || !m.save.seed) return lbJSON({ error: "bad save" }, 400);
       if (JSON.stringify(m.save).length > 200000) return lbJSON({ error: "save too big" }, 413);
       await this.s.put("h:" + m.pid, { t: Date.now(), save: m.save });
+      return lbJSON({ ok: true });
+    }
+    if (m.op === "gpool") {                                      // v0.28: keep the latest copy per player, newest 60 overall
+      const g = m.g;
+      if (!g || typeof g.p !== "string" || g.p.length > 6000 || !/^[A-Za-z0-9+/=]*$/.test(g.p)) return lbJSON({ error: "bad ghost" }, 400);
+      let all = ((await this.s.get("gp")) || []).filter(x => x.pid !== m.pid);
+      all.push({ pid: m.pid, n: name || (await this.s.get("n:" + m.pid)) || "PLAYER", s: Math.floor(Number(g.s)) || 0, l: Math.floor(Number(g.l)) || 1, p: g.p, t: Date.now() });
+      await this.s.put("gp", all.slice(-60));
       return lbJSON({ ok: true });
     }
     if (m.op === "ghost") {                                      // only the current #1 on that board may store the ghost
