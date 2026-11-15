@@ -49,7 +49,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.29 // BUILD 20261115.1930</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.30 // BUILD 20261115.1900</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="startm" class="ov hidden" style="gap:10px"><div class="ttl">START</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
  <button class="mb" id="sClassic">CLASSIC</button><div class="dim">LEVEL 1 FOREVER. NO TRANSITIONS, NO BOSSES. IT JUST GETS FASTER. MUSIC OFF (M TO TURN IT ON).</div>
@@ -174,7 +174,7 @@ function playerHit(serve){
   const z=zone(pad);pad.hl=z;pad.hlT=.35;const cracked=!serve&&impact(pad);
   const swipe=Math.hypot(pad.vx,pad.vy),side=Math.hypot(ball.vx,ball.vy),base=LS();
   ball.cx=-pad.vx/LC();ball.cy=pad.vy/LC();
-  if(serve){ball.vz=base;ball.stop=false;CYL.rets=0;
+  if(serve){gpServeRec();ball.vz=base;ball.stop=false;CYL.rets=0;
     if(Math.abs(ball.cx)<.01)ball.cx=pad.x<WX?.01:-.01;
     if(Math.abs(ball.cy)<.01)ball.cy=WY<pad.y?.01:-.01}
   else{ball.z=0;ball.vz=-ball.vz}
@@ -1226,7 +1226,7 @@ function hwDraw(W,H){const t=G.hwT;ctx.save();ctx.fillStyle="rgba(0,6,2,"+Math.m
   HW.boot.forEach((l,i)=>{const at=.4+i*.5;if(t<at)return;const n=Math.min(l.length,Math.floor((t-at)*40));ctx.fillStyle=i===HW.boot.length-1?"rgba(255,51,85,"+Math.min(1,4.6-t)+")":"rgba(51,255,119,"+Math.min(1,4.6-t)+")";ctx.fillText(l.slice(0,n),W*.2,H*.32+i*24)});ctx.restore()}
 
 function zTick(dt){if(G.state==="fold")foldTick(dt);if(G.state==="faceintro")faceIntroTick(dt);if(G.state==="hwin")hwTick(dt);faceTick(dt)}
-function drawOverlays(W,H){if(G.state==="faceintro")faceIntroDraw(W,H);if(G.state==="hwin")hwDraw(W,H)}
+function drawOverlays(W,H){try{gpCardDraw(W,H)}catch(e){}if(G.state==="faceintro")faceIntroDraw(W,H);if(G.state==="hwin")hwDraw(W,H)}
 /* AI in the tube: it simulates the ball ahead through the octagon bounces instead of guessing with box reflections */
 function aiTarget(sk){if(!G.tube)return aiTargetBox(sk);let T=Math.round((sk-1)*AI_LEAD*2);if(ball.vz>0)T=Math.min(T,Math.max(0,Math.floor((DEPTH-ball.z)/ball.vz)));
   const sv={x:ball.x,y:ball.y,vx:ball.vx,vy:ball.vy,cx:ball.cx,cy:ball.cy},N=tubeNormals();let x=ball.x,y=ball.y,vx=ball.vx,vy=ball.vy,cx=ball.cx,cy=ball.cy;
@@ -1902,7 +1902,7 @@ function ghSet(g,src){if(!g||typeof g.p!=="string"||!Array.isArray(g.sc))return;
 function ghStart(mode){GH.rec=null;GH.play=null;GH.i=0;try{gpStart(mode)}catch(e){}if(mode!=="daily")return;GH.rec={p:[],sc:[]};const day=gDay();
   try{const l=JSON.parse(localStorage.getItem("hb3_ghost")||"null");if(l&&l.d===day)ghSet(Object.assign({n:"YOUR BEST"},l),"you")}catch(e){}
   fetch(gAPI()+"?ghost="+encodeURIComponent("daily-"+day)).then(r=>r.json()).then(d=>{if(d&&d.g&&G.mode==="daily"){GH.play=null;ghSet({p:d.g.p,sc:d.g.sc,n:d.n,s:d.s},"world")}}).catch(()=>{})}
-function ghTick(){if(GP.pr&&G.state!=="menu"&&G.state!=="over"){GH.i++;gpTick(GH.i)}if(G.mode!=="daily"||!GH.rec||G.state==="menu"||G.state==="over")return;GH.i++;if(GH.rec.p.length<24000&&GH.i%3===0)GH.rec.p.push(Math.round(pad.x/BW*255),Math.round(pad.y/BH*255));if(GH.i%30===0&&GH.rec.sc.length<2000)GH.rec.sc.push(G.score)}
+function ghTick(){if(GP.pr&&G.state!=="menu"&&G.state!=="over"){GH.i++;gpTick(GH.i);gpWorld()}if(G.mode!=="daily"||!GH.rec||G.state==="menu"||G.state==="over")return;GH.i++;if(GH.rec.p.length<24000&&GH.i%3===0)GH.rec.p.push(Math.round(pad.x/BW*255),Math.round(pad.y/BH*255));if(GH.i%30===0&&GH.rec.sc.length<2000)GH.rec.sc.push(G.score)}
 function ghEnd(){try{gpEnd()}catch(e){}if(G.mode!=="daily"||G.test||!GH.rec||GH.rec.p.length<40)return;const g={d:gDay(),s:G.score,p:b64e(Uint8Array.from(GH.rec.p)),sc:GH.rec.sc};GH.rec=null;
   try{const l=JSON.parse(localStorage.getItem("hb3_ghost")||"null");if(!l||l.d!==g.d||g.s>l.s)localStorage.setItem("hb3_ghost",JSON.stringify(g))}catch(e){}
   if(RUN.boardP)RUN.boardP.then(d=>{if(d&&d.you&&d.you.rank===1&&d.you.s===g.s)gPost({op:"ghost",b:"daily-"+g.d,g:{p:g.p,sc:g.sc}}).catch(()=>{})}).catch(()=>{})}
@@ -2041,6 +2041,76 @@ function aiHumanTarget(tg){if(G.mode==="boss"||G.mode==="online")return tg;aiPer
   if(G.vol===1){const s=svLearn();if(s){const k=s.w*far*.7;x+=(s.x-x)*k;y+=(s.y-y)*k}}
   return[x,y]}
 function aiHumanHome(hx,hy){const o=[hx+AIH.bx*BW*.05,hy+AIH.by*BH*.05],s=svLearn();if(s){o[0]+=(s.x-o[0])*s.w*.6;o[1]+=(s.y-o[1])*s.w*.6}return o}
+
+/* ---------- v0.29.1 GHOST SIDE-MATCH + "GHOST DETECTED" card ---------- */
+GP.sv=[];
+function gpStart(mode){GP.pr=null;GP.list=[];GP.cards=[];GP.sv=[];mode=mode||"normal";if(!GP.ok.includes(mode))return;GP.pr=[];
+  fetch(gAPI()+"?pool=1&pid="+encodeURIComponent(gPid)).then(r=>r.json()).then(d=>{if(!d||!Array.isArray(d.list)||!GP.ok.includes(G.mode))return;
+    GP.list=d.list.slice(0,3).map(g=>({p:typeof g.p==="string"?b64d(g.p):null,n:gClean(g.n)||"GHOST",s:g.s|0,l:g.l|0,
+      sv:(Array.isArray(g.v)?g.v:[]).slice(0,8).filter(a=>Array.isArray(a)&&a.length===4&&a.every(Number.isFinite)),gb:null,pts:0,ai:0,si:0,said:0,msg:null})).filter(g=>g.p&&g.p.length>=40);
+    GP.list.forEach((g,i)=>GP.cards.push({g,t:-(1.4+i*5.4),d:5.2}))}).catch(()=>{})}
+function gpEnd(){const r=GP.pr;GP.pr=null;if(!r||G.test||r.length<60||G.score<50)return;try{gPost({op:"gpool",g:{p:b64e(Uint8Array.from(r)),s:G.score,l:LVL(),v:GP.sv.slice(-8)}}).catch(()=>{})}catch(e){}}
+function gpServeRec(){if(!GP.pr)return;GP.sv.push([Math.round(pad.x/BW*255),Math.round(pad.y/BH*255),Math.round(-pad.vx*100)/100,Math.round(pad.vy*100)/100]);if(GP.sv.length>8)GP.sv.shift()}
+/* the ghost's own ball: it serves with the style its player recorded, scores on the AI, and serves again when it wins the point */
+function gbStep(g){let b=g.gb;if(!b){b=g.gb={on:false,wait:20+Math.random()*30,srv:"g"}}
+  if(!b.on){if(--b.wait>0)return;b.on=true;const base=LS();
+    if(b.srv==="g"){const s=g.sv.length?g.sv[g.si++%g.sv.length]:[128,128,0,0];b.x=s[0]/255*BW;b.y=s[1]/255*BH;b.vz=base;b.cx=s[2]/LC();b.cy=s[3]/LC();b.z=0;g.said=0}
+    else{b.x=BW*(.3+Math.random()*.4);b.y=BH*(.3+Math.random()*.4);b.vz=-base;b.cx=(Math.random()-.5)*.02;b.cy=(Math.random()-.5)*.02;b.z=DEPTH}
+    b.vx=0;b.vy=0}
+  b.vx+=b.cx;b.vy+=b.cy;b.z+=b.vz;b.x+=b.vx;b.y-=b.vy;b.cx/=CURVE_DECAY;b.cy/=CURVE_DECAY;
+  if(b.y<BR){b.y=BR;b.vy=-b.vy}else if(b.y>BH-BR){b.y=BH-BR;b.vy=-b.vy}if(b.x<BR){b.x=BR;b.vx=-b.vx}else if(b.x>BW-BR){b.x=BW-BR;b.vx=-b.vx}
+  if(b.vz>0&&b.z>DEPTH){if(Math.random()<.5+Math.min(.3,LVL()*.025)){b.z=DEPTH;b.vz=-b.vz;b.vx=(Math.random()-.5)*2;b.vy=(Math.random()-.5)*2}
+    else{b.on=false;b.wait=36;b.srv="g";g.pts++;g.msg={t:1.6,s:"+1"}}}                          // the AI missed: the ghost serves again
+  else if(b.vz<0&&b.z<0){if(Math.random()<.6){b.z=0;b.vz=-b.vz;b.vx=(Math.random()-.5)*2;b.vy=(Math.random()-.5)*2}
+    else{b.on=false;b.wait=36;b.srv="a";g.ai++;g.msg={t:1.2,s:"MISS"}}}}                         // the ghost missed: the AI serves
+function gpWorld(){if(G.state!=="play"&&G.state!=="serve"&&G.state!=="wait")return;for(const g of GP.list)gbStep(g)}
+function gpDraw(){if(!GP.list.length||!GP.ok.includes(G.mode)||G.state==="menu"||G.state==="over")return;const f=GH.i/3,i=Math.floor(f),k=f-i;
+  ctx.save();ctx.lineWidth=1.2;ctx.font="bold 10px 'Courier New',monospace";ctx.textAlign="center";
+  for(const g of GP.list){const n=g.p.length/2;if(i+1>=n&&!(g.gb&&g.gb.on))continue;const fade=i+1>=n?.5:Math.min(1,(n-i)/30);let x=0,y=0;
+    if(i+1<n){x=(g.p[i*2]+(g.p[i*2+2]-g.p[i*2])*k)/255*BW;y=(g.p[i*2+1]+(g.p[i*2+3]-g.p[i*2+1])*k)/255*BH}else{x=BW/2;y=BH/2}
+    const b=g.gb;if(b&&b.on){const w=b.vz<0?Math.min(1,(1-b.z/DEPTH)*1.4):0;x+=(b.x-x)*w;y+=(b.y-y)*w}                // the ghost paddle goes for its own ball
+    const a=P(x-PW/2,y-PH/2,0),c=P(x+PW/2,y+PH/2,0);ctx.setLineDash([4,6]);ctx.strokeStyle="rgba(180,220,255,"+(.3*fade)+")";ctx.strokeRect(a[0],a[1],c[0]-a[0],c[1]-a[1]);
+    ctx.fillStyle="rgba(180,220,255,"+(.55*fade)+")";ctx.fillText("GHOST  "+g.n+"  "+g.pts+":"+g.ai,(a[0]+c[0])/2,a[1]-5);
+    if(g.msg&&g.msg.t>0){g.msg.t-=1/60;ctx.fillStyle="rgba(255,176,0,"+Math.min(1,g.msg.t)+")";ctx.fillText(g.msg.s,(a[0]+c[0])/2,a[1]-18)}
+    if(b&&b.on){ctx.setLineDash([]);const p=P(b.x,b.y,b.z),p2=P(b.x+BR,b.y,b.z),r=Math.max(2,Math.abs(p2[0]-p[0]));ctx.strokeStyle="rgba(180,220,255,.5)";ctx.beginPath();ctx.arc(p[0],p[1],r,0,TAU2);ctx.stroke();
+      ctx.fillStyle="rgba(180,220,255,.12)";ctx.fill()}}
+  ctx.restore()}
+/* ---- the card: red hazard stripes in Fatalix terminal dress. Glitches are position-only, a couple per second at most, no brightness flashing. ---- */
+const CARDW=230,CARDH=288;
+function gpStyleTxt(g){if(!g.sv.length)return"UNKNOWN";let cx=0,cy=0,px=0,py=0;for(const s of g.sv){px+=s[0];py+=s[1];cx+=s[2];cy+=s[3]}const n=g.sv.length;px/=n;py/=n;cx/=n;cy/=n;
+  const h=px<100?"LEFT":px>155?"RIGHT":"MID",v=py<100?"HIGH":py>155?"LOW":"CENTRE",c=Math.hypot(cx,cy)<.8?"FLAT":Math.abs(cx)>Math.abs(cy)?(cx>0?"CURVE R":"CURVE L"):(cy>0?"TOPSPIN":"BACKSPIN");return v+"-"+h+"/"+c}
+function gpCardImg(g){const c=document.createElement("canvas");c.width=CARDW*2;c.height=CARDH*2;const x=c.getContext("2d");x.scale(2,2);
+  x.fillStyle="#12000300";x.fillStyle="#140206";x.fillRect(0,0,CARDW,CARDH);
+  x.save();x.beginPath();x.rect(0,0,CARDW,CARDH);x.rect(30,30,CARDW-60,CARDH-60);x.clip("evenodd");
+  const gr=x.createLinearGradient(0,0,CARDW,CARDH);gr.addColorStop(0,"#ff4a5a");gr.addColorStop(1,"#a30c1c");x.fillStyle="#1a0206";x.fillRect(0,0,CARDW,CARDH);
+  x.fillStyle=gr;x.beginPath();for(let s=-CARDH;s<CARDW+CARDH;s+=26){x.moveTo(s,0);x.lineTo(s+13,0);x.lineTo(s+13-CARDH,CARDH);x.lineTo(s-CARDH,CARDH)}x.fill();x.restore();
+  x.strokeStyle="#ff4455";x.lineWidth=2;x.strokeRect(1,1,CARDW-2,CARDH-2);x.lineWidth=1;x.strokeRect(30,30,CARDW-60,CARDH-60);
+  const ig=x.createLinearGradient(30,30,CARDW-30,CARDH-30);ig.addColorStop(0,"#080002");ig.addColorStop(1,"#3a050d");x.fillStyle=ig;x.fillRect(31,31,CARDW-62,CARDH-62);
+  x.strokeStyle="#ff4455";x.lineWidth=1.5;const bx=40,by=40,bw=CARDW-80,bh=CARDH-80,bl=12;for(const[px,py,sx,sy]of[[bx,by,1,1],[bx+bw,by,-1,1],[bx,by+bh,1,-1],[bx+bw,by+bh,-1,-1]]){x.beginPath();x.moveTo(px+sx*bl,py);x.lineTo(px,py);x.lineTo(px,py+sy*bl);x.stroke()}
+  const cx=CARDW/2;x.strokeStyle="#ff4455";x.lineWidth=2;x.beginPath();x.moveTo(cx,52);x.lineTo(cx+24,92);x.lineTo(cx-24,92);x.closePath();x.stroke();
+  x.fillStyle="#ff4455";x.fillRect(cx-1.5,63,3,15);x.fillRect(cx-1.5,82,3,3);
+  x.textAlign="center";x.font="bold 15px 'Courier New',monospace";x.fillStyle="#ff4455";x.fillText("GHOST DETECTED",cx+1,115);x.fillStyle="#fff";x.fillText("GHOST DETECTED",cx,114);
+  x.font="bold 14px 'Courier New',monospace";x.fillStyle="#ffb000";x.fillText(g.n.length>16?g.n.slice(0,15)+".":g.n,cx,134);
+  x.textAlign="left";x.font="10px 'Courier New',monospace";let id=0;for(const ch of g.n)id=(id*31+ch.charCodeAt(0))>>>0;
+  const rows=[["ORIGIN","HUMAN // LIVE COPY"],["BEST RUN",String(g.s)],["DEPTH","LEVEL "+(g.l||"?")],["SERVE",gpStyleTxt(g)],["TRACE","ID "+id.toString(16).slice(-4).toUpperCase()]];
+  rows.forEach((r,i)=>{const yy=156+i*17;x.fillStyle="#b86a70";x.fillText(r[0],46,yy);x.fillStyle="#ffd98a";const t=r[1];x.font=t.length>15?"8px 'Courier New',monospace":"10px 'Courier New',monospace";x.fillText(t,98,yy);x.font="10px 'Courier New',monospace"});
+  x.fillStyle="rgba(255,68,85,.8)";x.fillRect(46,246,CARDW-92,1);x.font="9px 'Courier New',monospace";x.fillStyle="#ff4455";x.fillText("> SIGNAL ACQUIRED",46,262);
+  return c}
+function gpCardSfx(){tn(1850,.06,"sine",.03);setTimeout(()=>tn(1850,.06,"sine",.03),150);setTimeout(()=>{noise(.45,.016,1400)},60)}
+function gpCardDraw(W,H){const q=GP.cards;if(!q||!q.length||G.state==="menu"||G.state==="over")return;const c=q[0];c.t+=1/60;if(c.t<0)return;
+  if(!c.img){c.img=gpCardImg(c.g);c.gl=0;c.nx=.8;gpCardSfx()}
+  if(c.t>c.d){q.shift();return}
+  const sc=Math.min(1,W/1000,H/620)*.9,w=CARDW*sc,h=CARDH*sc,t=c.t,inA=Math.min(1,t/.5),out=Math.min(1,(c.d-t)/.6),a=Math.min(out,inA);
+  let ox=W-w-26+(1-easeOut(inA))*60,oy=Math.max(64,H*.18);
+  if(t>c.nx){c.nx=t+1.3+Math.random()*1.4;c.gl=.14}                         // one short positional glitch every 1.3 to 2.7 s
+  const gl=c.gl>0;if(gl)c.gl-=1/60;
+  ctx.save();ctx.globalAlpha=.92*a;ctx.beginPath();ctx.rect(ox-8,oy,w+16,h*inA);ctx.clip();
+  if(gl){const n=7,sh=h/n;for(let i=0;i<n;i++){const d=(i%2?1:-1)*(2+Math.random()*7)*sc*(Math.random()<.5?1:.4);ctx.drawImage(c.img,0,i*sh*2/sc,CARDW*2,sh*2/sc,ox+d,oy+i*sh,w,sh)}
+    ctx.globalAlpha=.22*a;ctx.drawImage(c.img,ox+4*sc,oy+1,w,h)}
+  else ctx.drawImage(c.img,ox+Math.sin(t*9)*.4*sc,oy,w,h);
+  ctx.globalAlpha=a;ctx.fillStyle="rgba(0,0,0,.2)";for(let y=0;y<h;y+=3)ctx.fillRect(ox,oy+y,w,1);                                       // static scanlines
+  const by=(t*38)%(h+30)-15;const bg=ctx.createLinearGradient(0,oy+by-14,0,oy+by+14);bg.addColorStop(0,"rgba(255,90,100,0)");bg.addColorStop(.5,"rgba(255,90,100,.1)");bg.addColorStop(1,"rgba(255,90,100,0)");ctx.fillStyle=bg;ctx.fillRect(ox,oy+by-14,w,28);  // slow soft roll
+  ctx.restore()}
 
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
