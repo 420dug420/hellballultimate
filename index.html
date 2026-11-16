@@ -14,6 +14,9 @@ html,body{margin:0;height:100%;background:#010402;color:#33ff77;font-family:"Cou
 .sb{background:transparent;border:1px solid #119944;color:#33ff77;font:12px "Courier New",monospace;letter-spacing:2px;padding:7px 12px;cursor:pointer}
 .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;font-size:12px;letter-spacing:2px}
 .dim{font-size:12px;color:#119944;letter-spacing:3px}
+#menu{gap:8px}#menu .mb{padding:9px 0;font-size:16px;letter-spacing:5px}#menu .mg{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:min(86vw,360px)}#menu .mg .mb{width:100%;max-width:none;padding:8px 0;font-size:11px;letter-spacing:2px;box-shadow:none}
+#menu .ft{font-size:10px;letter-spacing:1px;color:#0d7a38;text-align:center;line-height:1.7;max-width:92vw}
+#modes .mb{padding:8px 0;font-size:15px}#modes .dim{font-size:11px;letter-spacing:2px;text-align:center;max-width:92vw}
 .ach{border:1px solid #114422;padding:8px 12px;font-size:13px;letter-spacing:1px;color:#33ff77}.ach b{display:block;letter-spacing:3px}.ach span{color:#119944;font-size:11px}
 .ach.lock{color:#335544;border-color:#0c2416}.ach.lock span{color:#2a4434}
 #etchWrap{flex:none;width:min(86vw,480px);aspect-ratio:3/2;border:1px solid #119944;box-shadow:0 0 20px rgba(51,255,119,.15)}
@@ -52,12 +55,15 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.38 // BUILD 20261116.0050</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
-<div id="startm" class="ov hidden" style="gap:10px"><div class="ttl">START</div>
+<div id="menu" class="ov"><canvas id="logo2" style="width:min(80vw,440px);height:auto;flex:none"></canvas><div class="dim" id="mWh" style="color:#663333;min-height:13px;font-style:italic;font-size:11px"></div>
+ <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
+ <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
+ <div class="dim" id="mBest" style="font-size:11px"></div>
+ <div class="ft">v0.39 // BUILD 20261116.0230 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+<div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
+<div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
- <button class="mb" id="sClassic">CLASSIC</button><div class="dim">LEVEL 1 FOREVER. NO TRANSITIONS, NO BOSSES. IT JUST GETS FASTER. MUSIC OFF (M TO TURN IT ON).</div>
- <button class="mb" id="sBack">BACK</button></div>
-<div id="modes" class="ov scroll hidden" style="gap:8px"><div class="ttl">MODES</div>
+ <button class="mb" id="sClassic">CLASSIC</button><div class="dim">LEVEL 1 FOREVER. NO TRANSITIONS, NO BOSSES. MUSIC OFF (M TO TURN IT ON).</div>
  <button class="mb" id="mDaily">DAILY RUN</button><div class="dim">GHOST RACE: THE PADDLE OF THE WORLD #1 PLAYS ALONGSIDE YOU.</div><div class="dim" id="dailyInfo" style="text-align:center;max-width:90vw"></div>
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
   <button class="mb" id="mCoop" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">CO-OP CAMPAIGN</button><div class="dim">2 PLAYERS, 2 BALLS VS THE MACHINE. SHARED LIVES.</div>
@@ -1076,7 +1082,16 @@ function drawArtBack(W,H,dt){if(G.state==="menu"||QL<1||G.zone==="face"||G.zone=
   const pe=ev("poster");if(pe){const w=POSTER_W[Math.floor(pe.seed*POSTER_W.length)],C=artText(w,{size:Math.round(Math.min(W,H)*.2),grad:POSTER_G[Math.floor(pe.seed*977)%POSTER_G.length],drip:1.2}),
       s=Math.min(1,W*.95/C.width),a=evA(pe)*.45,y=H*(.25+((pe.seed*31)%1)*.5);ctx.save();ctx.globalAlpha=a;ctx.drawImage(C,W/2-C.width*s/2+Math.sin(DS.T*.2)*W*.02,y-C.height*s/2-pe.t*4,C.width*s,C.height*s);ctx.restore()}}
 
-/* the menu logo */
+/* v0.39: the menu title is a DOS-terminal block-letter banner: green phosphor, scanlines, static */
+const DOSF={H:"10001 10001 10001 11111 10001 10001 10001",E:"11111 10000 10000 11110 10000 10000 11111",L:"10000 10000 10000 10000 10000 10000 11111",B:"11110 10001 10001 11110 10001 10001 11110",A:"01110 10001 10001 11111 10001 10001 10001",U:"10001 10001 10001 10001 10001 10001 01110",T:"11111 00100 00100 00100 00100 00100 00100",I:"11111 00100 00100 00100 00100 00100 11111",M:"10001 11011 10101 10101 10001 10001 10001"};
+function drawLogo2(){const el=document.getElementById("logo2");if(!el)return;const S=2,W=440*S,cw=7*S+0,rows=[["HELLBALL",7*S],["ULTIMATE",4.4*S]];
+  const hh=(14+rows[0][1]*7+10+rows[1][1]*7+14+16)*1;el.width=W;el.height=Math.ceil(hh+30*S);const c=el.getContext("2d");c.fillStyle="#33ff77";c.font="bold "+11*S+"px 'Courier New',monospace";c.textBaseline="top";
+  c.shadowColor="#33ff77";c.shadowBlur=6*S;c.textAlign="center";c.fillText("// TOP SECRET // EYES ONLY //",W/2,2*S);let y=18*S;
+  for(const[w,px]of rows){const tw=w.length*6*px-px;let x=(W-tw)/2;for(const ch of w){const g=DOSF[ch].split(" ");for(let r=0;r<7;r++)for(let q=0;q<5;q++)if(g[r][q]==="1")c.fillRect(Math.round(x+q*px),Math.round(y+r*px),Math.ceil(px)-1,Math.ceil(px)-1);x+=6*px}y+=7*px+9*S}
+  c.shadowBlur=0;c.font="bold "+10*S+"px 'Courier New',monospace";c.fillStyle="#119944";c.fillText("FATALIX INTELLIGENCE ENTERTAINMENT TERMINAL  //  C:\\HELLBALL>_",W/2,y+2*S);
+  c.globalCompositeOperation="destination-out";c.fillStyle="rgba(0,0,0,.28)";for(let k=0;k<el.height;k+=3)c.fillRect(0,k,W,1)}
+try{drawLogo2()}catch(e){}
+/* the menu logo (old, unused) */
 function drawLogo(){const el=document.getElementById("logo");if(!el)return;const A=artText("HELLBALL",{size:120,grad:["#ff2bd6","#ff1648","#d8ff3a"],drip:1.1}),
     B=artText("ULTIMATE",{size:78,grad:["#00e5ff","#ff2bd6","#3b2bff"],c1:"#ff0030",c2:"#0000ff",drip:.8}),K=artText("地獄",{size:70,grad:["#ff1030","#ff1030"],drip:.6,glitch:0});
   const kw=K.height*.62,W=Math.max(A.width,B.width)+kw*2,H=A.height*.8+B.height*.85;el.width=W;el.height=H;const c=el.getContext("2d"),ax=(W-A.width)/2;
@@ -1089,7 +1104,7 @@ function faceTint(col){const F=DEEP.face,t=mkC(F.width,F.height),x=t.getContext(
 /* ---------- v0.9.1 QUALITY: AUTO drops the costly extras if the frame rate sags (P = show FPS, Q on the menu = AUTO / HIGH / LOW) ---------- */
 let QL=2,QMODE="auto";try{QMODE=localStorage.getItem("hb3_q")||"auto"}catch(e){}if(QMODE==="low")QL=0;
 const Q={ema:1/60,lowT:0,highT:0,fps:60,show:false};
-function qLabel(){const el=document.getElementById("mQ");if(el)el.textContent="Q  QUALITY: "+QMODE.toUpperCase()+(QMODE==="auto"?"  (NOW "+["LOW","MEDIUM","HIGH"][QL]+")":"")+"   //   P  SHOW FPS"}
+function qLabel(){const el=document.getElementById("mQ");if(el)el.textContent="M MUSIC // N NEXT // Q QUALITY: "+QMODE.toUpperCase()+(QMODE==="auto"?" ("+["LOW","MED","HIGH"][QL]+")":"")+" // P FPS // ESC PAUSE // R RESTART"}
 function qTick(dt){Q.ema+=(dt-Q.ema)*.05;Q.fps=1/Q.ema;if(QMODE!=="auto"||G.state==="menu"||document.hidden)return;
   if(Q.fps<54){Q.lowT+=dt;Q.highT=0;if(Q.lowT>1.5&&QL>0){QL--;Q.lowT=0;Q.ema=1/55;fit();qLabel()}}
   else if(Q.fps>58){Q.highT+=dt;Q.lowT=0;if(Q.highT>25&&QL<2){QL++;Q.highT=0;fit();qLabel()}}else{Q.lowT=0;Q.highT=0}}
@@ -2231,7 +2246,6 @@ function showMenu(){try{gAbandon()}catch(e){}G.paused=false;if(G.clsMute)setTime
 const OVS=["medals","startm","menu","cust","achs","modes","lb","over","hkb","pause","olobby","wb"];
 function hideAll(){for(const id of OVS)$(id).classList.add("hidden")}
 function startMode(m){initAudio();G.paused=false;hideAll();newGame(m);droneOn();if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
-$("bStart").onclick=()=>{hideAll();$("startm").classList.remove("hidden")};
 $("bModes").onclick=()=>{hideAll();const ms=dailyMods();let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}
   $("dailyInfo").innerHTML="TODAY: "+ms.map(m=>m.n).join("<br>+ ")+"<br>"+(db&&db.date===todayKey()?"YOUR BEST TODAY: "+db.best:"NO RUN YET TODAY");$("modes").classList.remove("hidden")};
 $("mDaily").onclick=()=>startMode("daily");$("mEndless").onclick=()=>startMode("endless");$("mBack").onclick=()=>showMenu();
