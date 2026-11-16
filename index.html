@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.61 // BUILD 20261116.2300 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.62 // BUILD 20261116.2400 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -135,7 +135,10 @@ const K=z=>(90-Math.atan(z/VA)*180/Math.PI)/90;            // Curveball's depth 
 let WX=BW/2,WY=BH/2;
 const G={state:"menu",sc:1,spd:1,debris:[],trail:[],cam:0,matrixA:0,shards:[],level:1,score:0,pl:5,el:3,vol:0,streak:0,mult:1,lastMult:1,msg:"",msgT:0,pops:[],best:0,waitT:0};
 try{G.best=+localStorage.getItem("hb3_best")||0}catch(e){}
-const lv=()=>Math.min(G.mode==="classic"?(G.cl||1):G.level,12)-1,LS=()=>L_SPEED[lv()]*(G.spd||1)*(G.mode==="lab"&&G.mod.labspd||1);
+const lv=()=>Math.min(G.mode==="classic"?(G.cl||1):G.level,12)-1;
+/* v0.62: the table used to be maxed out by level 10; now levels 1-4 are as before, then it climbs 0.4 of a step per level and tops out at level 24 */
+const tbl=a=>{if(G.mode==="classic")return a[lv()];const L=G.level,i=Math.min(11,L<=4?L-1:3+(L-4)*.4),k=Math.floor(i);return a[k]+(a[Math.min(11,k+1)]-a[k])*(i-k)};
+const LS=()=>tbl(L_SPEED)*(G.spd||1)*(G.mode==="lab"&&G.mod.labspd||1);
 let mouse={x:WX,y:WY};
 const pad={x:WX,y:WY,ox:WX,oy:WY,vx:0,vy:0,px:WX,py:WY,hl:null,hlT:0,cracks:[]};
 const ai ={x:WX,y:WY,ox:WX,oy:WY,vx:0,vy:0,px:WX,py:WY,hl:null,hlT:0,cracks:[]};
@@ -223,7 +226,7 @@ function stepCore(){
   pad.ox=pad.x;pad.oy=pad.y;pad.px=pad.x;pad.py=pad.y;
   pad.x-=(pad.x-(G.mode==="lab"&&G.mod.mirror?BW-mouse.x:mouse.x))/1.5;pad.y-=(pad.y-mouse.y)/1.5;clampP(pad);pad.vx=pad.x-pad.px;pad.vy=pad.y-pad.py;if(G.state==="play")stInc("mv",Math.hypot(pad.vx,pad.vy)/PW);
   // AI: chases the ball while it's coming, drifts home while it's leaving
-  if(G.mode==="online")nAI();else{const sk=L_SKILL[lv()]*(MOD().aiSlow||1)*(G.mode==="boss"?(G.twins?.85:1.25):1);
+  if(G.mode==="online")nAI();else{const sk=tbl(L_SKILL)*(MOD().aiSlow||1)*(G.mode==="boss"?(G.twins?.85:1.25):1);
   for(const[q,off]of G.twins?[[ai,-38],[ai2,38]]:[[ai,0]]){q.ox=q.x;q.oy=q.y;q.px=q.x;q.py=q.y;
     const B2=coAiB2();if(ball.vz>0||B2){let tg=B2?withB2(()=>aiTarget(sk)):aiTarget(sk);if(!B2&&!G.twins)tg=aiHumanTarget(tg);q.x-=(q.x-(tg[0]+off))/sk;q.y-=(q.y-tg[1])/sk}else{const hm=G.twins||G.mode==="boss"?[WX,WY]:aiHumanHome(WX,WY);q.x-=(q.x-(hm[0]+off*1.5))/15;q.y-=(q.y-hm[1])/15}
     clampP(q);q.vx=q.x-q.px;q.vy=q.y-q.py}}
@@ -509,7 +512,7 @@ const todayKey=()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth(
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function dailyMods(){const r=mulberry(todayKey()*7+13),a=Math.floor(r()*MODS.length);let b=Math.floor(r()*MODS.length);if(b===a)b=(b+3)%MODS.length;return[MODS[a],MODS[b]]}
 const MOD=()=>G.mod||{};
-const LC=()=>L_CURVE[lv()]/(MOD().curve||1);
+const LC=()=>tbl(L_CURVE)/(MOD().curve||1);
 const MODE_NAME={lab:"THE LAB",classic:"CLASSIC",grudge:"GRUDGE MATCH",coop:"CO-OP",online:"ONLINE",normal:"HELLBALL",daily:"DAILY",endless:"ENDLESS",boss:"BOSS",test:"TEST"};
 
 /* ---- THE WARDEN: 10 health. A giant paddle; at half health it splits into twins ---- */
@@ -1099,7 +1102,7 @@ function dripCurtain(W,H){const key=W+"x"+H;if(ART.dripKey===key)return ART.drip
 const POSTER_W=["FREAK","FREAKS","GHOUL","REBOOT","HOLLOW EARTH","ANIMUS","ANIMA","NIGHT SCREAMS","NIGHT FREAK","ESOTERICA","HELLBALL","地獄","鬼","呪い"];
 const POSTER_G=[["#ff2bd6","#ff1648","#d8ff3a"],["#00e5ff","#ff2bd6","#0000ff"],["#ffe600","#ff3c00","#ff0030"],["#00ffd0","#00a0ff","#ffffff"]];
 function drawArtBack(W,H,dt){if(G.state==="menu"||QL<1||G.zone==="face"||G.zone==="hell")return;const L=G.level;
-  if(L>=7&&DQ>=2&&G.zone!=="cyber"){const C=dripCurtain(W,H),a=Math.min(.3,.035*(L-6))*(G.state==="form"?.3:1);ctx.save();ctx.globalAlpha=a;ctx.imageSmoothingEnabled=true;ctx.drawImage(C,0,Math.round(Math.sin(DS.T*.17)*H*.02),W,H*.55);ctx.restore()}
+  if(L>=7&&DQ>=3&&G.zone!=="cyber"){const C=dripCurtain(W,H),a=Math.min(.3,.035*(L-6))*(G.state==="form"?.3:1);ctx.save();ctx.globalAlpha=a;ctx.imageSmoothingEnabled=true;ctx.drawImage(C,0,Math.round(Math.sin(DS.T*.17)*H*.02),W,H*.55);ctx.restore()}
   bgxDraw(W,H,dt);const pe=ev("poster");if(pe){const w=POSTER_W[Math.floor(pe.seed*POSTER_W.length)],C=artText(w,{size:Math.round(Math.min(W,H)*.2),grad:POSTER_G[Math.floor(pe.seed*977)%POSTER_G.length],drip:1.2}),
       s=Math.min(1,W*.95/C.width),a=evA(pe)*.45,y=H*(.25+((pe.seed*31)%1)*.5);ctx.save();ctx.globalAlpha=a;ctx.drawImage(C,W/2-C.width*s/2+Math.sin(DS.T*.2)*W*.02,y-C.height*s/2-pe.t*4,C.width*s,C.height*s);ctx.restore()}}
 
@@ -1141,16 +1144,16 @@ function bgxSmear(L){const w=BGX.w,h=BGX.h,u=BGX.u,p=Math.min(.5,.05*(L-11));if(
 function bgxOn(){return DQ>=2&&G.state!=="menu"&&G.zone!=="face"&&G.zone!=="hell"&&QL>=1&&G.level>=7&&G.state!=="form"&&G.state!=="hyper"&&!G.test}
 function bgxStep(dt){const L=G.level;if(!BGX.id)bgxInit();BGX.mt+=dt;
   const av=BGX_POOL.filter(m=>m[0]<=L);if(!BGX.mode||BGX.mt>BGX.md){if(!BGX.mode||BGX.mt>BGX.md+1.6){let m;for(let k=0;k<6;k++){m=av[Math.floor(Math.random()*av.length)];if(m[1]!==BGX.last||av.length<2)break}
-      BGX.mode=m;BGX.last=m[1];BGX.mt=0;BGX.md=18+Math.random()*16}}
+      BGX.mode=m;BGX.last=m[1];BGX.mt=0;BGX.md=40+Math.random()*30}}
   BGX.acc+=dt;const per=QL>=2?1/20:1/12;if(BGX.acc<per)return;BGX.acc%=per;
   const m=BGX.mode,w=BGX.w,h=BGX.h,t=DS.T;BGX_MODES[m[1]](BGX.d,w,h,t,L);
   const d=BGX.d,rw=BGX.rw;for(let i=0,k=0;k<w*h;k++,i+=4){const f=rw[k];d[i]*=f;d[i+1]*=f;d[i+2]*=f}   // dim the middle of the picture
   if(L>=12)bgxSmear(L);BGX.x.putImageData(BGX.id,0,0)}
-function bgxDraw(W,H,dt){if(!bgxOn()){BGX.mode=null;return}const L=G.level;bgxStep(dt);if(!BGX.mode)return;
+function bgxDraw(W,H,dt){if(!bgxOn())return;const L=G.level;bgxStep(dt);if(!BGX.mode)return;
   const en=Math.min(1,BGX.mt/1.6,Math.max(0,(BGX.md+1.6-BGX.mt)/1.6)),a=Math.min(.5,.14+.02*(L-7))*Math.max(.5,Math.min(1.2,fxDist()))*en*(BGX.mode[3]||1);if(a<=.004)return;
   ctx.save();ctx.globalCompositeOperation="lighter";ctx.globalAlpha=a;ctx.imageSmoothingEnabled=false;ctx.drawImage(BGX.c,0,0,W,H);ctx.restore()}
-function bgxFront(W,H){if(!bgxOn()||G.level<18||!BGX.id)return;const dt=1/60;BGX.fnext-=dt;if(BGX.front<=0&&BGX.fnext<=0){BGX.front=1.6;BGX.fnext=32+Math.random()*30}
-  if(BGX.front>0){BGX.front-=dt;const e=Math.sin(Math.PI*Math.max(0,Math.min(1,1-BGX.front/1.6)));ctx.save();ctx.globalCompositeOperation="lighter";ctx.globalAlpha=.1*e*Math.min(1.2,fxDist());ctx.imageSmoothingEnabled=false;ctx.drawImage(BGX.c,0,0,W,H);ctx.restore()}}
+function bgxFront(W,H){if(!bgxOn()||G.level<18||!BGX.id)return;const dt=1/60;BGX.fnext-=dt;if(BGX.front<=0&&BGX.fnext<=0){BGX.front=6;BGX.fnext=24+Math.random()*26}
+  if(BGX.front>0){BGX.front-=dt;const e=Math.sin(Math.PI*Math.max(0,Math.min(1,1-BGX.front/6)));ctx.save();ctx.globalCompositeOperation="lighter";ctx.globalAlpha=.1*e*Math.min(1.2,fxDist());ctx.imageSmoothingEnabled=false;ctx.drawImage(BGX.c,0,0,W,H);ctx.restore()}}
 
 /* v0.39: the menu title is a DOS-terminal block-letter banner: green phosphor, scanlines, static */
 const DOSF={H:"10001 10001 10001 11111 10001 10001 10001",E:"11111 10000 10000 11110 10000 10000 11111",L:"10000 10000 10000 10000 10000 10000 11111",B:"11110 10001 10001 11110 10001 10001 11110",A:"01110 10001 10001 11111 10001 10001 10001",U:"10001 10001 10001 10001 10001 10001 01110",T:"11111 00100 00100 00100 00100 00100 00100",I:"11111 00100 00100 00100 00100 00100 11111",M:"10001 11011 10101 10101 10001 10001 10001"};
@@ -1182,18 +1185,19 @@ function faceTint(col){const F=DEEP.face,t=mkC(F.width,F.height),x=t.getContext(
 /* ---------- v0.9.1 QUALITY: AUTO drops the costly extras if the frame rate sags (P = show FPS, Q on the menu = AUTO / HIGH / LOW) ---------- */
 let QL=2,QMODE="auto";try{QMODE=localStorage.getItem("hb3_q")||"auto"}catch(e){}if(QMODE==="low")QL=0;
 const Q={ema:1/60,lowT:0,highT:0,fps:60,show:false,refresh:60,dlT:0,dhT:0};
-let DQ=3;   // v0.60 distortion quality 3..0: 3 all level effects, 2 no colour-split tunnels, 1 also no wall layer / drips, 0 also no wobble, CRT mask or vignette
+let DQ=3,RS=1;const LAD_RS=[1,.85,.72,.72,.6,.6,.6],LAD_DQ=[3,3,3,2,2,1,0];function ladApply(){const n=Q.S|0;RS=LAD_RS[n];DQ=LAD_DQ[n];fit();qLabel()}
+//   // v0.60 distortion quality 3..0: 3 all level effects, 2 no colour-split tunnels, 1 also no wall layer / drips, 0 also no wobble, CRT mask or vignette
 function qLabel(){const el=document.getElementById("mQ");if(el)el.textContent="M MUSIC // N NEXT // Q QUALITY: "+QMODE.toUpperCase()+(QMODE==="auto"?" ("+["LOW","MED","HIGH"][QL]+")":"")+" // P FPS // ESC PAUSE // R RESTART"}
 function qTick(dt){Q.ema+=(dt-Q.ema)*.05;Q.fps=1/Q.ema;if(!document.hidden&&Q.fps>Q.refresh&&dt<.05)Q.refresh=Math.min(240,Q.fps);   // the best rate this screen has shown = its refresh rate
   if(QMODE!=="auto"||G.state==="menu"||document.hidden)return;
-  {const tg=Math.max(50,Math.min(Q.refresh*.82,118));   // v0.60: on a fast screen a drop from 144 to 70 never reached the old 54 fps trigger; shed the level-driven extras one step at a time instead
-   if(Q.fps<tg){Q.dlT+=dt;Q.dhT=0;if(Q.dlT>1.4&&DQ>0){if(Q.dRaised!==undefined&&Q.age-Q.dRaised<120)Q.dCap=DQ-1;DQ--;Q.dlT=0;Q.ema=1/Math.max(60,Q.refresh*.9)}}
-   else if(Q.fps>tg*1.1){Q.dhT+=dt;Q.dlT=0;if(Q.dhT>45&&DQ<(Q.dCap===undefined?3:Q.dCap)){DQ++;Q.dhT=0;Q.dRaised=Q.age}}else{Q.dlT=0;Q.dhT=0}}
+  {const tg=Math.max(50,Math.min(Q.refresh*.82,118));   // v0.62: on a fast screen, sag below ~82% of refresh walks a ladder: render a bit smaller (barely visible), then shed level extras
+   if(Q.fps<tg){Q.dlT+=dt;Q.dhT=0;if(Q.dlT>1&&(Q.S|0)<6){const n=(Q.S|0)+1;if(Q.sUp!==undefined&&Q.age-Q.sUp<120)Q.sMin=n;Q.S=n;Q.dlT=0;Q.ema=1/Math.max(60,Q.refresh*.9);ladApply()}}
+   else if(Q.fps>tg*1.12){Q.dhT+=dt;Q.dlT=0;if(Q.dhT>40&&(Q.S|0)>(Q.sMin||0)){Q.S=(Q.S|0)-1;Q.dhT=0;Q.sUp=Q.age;ladApply()}}else{Q.dlT=0;Q.dhT=0}}
   Q.age=(Q.age||0)+dt;
   if(Q.fps<54){Q.lowT+=dt;Q.highT=0;if(Q.lowT>(Q.fps<36?.6:1.2)&&QL>0){const was=QL;QL-=(Q.fps<36&&QL>1)?2:1;if(QL<0)QL=0;if(Q.raisedAt!==undefined&&Q.age-Q.raisedAt<90)Q.cap=QL;Q.lowT=0;Q.ema=1/55;fit();qLabel()}}   // v0.57: sag fast, jump two steps when it is a real slowdown, and never climb back to a quality that just failed
   else if(Q.fps>58){Q.highT+=dt;Q.lowT=0;if(Q.highT>60&&QL<(Q.cap===undefined?2:Q.cap)){QL++;Q.highT=0;Q.raisedAt=Q.age;fit();qLabel()}}else{Q.lowT=0;Q.highT=0}}
 function drawFPS(W,H){if(!Q.show)return;ctx.save();ctx.font="bold 12px monospace";ctx.textAlign="center";ctx.fillStyle="#ffb000";
-  ctx.fillText(Q.fps.toFixed(0)+" FPS ("+Q.refresh.toFixed(0)+"Hz)  //  QUALITY "+["LOW","MEDIUM","HIGH"][QL]+"  //  FX "+DQ+"  //  "+cv.width+"x"+cv.height,W/2,H-6);ctx.restore()}
+  ctx.fillText(Q.fps.toFixed(0)+" FPS ("+Q.refresh.toFixed(0)+"Hz)  //  QUALITY "+["LOW","MEDIUM","HIGH"][QL]+"  //  FX "+DQ+" RES "+Math.round(RS*100)+"%  //  "+cv.width+"x"+cv.height,W/2,H-6);ctx.restore()}
 addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT"))return;const k=e.key.toLowerCase();if(k==="p")Q.show=!Q.show;
   if(k==="q"&&G.state==="menu"){QMODE=QMODE==="auto"?"high":QMODE==="high"?"low":"auto";QL=QMODE==="low"?0:2;try{localStorage.setItem("hb3_q",QMODE)}catch(e){}fit();qLabel()}});
 
@@ -1472,8 +1476,10 @@ function drawBall3D(cx,cy,r,c){c=c||ctx;const tr=(TINT().rgb||"51,255,119").spli
   const sp=c.createRadialGradient(cx-r*.38,cy-r*.42,0,cx-r*.38,cy-r*.42,r*.32);sp.addColorStop(0,"rgba(255,255,255,.95)");sp.addColorStop(1,"rgba(255,255,255,0)");c.fillStyle=sp;c.fillRect(cx-r,cy-r,r*2,r*2);
   c.restore();c.save();c.strokeStyle="rgba("+(DS&&DS.rgb||"51,255,119")+",.75)";c.lineWidth=Math.max(1,r*.07);c.beginPath();c.arc(cx,cy,r-c.lineWidth/2,Math.PI*.05,Math.PI*.75);c.stroke();
   c.strokeStyle="rgba(0,0,0,.6)";c.lineWidth=Math.max(.6,r*.03);c.beginPath();c.arc(cx,cy,r,0,TAU2);c.stroke();c.restore()}
+const BSH={c:null};
 function ballShadow(x,y,z){if(z<0)return;const p=P(x,BH,z),q=P(x,y,z),r=BR*q[2]*view.s,h=Math.max(0,Math.min(1,(BH-y)/BH)),a=.42*(1-h*.7);
-  ctx.save();const g=ctx.createRadialGradient(p[0],p[1],0,p[0],p[1],r*1.3);g.addColorStop(0,"rgba(0,0,0,"+a+")");g.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(p[0],p[1],r*1.3,r*.35,0,0,TAU2);ctx.fill();ctx.restore()}
+  if(!BSH.c){const c=mkC(128,35),x2=c.getContext("2d"),g=x2.createRadialGradient(64,17.5,0,64,17.5,64);g.addColorStop(0,"rgba(0,0,0,1)");g.addColorStop(1,"rgba(0,0,0,0)");x2.fillStyle=g;x2.beginPath();x2.ellipse(64,17.5,64,17.2,0,0,TAU2);x2.fill();BSH.c=c}
+  ctx.save();ctx.globalAlpha=a;ctx.drawImage(BSH.c,p[0]-r*1.3,p[1]-r*.35,r*2.6,r*.7);ctx.restore()}
 try{if(!localStorage.getItem("hb3_cosv3")){SEL.ball="b3d";SEL.paddle="glass3d";cosSave();localStorage.setItem("hb3_cosv3","1")}}catch(e){}
 
 /* ---------- v0.14: the 3D ball is a dark glowing orb lighting up the tunnel ---------- */
@@ -1791,10 +1797,14 @@ function drawFX2D(cx,cy,r,c){c=c||ctx;fxStamp();const gl=Math.random()<.06,m=ROT
 {const d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,"shadowBlur");if(d&&d.set)Object.defineProperty(ctx,"shadowBlur",{configurable:true,get(){return d.get.call(this)},set(v){d.set.call(this,QL>=2?v:0)}})}
 /* orb lighting: the wall light is rebuilt only when the ball has actually moved (the game steps 30x a second), at 1/6 size, and stretched smooth */
 const LT2={c:mkC(2,2),key:""};
+/* v0.62: the orb's darkness and its light on the walls were two full-screen blits every frame. The light only exists inside the court, and the dark is flat far from the ball, so blit just the court (+margin) and fill the rest with one solid colour */
+function ballCrop(c,W,H,pad,solid){const x0=Math.max(0,Math.floor(view.ox-pad)),y0=Math.max(0,Math.floor(view.oy-pad)),x1=Math.min(W,Math.ceil(view.ox+BW*view.s+pad)),y1=Math.min(H,Math.ceil(view.oy+BH*view.s+pad)),kx=c.width/W,ky=c.height/H;
+  if(solid){ctx.fillStyle=solid;ctx.fillRect(0,0,W,y0);ctx.fillRect(0,y1,W,H-y1);ctx.fillRect(0,y0,x0,y1-y0);ctx.fillRect(x1,y0,W-x1,y1-y0)}
+  ctx.imageSmoothingEnabled=false;ctx.drawImage(c,x0*kx,y0*ky,(x1-x0)*kx,(y1-y0)*ky,x0,y0,x1-x0,y1-y0)}
 function ballShadow(x,y,z){if(z<0)return;const q=P(x,y,z),r=BR*q[2]*view.s,rgb=TINT().rgb||"51,255,119",W=innerWidth,H=innerHeight,R=Math.hypot(W,H)*.6;
   ctx.save();{const SD=window.SHD||(window.SHD={c:document.createElement("canvas")}),sw=Math.max(2,Math.round(W/4)),sh=Math.max(2,Math.round(H/4));if(SD.c.width!==sw||SD.c.height!==sh){SD.c.width=sw;SD.c.height=sh}const sc=SD.c.getContext("2d");sc.setTransform(1,0,0,1,0,0);sc.clearRect(0,0,sw,sh);sc.setTransform(sw/W,0,0,sh/H,0,0);
   const d=sc.createRadialGradient(q[0],q[1],r*1.2,q[0],q[1],R);d.addColorStop(0,"rgba(0,0,0,0)");d.addColorStop(.06,"rgba(0,0,0,.16)");d.addColorStop(.16,"rgba(0,0,0,.42)");d.addColorStop(.32,"rgba(0,0,0,.66)");d.addColorStop(.55,"rgba(0,0,0,.82)");d.addColorStop(1,"rgba(0,0,0,.93)");
-  sc.fillStyle=d;sc.fillRect(0,0,W,H);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="low";ctx.drawImage(SD.c,0,0,W,H)}ctx.restore();if(QL<1)return;
+  sc.fillStyle=d;sc.fillRect(0,0,W,H);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="low";ballCrop(SD.c,W,H,W*.1,"rgba(0,0,0,.9)")}ctx.restore();if(QL<1)return;
   const LW=Math.max(2,Math.round(W/6)),LH=Math.max(2,Math.round(H/6)),key=[Math.round(x),Math.round(y),Math.round(z*2),rgb,BW,W,H,Math.round((G.cam||0)*2),G.tube?1:0].join();
   if(key!==LT2.key||LT2.c.width!==LW){LT2.key=key;if(LT2.c.width!==LW||LT2.c.height!==LH){LT2.c.width=LW;LT2.c.height=LH}const lc=LT2.c.getContext("2d");lc.setTransform(1,0,0,1,0,0);lc.clearRect(0,0,LW,LH);lc.setTransform(LW/W,0,0,LH/H,0,0);lc.globalCompositeOperation="lighter";
     const Lr=BR*1.6,amp=.8,NU=QL>=2?12:8,NV=QL>=2?10:7;
@@ -1803,7 +1813,7 @@ function ballShadow(x,y,z){if(z<0)return;const q=P(x,y,z),r=BR*q[2]*view.s,rgb=T
       for(let j=0;j<NV;j++)for(let i=0;i<NU;i++){const I=(val[j][i]+val[j][i+1]+val[j+1][i]+val[j+1][i+1])/4;if(I<.012)continue;const a=pts[j][i],b=pts[j][i+1],c=pts[j+1][i+1],e=pts[j+1][i];
         lc.fillStyle="rgba("+rgb+","+Math.min(.6,I)+")";lc.beginPath();lc.moveTo(a[0],a[1]);lc.lineTo(b[0],b[1]);lc.lineTo(c[0],c[1]);lc.lineTo(e[0],e[1]);lc.closePath();lc.fill()}};
     const zz=v=>v*DEPTH;wall((u,v)=>[u*BW,BH,zz(v)],0,-1,0);wall((u,v)=>[u*BW,0,zz(v)],0,1,0);wall((u,v)=>[0,u*BH,zz(v)],1,0,0);wall((u,v)=>[BW,u*BH,zz(v)],-1,0,0);wall((u,v)=>[u*BW,v*BH,DEPTH],0,0,-1)}
-  ctx.save();ctx.globalCompositeOperation="lighter";ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="low";ctx.drawImage(LT2.c,0,0,W,H);ctx.restore()}
+  ctx.save();ctx.globalCompositeOperation="lighter";ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="low";ballCrop(LT2.c,W,H,W*.04,null);ctx.restore()}
 function drawSlabGlow(x,y,w,h,rgb){ctx.save();const g=ctx.createLinearGradient(0,y+h,0,y);g.addColorStop(0,"rgba("+rgb+",.42)");g.addColorStop(.35,"rgba("+rgb+",.12)");g.addColorStop(1,"rgba("+rgb+",0)");
   ctx.fillStyle=g;ctx.fillRect(x,y,w,h);ctx.globalCompositeOperation="lighter";const lw=Math.max(1.5,h*.035);ctx.beginPath();ctx.moveTo(x+2,y+h-1);ctx.lineTo(x+w-2,y+h-1);
   ctx.strokeStyle="rgba("+rgb+",.16)";ctx.lineWidth=lw*5;ctx.stroke();ctx.strokeStyle="rgba("+rgb+",.4)";ctx.lineWidth=lw*2.2;ctx.stroke();ctx.strokeStyle="rgba(235,255,240,.95)";ctx.lineWidth=lw*.8;ctx.stroke();
@@ -2594,7 +2604,7 @@ function drawFace(c,x,y,w,h,o){c.save();c.beginPath();c.rect(x,y,w,h);c.clip();
     c.shadowColor="#33ff77";c.shadowBlur=w/30;c.fillStyle="rgba(210,255,225,.95)";c.fillRect(x,yy-Math.max(1,h/120),w,Math.max(2,h/60));c.shadowBlur=0}
   c.restore()}
 /* ---- drawing ---- */
-function fit(){let d=QL>=2?Math.min(1.25,devicePixelRatio||1):QL===1?1:.7;d=Math.min(d,Math.sqrt((QL>=2?2.4e6:QL===1?1.6e6:1e6)/Math.max(1,innerWidth*innerHeight)));cv.width=innerWidth*d;cv.height=innerHeight*d;ctx.setTransform(d,0,0,d,0,0);
+function fit(){let d=QL>=2?Math.min(1.25,devicePixelRatio||1):QL===1?1:.7;d=Math.min(d,Math.sqrt((QL>=2?2.4e6:QL===1?1.6e6:1e6)/Math.max(1,innerWidth*innerHeight)));d=Math.max(.45,d*RS);cv.width=innerWidth*d;cv.height=innerHeight*d;ctx.setTransform(d,0,0,d,0,0);
   const W=innerWidth,H=innerHeight,s=Math.min((W-32)/BW,(H-90)/BH);view.s=s;view.ox=(W-BW*s)/2;view.oy=(H-BH*s)/2+12}
 addEventListener("resize",fit);fit();
 const P=(x,y,z)=>{const k=K(z);return[view.ox+(WX-(WX-x)*k)*view.s,view.oy+(WY-(WY-y)*k)*view.s,k]};
@@ -2612,7 +2622,7 @@ function rimPts(z,n){const pts=[],per=G.tube?tubeEdges():[[0,0,BW,0],[BW,0,BW,BH
 function frame(z,col,w){const a=P(0,0,z),b=P(BW,BH,z);ctx.strokeStyle=col;ctx.lineWidth=w||1;ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1])}
 function drawTunnel(rgb,ghost){
   if(G.blown&&G.state!=="form")return;
-  rgb=rgb||DS.rgb;const rip=!!G.ripple,n=ghost?(DS.wob||DS.twist?5:1):rip?40:DS.wob||DS.twist?14:1,fm=G.state==="form"?Math.min(1,Math.max(0,(G.formT-FORM_GROW)/2.2)):1;
+  rgb=rgb||DS.rgb;const lo=DQ<3||QL<2,rip=!!G.ripple,n=ghost?(DS.wob||DS.twist?5:1):rip?40:DS.wob||DS.twist?(lo?8:14):1,fm=G.state==="form"?Math.min(1,Math.max(0,(G.formT-FORM_GROW)/2.2)):1;
   ctx.save();
   for(let i=10;i>=1;i--){let z=DEPTH*i/10;if(G.cam){z=((z-G.cam)%DEPTH+DEPTH)%DEPTH;if(z<.5)continue}else if(i===10&&G.broken)continue;
     if(fm<1&&(10-i)/10>fm*1.1)continue;if(DS.breathe)z=Math.max(.6,z+DS.breathe*Math.sin(DS.T*.9+i*1.3));
@@ -2622,7 +2632,7 @@ function drawTunnel(rgb,ghost){
   // lines running down the tunnel: the 4 corners always, plus faint wall lines that show the waves rolling
   const lines=G.tube?tubeVerts():[[0,0],[BW,0],[BW,BH],[0,BH]],nc=lines.length;
   if(!G.tube){for(let i=1;i<6;i++){lines.push([BW*i/6,0],[BW*i/6,BH])}for(let i=1;i<4;i++){lines.push([0,BH*i/4],[BW,BH*i/4])}}
-  {const m=ghost?(DS.wob||DS.twist?4:1):rip?60:DS.wob||DS.twist?12:1;if(fm<1)ctx.globalAlpha=fm;
+  {const m=ghost?(DS.wob||DS.twist?4:1):rip?60:DS.wob||DS.twist?(lo?7:12):1;if(fm<1)ctx.globalAlpha=fm;
    for(let g=0;g<(ghost?1:2);g++){const a0=g?nc:0,a1=g?lines.length:nc;if(a0>=a1)continue;ctx.strokeStyle=g?"rgba("+rgb+",.08)":"rgba("+rgb+",.5)";ctx.lineWidth=g?1:1.2;ctx.beginPath();
      for(let j=a0;j<a1;j++){const x=lines[j][0],y=lines[j][1];for(let i=0;i<=m;i++){const p=RP(x,y,DEPTH-(DEPTH*(1-i/m))*fm);i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])}}
      ctx.stroke()}
