@@ -59,7 +59,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.39 // BUILD 20261116.0230 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.40 // BUILD 20261116.0235 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -1086,7 +1086,7 @@ function drawArtBack(W,H,dt){if(G.state==="menu"||QL<1||G.zone==="face"||G.zone=
 const DOSF={H:"10001 10001 10001 11111 10001 10001 10001",E:"11111 10000 10000 11110 10000 10000 11111",L:"10000 10000 10000 10000 10000 10000 11111",B:"11110 10001 10001 11110 10001 10001 11110",A:"01110 10001 10001 11111 10001 10001 10001",U:"10001 10001 10001 10001 10001 10001 01110",T:"11111 00100 00100 00100 00100 00100 00100",I:"11111 00100 00100 00100 00100 00100 11111",M:"10001 11011 10101 10101 10001 10001 10001"};
 function drawLogo2(){const el=document.getElementById("logo2");if(!el)return;const S=2,W=440*S,cw=7*S+0,rows=[["HELLBALL",7*S],["ULTIMATE",4.4*S]];
   const hh=(14+rows[0][1]*7+10+rows[1][1]*7+14+16)*1;el.width=W;el.height=Math.ceil(hh+30*S);const c=el.getContext("2d");c.fillStyle="#33ff77";c.font="bold "+11*S+"px 'Courier New',monospace";c.textBaseline="top";
-  c.shadowColor="#33ff77";c.shadowBlur=6*S;c.textAlign="center";c.fillText("// TOP SECRET // EYES ONLY //",W/2,2*S);let y=18*S;
+  c.shadowColor="#33ff77";c.shadowBlur=6*S;c.textAlign="center";c.fillText("// TOP SECRET // HUMANS ONLY //",W/2,2*S);let y=18*S;
   for(const[w,px]of rows){const tw=w.length*6*px-px;let x=(W-tw)/2;for(const ch of w){const g=DOSF[ch].split(" ");for(let r=0;r<7;r++)for(let q=0;q<5;q++)if(g[r][q]==="1")c.fillRect(Math.round(x+q*px),Math.round(y+r*px),Math.ceil(px)-1,Math.ceil(px)-1);x+=6*px}y+=7*px+9*S}
   c.shadowBlur=0;c.font="bold "+10*S+"px 'Courier New',monospace";c.fillStyle="#119944";c.fillText("FATALIX INTELLIGENCE ENTERTAINMENT TERMINAL  //  C:\\HELLBALL>_",W/2,y+2*S);
   c.globalCompositeOperation="destination-out";c.fillStyle="rgba(0,0,0,.28)";for(let k=0;k<el.height;k+=3)c.fillRect(0,k,W,1)}
