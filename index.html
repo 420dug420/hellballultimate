@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.48 // BUILD 20261116.0650 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.49 // BUILD 20261116.0720 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -2224,7 +2224,7 @@ const MEDC={};function medCanvas(i,t){const k=i+"_"+t;if(MEDC[k])return MEDC[k];
 function medBadges(code){const lv=code?String(code).split("").map(Number):medLevels(),out=[];lv.forEach((t,i)=>{t=t|0;if(t>=1&&t<=5&&i<MED_DEF.length)out.push([i,t])});out.sort((a,b)=>b[1]-a[1]||a[0]-b[0]);return out}
 /* v0.48: the badges worn on the paddle are the miniature medals, best first, centred on the edge you pick */
 function drawSticks(a,b,k,code,edge){const L=medBadges(code);if(!L.length)return;const w=b[0]-a[0],h=b[1]-a[1],horiz=edge==="b"||edge==="t",n=L.length,asp=44/64;
-  const Hm=Math.max(6,horiz?Math.min(h*.4,w*.94/n/asp,46):Math.min(h*.94/n,w*.45/asp,46)),Wm=Hm*asp;
+  const Hm=Math.max(5,horiz?Math.min(h*.19,w*.94/n/asp,24):Math.min(h*.94/n,w*.2/asp,24)),Wm=Hm*asp;
   ctx.save();ctx.shadowBlur=0;ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";
   L.forEach(([i,t],j)=>{let x,y;if(horiz){x=a[0]+(w-n*Wm)/2+j*Wm;y=edge==="b"?b[1]-Hm-2:a[1]+2}else{y=a[1]+(h-n*Hm)/2+j*Hm;x=edge==="l"?a[0]+2:b[0]-Wm-2}
     ctx.drawImage(medCanvas(i,t),x,y,Wm,Hm)});ctx.restore()}
