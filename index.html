@@ -62,7 +62,7 @@ body.touch #c{touch-action:none}
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.55 // BUILD 20261116.1730 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.56 // BUILD 20261116.1800 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -2311,7 +2311,7 @@ function gpStart(mode){GP.pr=null;GP.list=[];GP.cards=[];GP.sv=[];mode=mode||"no
       sv:(Array.isArray(g.v)?g.v:[]).slice(0,8).filter(a=>Array.isArray(a)&&a.length===4&&a.every(Number.isFinite))})).filter(g=>g.p&&g.p.length>=40);
     if(G.state==="serve"&&!G.aiCopy&&G.score===0&&Math.random()<.6)copyMaybe(1)}).catch(()=>{})}
 function adoptCopy(g){G.aiCopy=g;G.hk=null;G.aiName=g.n;G.aiRival=0;G.tagFade=0;G.tagGo=false;AIH.key="";GP.cards=[{g,t:-.9,d:5.4}];setTimeout(()=>{if(G.state!=="menu"&&G.aiCopy===g)say("PLAYER COPY  //  "+g.n,2.4)},900)}
-function copyMaybe(p){if(!COPY_MODES.includes(G.mode)||!GP.list.length||Math.random()>=(p||.4))return;adoptCopy(GP.list[Math.floor(Math.random()*GP.list.length)])}
+function copyMaybe(p){if(G.level<16||!COPY_MODES.includes(G.mode)||!GP.list.length||Math.random()>=(p||.4))return;adoptCopy(GP.list[Math.floor(Math.random()*GP.list.length)])}
 function aiServe(){const c=G.aiCopy,s=c.sv.length?c.sv[c.si++%c.sv.length]:[128,128,0,0];resetBall();
   ai.x=ai.ox=ai.px=s[0]/255*BW;ai.y=ai.oy=ai.py=s[1]/255*BH;
   Object.assign(ball,{x:ai.x,y:ai.y,z:DEPTH,px:ai.x,py:ai.y,pz:DEPTH,vz:-LS(),vx:0,vy:0,cx:s[2]/LC(),cy:s[3]/LC(),stop:false});
