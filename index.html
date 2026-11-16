@@ -49,7 +49,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.32 // BUILD 20261115.1910</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.33 // BUILD 20261115.1925</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="startm" class="ov hidden" style="gap:10px"><div class="ttl">START</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
  <button class="mb" id="sClassic">CLASSIC</button><div class="dim">LEVEL 1 FOREVER. NO TRANSITIONS, NO BOSSES. IT JUST GETS FASTER. MUSIC OFF (M TO TURN IT ON).</div>
@@ -120,7 +120,7 @@ function spinBall(){if(G.state!=="play"||ball.stop){rotAxis(0,1,0,.012);return}
   rotAxis(1,0,0,-ball.vy*.045+ball.cy*7+ball.vz*.03)} // up/down drift + top spin + rolling down the tunnel
 function resetBall(){Object.assign(ball,{x:WX,y:WY,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,px:WX,py:WY,pz:0})}
 function startLevel(){G.vol=0;if(G.mode==="classic")G.spd=1+Math.min(.5,Math.max(0,(G.cl||1)-12)*.025);resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck();G.dark=G.mode!=="online"&&G.level>=41&&Math.random()<.45;if(G.dark)setTimeout(()=>{if(G.dark)popup("LIGHTS OUT","#ff4455")},2600)}
-function newGame(mode){SV.pts=[];SV.said=false;if(mode!=="classic"&&G.clsMute)setTimeout(clsMusicBack,0);G.cl=1;runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
+function newGame(mode){G.subDone=false;SV.pts=[];SV.said=false;if(mode!=="classic"&&G.clsMute)setTimeout(clsMusicBack,0);G.cl=1;runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
   G.mod={};G.modNames=[];if(mode==="daily"){const ms=dailyMods();ms.forEach(m=>Object.assign(G.mod,m));G.modNames=ms.map(m=>m.n.split(":")[0]);RNG=mulberry(todayKey())}else RNG=Math.random;
   G.level=G.mod.start||1;G.score=0;G.pl=mode==="endless"?3:(G.mod.lives||5);G.el=(mode==="endless"||mode==="boss")?99:3;G.epts=0;G.bossWon=false;G.bossLost=false;G.zone=null;G.tube=false;G.tubeK=0;G.elMax=3;G.oceanA=1;ABYSS.length=0;EV.list=[];EV.t=8;BLK.length=0;G.hyCam=0;G.twins=false;ai.w=PW;ai.h=PH;
   G.streak=0;G.matrixA=G.level>=6?1:0;G.cam=0;G.shards=[];G.debris=[];G.blown=false;G.hg=null;G.wh=null;setField(1);droneOn();pad.cracks=[];ai.cracks=[];
@@ -1514,7 +1514,7 @@ let gPid=gStore("hb3_pid");if(!/^[a-z0-9]{8,24}$/.test(gPid||""))gPid=gStore("hb
 const gClean=n=>String(n||"").toUpperCase().replace(/[^A-Z0-9 _.-]/g,"").trim().slice(0,12);
 const gName=()=>gStore("hb3_name")||"PLAYER-"+gPid.slice(0,4).toUpperCase();
 const gEsc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const gPost=o=>fetch(gAPI(),{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(Object.assign({pid:gPid,n:gName()},o))}).then(r=>r.json());
+const gPost=o=>{const body=JSON.stringify(Object.assign({pid:gPid,n:gName()},o));return fetch(gAPI(),{method:"POST",headers:{"Content-Type":"text/plain"},body,keepalive:body.length<30000}).then(r=>r.json())};
 const gDay=()=>new Date().toISOString().slice(0,10);
 const GB_TABS=[["normal","NORMAL"],["hard","ENDLESS"],["daily","DAILY"],["classic","DEEPEST LEVEL"],["1v1","1V1 WINS"],["koth","KOTH CROWNS"],["cls","CLASSIC"]];
 const gKey=b=>b==="daily"?"daily-"+gDay():b;
@@ -1522,9 +1522,9 @@ function gProfile(){const R=readouts();return{v:1,id:ST.id,best:Math.max(G.best|
   tricks:ST.tricks||0,min:Math.floor((ST.time||0)/60),pw:ST.pw||0,plost:ST.plost||0,w1:ST.w1v1||0,ach:Object.keys(ACHD||{}).length,r:R.map(x=>x[1]),
   ball:SEL.ball,tint:SEL.tint,border:SEL.border,bud:(BUD&&BUD.g)?BUD.name:"",d:gDay()}}
 function gSendProfile(force){const n=performance.now();if(!force&&n-GB.lastProf<120000)return;GB.lastProf=n;gPost({op:"prof",p:gProfile()}).catch(()=>{})}
-function gSubmit(){if(G.test)return;const b=G.mode==="classic"?"cls":G.mode==="normal"?"normal":G.mode==="daily"?"daily-"+gDay():G.mode==="endless"?"hard":null;
-  if(b&&G.score>0){RUN.boardP=gPost({op:"score",b,s:G.score,l:LVL()});RUN.boardP.then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{})}
-  const deep=Math.max(ST.maxL||0,G.level||0);if(G.mode!=="online"&&G.mode!=="coop"&&G.mode!=="grudge"&&G.mode!=="classic"&&deep>0)gPost({op:"score",b:"classic",s:deep,l:deep}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
+function gSubmit(){if(G.test||G.subDone)return;G.subDone=true;try{gFlushPending()}catch(e){}const b=G.mode==="classic"?"cls":G.mode==="normal"?"normal":G.mode==="daily"?"daily-"+gDay():G.mode==="endless"?"hard":null;
+  if(b&&G.score>0){RUN.boardP=gScore({op:"score",b,s:G.score,l:LVL()});RUN.boardP.then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{})}
+  const deep=Math.max(ST.maxL||0,G.level||0);if(G.mode!=="online"&&G.mode!=="coop"&&G.mode!=="grudge"&&G.mode!=="classic"&&deep>0)gScore({op:"score",b:"classic",s:deep,l:deep}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
 function gWin(){ST.w1v1=(ST.w1v1||0)+1;stSave();gPost({op:"win",b:"1v1"}).then(d=>{if(d&&d.you&&d.you.rank===1)ach("world_one")}).catch(()=>{});gSendProfile(true)}
 function gOpen(){hideAll();g$("wb").classList.remove("hidden");g$("wbProf").classList.add("hidden");gLoad(GB.tab)}
 function gLoad(b){GB.tab=b;g$("wbTabs").innerHTML=GB_TABS.map(([k,t])=>'<button class="sb'+(k===b?" on":"")+'" data-wb="'+k+'">'+t+'</button>').join("");
@@ -2131,10 +2131,19 @@ function aiPers(){const k=G.aiName||"";if(AIH.key===k)return;AIH.key=k;let h=216
   AIH.bx=((h%200)/100-1);AIH.by=(((h>>8)%200)/100-1)*.6;AIH.wob=.35+((h>>16)%70)/100;AIH.slow=((h>>20)%3);
   const c=G.aiCopy;if(c&&c.sv.length){let px=0,py=0;for(const s of c.sv){px+=s[0];py+=s[1]}px/=c.sv.length;py/=c.sv.length;AIH.bx=(px/255-.5)*2;AIH.by=(py/255-.5)*1.2}}   // a copy drifts to where its player likes to stand
 
+/* ---------- v0.33: scores never get lost: abandoned runs still count, failed posts are kept and retried ---------- */
+const gStoreJ=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||"null");localStorage.setItem(k,JSON.stringify(v))}catch(e){}return null};
+function gScore(o){const send=()=>gPost(o).then(d=>{if(!d||d.error)throw 0;return d});
+  return send().catch(e=>{const q=gStoreJ("hb3_pend")||[];if(!q.some(x=>x.b===o.b&&x.s>=o.s)){q.push({op:"score",b:o.b,s:o.s,l:o.l});gStoreJ("hb3_pend",q.slice(-20))}return null})}
+function gFlushPending(){const q=gStoreJ("hb3_pend");if(!q||!q.length)return;gStoreJ("hb3_pend",[]);q.forEach(o=>gScore(o))}
+setTimeout(gFlushPending,4000);
+function gAbandon(){try{if(["play","serve","wait"].includes(G.state)&&!G.test&&G.score>0&&G.mode!=="online"&&G.mode!=="coop"){if(G.score>G.best){G.best=G.score;try{localStorage.setItem("hb3_best",G.best)}catch(e){}}gSubmit()}}catch(e){}}
+addEventListener("pagehide",gAbandon);
+
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
 function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}musStart();if(MUS.on&&!G.clsMute&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}}
-function showMenu(){G.paused=false;if(G.clsMute)setTimeout(clsMusicBack,0);if(CO.on||net.ws){nClose();CO.on=false;if(G.mode==="coop")G.mode="normal"}if(G.mode==="online"&&typeof nClose==="function"){nClose();G.mode="normal"}musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
+function showMenu(){try{gAbandon()}catch(e){}G.paused=false;if(G.clsMute)setTimeout(clsMusicBack,0);if(CO.on||net.ws){nClose();CO.on=false;if(G.mode==="coop")G.mode="normal"}if(G.mode==="online"&&typeof nClose==="function"){nClose();G.mode="normal"}musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
 const OVS=["startm","menu","cust","achs","modes","lb","over","hkb","pause","olobby","wb"];
 function hideAll(){for(const id of OVS)$(id).classList.add("hidden")}
 function startMode(m){initAudio();G.paused=false;hideAll();newGame(m);droneOn();if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
