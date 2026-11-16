@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.46 // BUILD 20261116.0550 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.47 // BUILD 20261116.0620 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -97,7 +97,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 <div id="over" class="ov scroll hidden"><div id="ovT" class="ttl" style="font-size:28px;color:#ff4455">GAME OVER</div><div id="ovS" class="dim" style="text-align:center"></div><div id="ovK" class="dim" style="color:#ff4455"></div>
  <div id="profO" class="pf"></div><div class="dim" style="font-size:11px"><span style="color:#ffd23a">YELLOW</span> = WENT UP THIS RUN &nbsp; <span style="color:#ff4455">RED</span> = WENT DOWN</div>
  <div class="row"><button class="mb" id="ovAgain">AGAIN</button><button class="mb" id="ovMenu">MENU</button></div></div>
-<div id="medals" class="ov scroll hidden"><div style="font-size:20px;letter-spacing:6px;text-shadow:0 0 8px #33ff77">MEDALS</div><div class="dim" id="medArch"></div><div id="medList" style="width:min(94vw,640px)"></div>
+<div id="medals" class="ov scroll hidden"><div style="font-size:20px;letter-spacing:6px;text-shadow:0 0 8px #33ff77">MEDALS</div><div class="dim" id="medArch"></div><canvas id="medRack" style="max-width:94vw;width:min(94vw,420px)"></canvas><div id="medList" style="width:min(94vw,640px)"></div>
  <canvas id="medPrev" width="360" height="140" style="max-width:90vw"></canvas><div class="row" id="medEdge"></div><div class="dim">ONE STICK PER MEDAL TIER YOU HOLD. PICK THE EDGE OF YOUR PADDLE THEY SIT ON.</div><button class="mb" id="bMedBack">BACK</button></div>
 <div id="achs" class="ov hidden"><div style="font-size:20px;letter-spacing:6px;text-shadow:0 0 8px #33ff77">ACHIEVEMENTS</div><div class="dim" id="achN"></div>
  <div id="achList" style="width:min(92vw,620px);max-height:62vh;overflow:auto;display:flex;flex-direction:column;gap:6px"></div><button class="mb" id="bAchBack">BACK</button></div>
@@ -2201,7 +2201,7 @@ function gmPlay(g){initAudio();hideAll();G.paused=false;newGame("grudge");const 
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-gm]");if(t)gmStart(t.dataset.gm)});
 
 /* ---------- v0.36: medals, archetypes, paddle sticks, near-miss grading in the left margin ---------- */
-const TIERS=[["BRONZE","#cd7f32"],["SILVER","#c9d1d9"],["GOLD","#ffd23a"],["PLATINUM","#8fe9ff"],["DIAMOND","#d78bff"]];
+const TIERS=[["BRONZE","#cd7f32"],["SILVER","#c9d1d9"],["GOLD","#ffd23a"],["PLATINUM","#8fe9ff"],["FX DIAMOND","#d78bff"]];
 const MED_DEF=[
  {id:"hb",n:"HELLBALL",mode:"normal",th:[1000,4000,10000,25000,60000],v:S=>S.mb_normal||0,d:"BEST HELLBALL SCORE"},
  {id:"en",n:"ENDLESS",mode:"endless",th:[1000,4000,10000,25000,60000],v:S=>S.mb_endless||0,d:"BEST ENDLESS SCORE"},
@@ -2227,10 +2227,29 @@ function drawSticks(a,b,k,code,edge){const L=stkList(code);if(!L.length)return;c
     else{sx=len;sy=sw;y=a[1]+h*.04+c*pitch;x=edge==="l"?a[0]+2+r*(len+2):b[0]-len-2-r*(len+2)}
     ctx.fillStyle="rgba(0,0,0,.55)";ctx.fillRect(x-.7,y-.7,sx+1.4,sy+1.4);ctx.fillStyle=col;ctx.fillRect(x,y,sx,sy);i++}
   ctx.restore()}
+/* v0.47: military-style medals in the game's own style: ribbon, pin bar, octagon medal, one ominous emblem each; the top tier gets the FX prestige halo */
+const MED_RIB=["#aa2233","#2255aa","#aa8822","#22aa66","#aa3399","#cc6622","#22aaaa"];
+function medEmblem(x,i,r,col){x.strokeStyle=col;x.fillStyle=col;x.lineWidth=Math.max(1,r*.13);x.lineCap="round";x.lineJoin="round";const dot=(a,b,q)=>{x.beginPath();x.arc(a,b,q,0,7);x.fill()};
+  if(i===0){x.beginPath();x.moveTo(-r*.6,-r*.1);x.arc(0,-r*.1,r*.6,Math.PI,2*Math.PI);x.lineTo(r*.45,r*.55);x.lineTo(-r*.45,r*.55);x.closePath();x.stroke();dot(-r*.26,-r*.12,r*.17);dot(r*.26,-r*.12,r*.17);
+    x.beginPath();x.moveTo(0,r*.1);x.lineTo(-r*.09,r*.28);x.lineTo(r*.09,r*.28);x.closePath();x.fill();x.lineWidth=Math.max(.8,r*.08);x.beginPath();for(const u of[-.2,0,.2]){x.moveTo(r*u,r*.38);x.lineTo(r*u,r*.55)}x.stroke()}
+  else if(i===1){x.beginPath();x.arc(0,0,r*.82,0,7);x.stroke();x.beginPath();x.moveTo(0,-r*.52);x.lineTo(r*.52,0);x.lineTo(0,r*.52);x.lineTo(-r*.52,0);x.closePath();x.stroke();dot(0,0,r*.11);x.beginPath();for(let k=0;k<8;k++){const a=k*Math.PI/4;x.moveTo(Math.cos(a)*r*.86,Math.sin(a)*r*.86);x.lineTo(Math.cos(a)*r*1.08,Math.sin(a)*r*1.08)}x.stroke()}
+  else if(i===2){x.font="bold "+(r*.98)+"px 'Courier New',monospace";x.textAlign="center";x.textBaseline="middle";x.fillText("905",0,r*.06)}
+  else if(i===3){x.beginPath();x.arc(0,0,r*.66,0,7);x.stroke();x.beginPath();for(const[a,b]of[[-1.08,-.24],[.24,1.08]]){x.moveTo(r*a,0);x.lineTo(r*b,0);x.moveTo(0,r*a);x.lineTo(0,r*b)}x.stroke();dot(0,0,r*.1)}
+  else if(i===4||i===5){x.beginPath();x.arc(0,0,r*.9,0,7);x.stroke();dot(-r*.32,-r*.26,r*.12);dot(r*.32,-r*.26,r*.12);x.beginPath();if(i===4)x.arc(0,r*.05,r*.5,Math.PI*.15,Math.PI*.85);else x.arc(0,r*.68,r*.46,Math.PI*1.15,Math.PI*1.85);x.stroke()}
+  else{x.beginPath();for(let t=0;t<=Math.PI*3.4;t+=.15){const q=r*.1+t/(Math.PI*3.4)*r*.85;x[t?"lineTo":"moveTo"](Math.cos(t)*q,Math.sin(t)*q)}x.stroke()}}
+function medalDraw(x,i,t,ox,oy,s){x.save();x.translate(ox,oy);x.scale(s,s);const on=t>0,col=on?TIERS[t-1][1]:"#2d3d35",cx=22,cy=42,R=15;
+  x.fillStyle=on?MED_RIB[i]:"#1b2822";x.fillRect(14,3,16,24);if(on){x.fillStyle=col;x.fillRect(20,3,4,24);x.fillStyle="rgba(0,0,0,.35)";x.fillRect(14,3,2,24);x.fillRect(28,3,2,24)}
+  x.fillStyle=col;x.fillRect(11,0,22,4);
+  if(t===5){x.beginPath();for(let k=0;k<16;k++){const a=k*Math.PI/8,q=k%2?R+1:R+4;x.lineTo(cx+Math.cos(a)*q,cy+Math.sin(a)*q)}x.closePath();x.strokeStyle=col;x.lineWidth=1;x.stroke();x.fillStyle="#02140a";x.font="bold 6px 'Courier New',monospace";x.textAlign="center";x.textBaseline="middle";x.fillText("FX",22,15)}
+  x.beginPath();for(let k=0;k<8;k++){const a=Math.PI/8+k*Math.PI/4;x.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R)}x.closePath();x.fillStyle="#04140a";x.fill();x.strokeStyle=col;x.lineWidth=2;x.stroke();
+  x.beginPath();x.arc(cx,cy,R-3.6,0,7);x.lineWidth=.7;x.stroke();
+  x.save();x.translate(cx,cy);if(on)medEmblem(x,i,8.4,col);else{x.fillStyle="#2d3d35";x.font="bold 12px 'Courier New',monospace";x.textAlign="center";x.textBaseline="middle";x.fillText("?",0,1)}x.restore();x.restore()}
+const MEDU={};function medalURL(i,t){const k=i+"_"+t;if(MEDU[k])return MEDU[k];const c=document.createElement("canvas");c.width=44*3;c.height=64*3;medalDraw(c.getContext("2d"),i,t,0,0,3);return MEDU[k]=c.toDataURL()}
+function medRack(lv){const c=$("medRack");if(!c)return;const s=2,w=MED_DEF.length*46;c.width=w*s;c.height=70*s;const x=c.getContext("2d");x.fillStyle="#050d08";x.fillRect(0,0,c.width,c.height);x.strokeStyle="#114422";x.lineWidth=2;x.strokeRect(1,1,c.width-2,c.height-2);MED_DEF.forEach((m,i)=>medalDraw(x,i,lv[i],(i*46+1)*s,3*s,s))}
 /* MEDALS screen */
 function medRender(){const lv=medLevels(),l=$("medList");l.innerHTML=MED_DEF.map((m,i)=>{const v=m.v(ST),t=lv[i],nx=t<5?m.th[t]:null,pc=nx?Math.min(100,Math.round(v/nx*100)):100;
-  return '<div class="lbr" style="grid-template-columns:130px 1fr 110px;gap:8px"><span style="color:'+(t?TIERS[t-1][1]:"#557")+'">'+m.n+'</span><span class="dim" style="text-align:left">'+m.d+'  '+v+(nx?' / '+nx:'')+'<div style="height:3px;background:#133;margin-top:3px"><div style="height:3px;width:'+pc+'%;background:'+(t<5?TIERS[t][1]:"#d78bff")+'"></div></div></span><span style="color:'+(t?TIERS[t-1][1]:"#557")+'">'+(t?TIERS[t-1][0]:"NONE")+'</span></div>'}).join("");
-  $("medArch").textContent="ARCHETYPE: "+archOf(ST)+"   //   STICKS WORN: "+stkList().length;
+  return '<div class="lbr" style="grid-template-columns:36px 118px 1fr 120px;gap:8px;align-items:center"><img src="'+medalURL(i,t)+'" width="33" height="48" style="display:block"><span style="color:'+(t?TIERS[t-1][1]:"#557")+'">'+m.n+'</span><span class="dim" style="text-align:left">'+m.d+'  '+v+(nx?' / '+nx:'')+'<div style="height:3px;background:#133;margin-top:3px"><div style="height:3px;width:'+pc+'%;background:'+(t<5?TIERS[t][1]:"#d78bff")+'"></div></div></span><span style="color:'+(t?TIERS[t-1][1]:"#557")+'">'+(t?TIERS[t-1][0]:"NONE")+'</span></div>'}).join("");
+  medRack(lv);$("medArch").textContent="ARCHETYPE: "+archOf(ST)+"   //   STICKS WORN: "+stkList().length;
   $("medEdge").innerHTML=[["b","BOTTOM"],["t","TOP"],["l","LEFT"],["r","RIGHT"]].map(([k,n])=>'<button class="sb'+(STK.edge===k?" on":"")+'" data-stk="'+k+'">'+n+'</button>').join("")+'<button class="sb'+(STK.on?" on":"")+'" data-stk="tog">'+(STK.on?"STICKS ON":"STICKS OFF")+'</button>';
   const c=$("medPrev"),x=c.getContext("2d");x.clearRect(0,0,c.width,c.height);const a=[90,30],b=[270,110];x.fillStyle="#04140a";x.fillRect(0,0,c.width,c.height);x.strokeStyle="#33ff77";x.lineWidth=2;x.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);
   const o=ctx;ctx=x;try{if(STK.on)drawSticks(a,b,1,null,STK.edge)}finally{ctx=o}}
