@@ -56,13 +56,23 @@ body.touch #c{touch-action:none}
 #rot{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#010402;color:#33ff77;text-align:center;font:bold 16px "Courier New",monospace;letter-spacing:4px}
 @media (orientation:portrait) and (pointer:coarse){#rot{display:flex}}
 @media (max-height:560px){.ov{justify-content:flex-start;padding:10px}.ov>:first-child{margin-top:auto}.ov>:last-child{margin-bottom:auto}#menu{gap:5px}#menu .mb{padding:6px 0;font-size:14px}#menu #logo2{width:min(38vw,260px)}#menu .mg .mb{padding:6px 0}.mb{padding:8px 0}}
-</style></head><body>
+html,body{overscroll-behavior:none}canvas{touch-action:none;-webkit-user-select:none;user-select:none}</style></head><body>
+<!--DISCORD--><script src="discord-sdk.js"></script>
+<script>
+/* Discord Activity handshake: only runs inside Discord (the iframe URL carries frame_id). The app id comes from <app-id>.discordsays.com */
+window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
+(async()=>{try{
+  if(!window.IN_DISCORD||!window.DiscordSDK)return;
+  const sdk=new DiscordSDK(location.hostname.split(".")[0]);await sdk.ready();window.DISCORD_SDK=sdk;
+  try{await sdk.commands.setOrientationLockState({lock_state:3})}catch(e){}   // landscape on phones
+}catch(e){console.warn("Discord SDK:",e)}})();
+</script><!--/DISCORD-->
 <canvas id="c"></canvas><button class="tb" id="tbSpin">SPIN</button><button class="tb" id="tbFx">FLIP&#8596;</button><button class="tb" id="tbFy">FLIP&#8597;</button><button class="tb" id="tbRst">&#8635;</button><button class="tb" id="tbPause">II</button><div id="rot"><div style="font-size:34px">&#8635;</div><div>ROTATE YOUR PHONE</div><div style="font-size:11px;color:#119944;letter-spacing:2px">HELLBALL PLAYS SIDEWAYS</div></div>
 <div id="menu" class="ov"><canvas id="logo2" style="width:min(80vw,440px);height:auto;flex:none"></canvas><div class="dim" id="mWh" style="color:#663333;min-height:13px;font-style:italic;font-size:11px"></div>
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.56 // BUILD 20261116.1800 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.57 // BUILD 20261116.1900 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -1122,8 +1132,9 @@ let QL=2,QMODE="auto";try{QMODE=localStorage.getItem("hb3_q")||"auto"}catch(e){}
 const Q={ema:1/60,lowT:0,highT:0,fps:60,show:false};
 function qLabel(){const el=document.getElementById("mQ");if(el)el.textContent="M MUSIC // N NEXT // Q QUALITY: "+QMODE.toUpperCase()+(QMODE==="auto"?" ("+["LOW","MED","HIGH"][QL]+")":"")+" // P FPS // ESC PAUSE // R RESTART"}
 function qTick(dt){Q.ema+=(dt-Q.ema)*.05;Q.fps=1/Q.ema;if(QMODE!=="auto"||G.state==="menu"||document.hidden)return;
-  if(Q.fps<54){Q.lowT+=dt;Q.highT=0;if(Q.lowT>1.5&&QL>0){QL--;Q.lowT=0;Q.ema=1/55;fit();qLabel()}}
-  else if(Q.fps>58){Q.highT+=dt;Q.lowT=0;if(Q.highT>60&&QL<2){QL++;Q.highT=0;fit();qLabel()}}else{Q.lowT=0;Q.highT=0}}
+  Q.age=(Q.age||0)+dt;
+  if(Q.fps<54){Q.lowT+=dt;Q.highT=0;if(Q.lowT>(Q.fps<36?.6:1.2)&&QL>0){const was=QL;QL-=(Q.fps<36&&QL>1)?2:1;if(QL<0)QL=0;if(Q.raisedAt!==undefined&&Q.age-Q.raisedAt<90)Q.cap=QL;Q.lowT=0;Q.ema=1/55;fit();qLabel()}}   // v0.57: sag fast, jump two steps when it is a real slowdown, and never climb back to a quality that just failed
+  else if(Q.fps>58){Q.highT+=dt;Q.lowT=0;if(Q.highT>60&&QL<(Q.cap===undefined?2:Q.cap)){QL++;Q.highT=0;Q.raisedAt=Q.age;fit();qLabel()}}else{Q.lowT=0;Q.highT=0}}
 function drawFPS(W,H){if(!Q.show)return;ctx.save();ctx.font="bold 12px monospace";ctx.textAlign="center";ctx.fillStyle="#ffb000";
   ctx.fillText(Q.fps.toFixed(0)+" FPS  //  QUALITY "+["LOW","MEDIUM","HIGH"][QL]+"  //  "+cv.width+"x"+cv.height,W/2,H-6);ctx.restore()}
 addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT"))return;const k=e.key.toLowerCase();if(k==="p")Q.show=!Q.show;

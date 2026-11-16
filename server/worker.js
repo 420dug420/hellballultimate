@@ -312,7 +312,8 @@ export class Board {
       const sc = Math.floor(Number(m.s)), lv = Math.floor(Number(m.l)) || 0;
       if (!(sc > 0 && sc < 1e8)) return lbJSON({ error: "bad score" }, 400);
       if (!e) list.push(e = { p: m.pid, s: 0 });
-      if (sc > e.s) { e.s = sc; e.l = Math.max(0, Math.min(999, lv)); e.t = Date.now(); }
+      if (sc > e.s) { e.s = sc; e.t = Date.now(); }
+      e.l = Math.max(e.l || 0, Math.min(999, lv));              // v0.48: the level shown is the deepest this player reached on this board, not just the level of their best-scoring run
     }
     list.sort((a, b) => b.s - a.s || a.t - b.t);
     if (list.length > LB_KEEP) list.length = LB_KEEP;
