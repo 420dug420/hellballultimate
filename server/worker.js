@@ -148,18 +148,21 @@ export class Board {
     const name = lbName(m.n);
     if (name) await this.s.put("n:" + m.pid, name);
     if (m.op === "name") return lbJSON({ ok: true, n: name });
-    if (m.op === "linkmk") {                                     // v0.42: a short one-use code (10 min) so a second device can join THIS player
-      const old = await this.s.get("lp:" + m.pid); if (old) await this.s.delete("lk:" + old);
-      const al = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", rb = crypto.getRandomValues(new Uint8Array(6)), code = Array.from(rb, x => al[x % 32]).join("");
-      await this.s.put("lk:" + code, { p: m.pid, t: Date.now() }); await this.s.put("lp:" + m.pid, code);
-      return lbJSON({ ok: true, code, ttl: 600 });
+    if (m.op === "linkmk" || m.op === "linkreset") {            // v0.43: your link code is permanent (any device can show it again); RESET makes a new one and kills the old
+      let code = await this.s.get("lp:" + m.pid);
+      if (!code || m.op === "linkreset") {
+        if (code) await this.s.delete("lk:" + code);
+        const al = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", rb = crypto.getRandomValues(new Uint8Array(10)); code = Array.from(rb, x => al[x % 32]).join("");
+        await this.s.put("lk:" + code, { p: m.pid, t: Date.now() }); await this.s.put("lp:" + m.pid, code);
+      }
+      return lbJSON({ ok: true, code });
     }
     if (m.op === "linkuse") {                                    // the other device types the code: its scores merge into the code owner's player
       const now = Date.now(), rl = (await this.s.get("lkf")) || { t: 0, n: 0 };
       if (now - rl.t > 60000) { rl.t = now; rl.n = 0; }
-      if (rl.n >= 15) return lbJSON({ ok: false, err: "slow down" }, 429);
-      const code = String(m.code || "").toUpperCase().replace(/[^A-Z0-9]/g, ""), rec = /^[A-Z2-9]{6}$/.test(code) ? await this.s.get("lk:" + code) : null;
-      if (!rec || now - rec.t > 600000 || rec.p === m.pid) { rl.n++; await this.s.put("lkf", rl); return lbJSON({ ok: false, err: rec && rec.p === m.pid ? "same device" : "bad code" }); }
+      if (rl.n >= 30) return lbJSON({ ok: false, err: "slow down" }, 429);
+      const code = String(m.code || "").toUpperCase().replace(/[^A-Z0-9]/g, ""), rec = /^[A-Z2-9]{10}$/.test(code) ? await this.s.get("lk:" + code) : null;
+      if (!rec || rec.p === m.pid) { rl.n++; await this.s.put("lkf", rl); return lbJSON({ ok: false, err: rec && rec.p === m.pid ? "same device" : "bad code" }); }
       const A = rec.p, B = m.pid, boards = await this.s.list({ prefix: "b:" });
       for (const [k, list] of boards) {
         const eB = list.find(x => x.p === B); if (!eB) continue;
@@ -169,7 +172,6 @@ export class Board {
         list.sort((x, y) => y.s - x.s || x.t - y.t);
         await this.s.put(k, list);
       }
-      await this.s.delete("lk:" + code); await this.s.delete("lp:" + A);
       const hB = await this.s.get("h:" + B); if (hB && !(await this.s.get("h:" + A))) await this.s.put("h:" + A, hB);
       await this.s.delete("h:" + B); await this.s.delete("n:" + B);
       const gp = ((await this.s.get("gp")) || []).filter(x => x.pid !== B); await this.s.put("gp", gp);
