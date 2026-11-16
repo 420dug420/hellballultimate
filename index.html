@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.59 // BUILD 20261116.2100 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.60 // BUILD 20261116.2200 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -731,7 +731,7 @@ function evTick(dt){if(G.mode==="online")return;if(G.state!=="play"&&G.state!=="
   for(const e of EV.list)e.t+=dt;EV.list=EV.list.filter(e=>e.t<e.d)}
 const ev=k=>EV.list.find(e=>e.k===k);
 const evA=e=>Math.min(1,e.t/.8,(e.d-e.t)/.8);
-function drawEventsBack(W,H,t){                                    // behind the tunnel
+function drawEventsBack(W,H,t){if(DQ<1)return;                                    // behind the tunnel
   const ts=ev("textstorm");if(ts){const a=evA(ts);ctx.save();ctx.font="12px 'Courier New',monospace";ctx.textAlign="left";
     for(const r of ts.data){r.x-=r.sp*.0002;if(r.x<-1)r.x=1.2;ctx.fillStyle="rgba(255,68,85,"+(.14*a)+")";ctx.fillText(r.l,r.x*W,r.y*H)}ctx.restore()}
   const sg=ev("sigil");if(sg){drawSigil(sg,W,H,t)}if(0){const a=evA(sg)*.28,cx=W/2,cy=H/2,R=Math.min(W,H)*.42;ctx.save();ctx.translate(cx,cy);ctx.rotate(t*.08);ctx.strokeStyle="rgba(255,176,0,"+a+")";ctx.lineWidth=1.5;
@@ -1087,7 +1087,7 @@ function bloom(){return;const w=Math.max(2,cv.width>>3),h=Math.max(2,cv.height>>
 /* CRT / LED subpixel mask over the whole picture: barely there at first, heavier the deeper you go */
 const OVL={};function ovEl(id,css){let e=OVL[id];if(!e){e=OVL[id]=document.createElement("div");e.style.cssText="position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:3;display:none;"+css;document.body.appendChild(e)}return e}
 function ovShow(e,on){const v=on?"block":"none";if(e.style.display!==v)e.style.display=v}
-function drawCRT(W,H){const e=ovEl("crt","mix-blend-mode:multiply;image-rendering:pixelated");if(G.state==="menu"||QL<2){ovShow(e,false);return}
+function drawCRT(W,H){const e=ovEl("crt","mix-blend-mode:multiply;image-rendering:pixelated");if(G.state==="menu"||QL<2||DQ<1){ovShow(e,false);return}
   if(!ART.crt){const p=mkC(3,3),x=p.getContext("2d");const cols=["rgb(255,95,95)","rgb(95,255,95)","rgb(110,110,255)"];
     for(let i=0;i<3;i++){x.fillStyle=cols[i];x.fillRect(i,0,1,2)}x.fillStyle="rgb(70,70,70)";x.fillRect(0,2,3,1);ART.crt=p;e.style.backgroundImage="url("+p.toDataURL()+")"}
   const k=Math.min(.42,.14+.012*G.level).toFixed(2),sz=(3*innerWidth/Math.max(1,cv.width)).toFixed(2),key=k+"|"+sz;if(e.dataset.k!==key){e.dataset.k=key;e.style.opacity=k;e.style.backgroundSize=sz+"px "+sz+"px"}ovShow(e,true)}
@@ -1099,7 +1099,7 @@ function dripCurtain(W,H){const key=W+"x"+H;if(ART.dripKey===key)return ART.drip
 const POSTER_W=["FREAK","FREAKS","GHOUL","REBOOT","HOLLOW EARTH","ANIMUS","ANIMA","NIGHT SCREAMS","NIGHT FREAK","ESOTERICA","HELLBALL","地獄","鬼","呪い"];
 const POSTER_G=[["#ff2bd6","#ff1648","#d8ff3a"],["#00e5ff","#ff2bd6","#0000ff"],["#ffe600","#ff3c00","#ff0030"],["#00ffd0","#00a0ff","#ffffff"]];
 function drawArtBack(W,H,dt){if(G.state==="menu"||QL<1||G.zone==="face"||G.zone==="hell")return;const L=G.level;
-  if(L>=7&&G.zone!=="cyber"){const C=dripCurtain(W,H),a=Math.min(.3,.035*(L-6))*(G.state==="form"?.3:1);ctx.save();ctx.globalAlpha=a;ctx.imageSmoothingEnabled=true;ctx.drawImage(C,0,Math.round(Math.sin(DS.T*.17)*H*.02),W,H*.55);ctx.restore()}
+  if(L>=7&&DQ>=2&&G.zone!=="cyber"){const C=dripCurtain(W,H),a=Math.min(.3,.035*(L-6))*(G.state==="form"?.3:1);ctx.save();ctx.globalAlpha=a;ctx.imageSmoothingEnabled=true;ctx.drawImage(C,0,Math.round(Math.sin(DS.T*.17)*H*.02),W,H*.55);ctx.restore()}
   bgxDraw(W,H,dt);const pe=ev("poster");if(pe){const w=POSTER_W[Math.floor(pe.seed*POSTER_W.length)],C=artText(w,{size:Math.round(Math.min(W,H)*.2),grad:POSTER_G[Math.floor(pe.seed*977)%POSTER_G.length],drip:1.2}),
       s=Math.min(1,W*.95/C.width),a=evA(pe)*.45,y=H*(.25+((pe.seed*31)%1)*.5);ctx.save();ctx.globalAlpha=a;ctx.drawImage(C,W/2-C.width*s/2+Math.sin(DS.T*.2)*W*.02,y-C.height*s/2-pe.t*4,C.width*s,C.height*s);ctx.restore()}}
 
@@ -1138,7 +1138,7 @@ const BGX_MODES={
 const BGX_POOL=[[7,"rgbcol",0,1.9],[7,"rain",1,1.7],[9,"drops",1,1.1],[10,"squares",0,1],[11,"spiral",1,1],[12,"hexdots",1,1.25],[13,"checker",0,2],[15,"blobs",1,1.6],[16,"veins",1,1.2]];   // [min level, mode, smooth upscale]
 function bgxSmear(L){const w=BGX.w,h=BGX.h,u=BGX.u,p=Math.min(.5,.05*(L-11));if(Math.random()>p*1.4)return;const tmp=new Uint32Array(w);let y=0;
   while(y<h){const bh=3+Math.floor(Math.random()*9);if(Math.random()<p){const dx=Math.floor((Math.random()-.5)*w*.5);for(let r=y;r<Math.min(h,y+bh);r++){const o=r*w;for(let x=0;x<w;x++)tmp[x]=u[o+x];for(let x=0;x<w;x++)u[o+((x+dx)%w+w)%w]=tmp[x]}}y+=bh}}
-function bgxOn(){return G.state!=="menu"&&G.zone!=="face"&&G.zone!=="hell"&&QL>=1&&G.level>=7&&G.state!=="form"&&G.state!=="hyper"&&!G.test}
+function bgxOn(){return DQ>=2&&G.state!=="menu"&&G.zone!=="face"&&G.zone!=="hell"&&QL>=1&&G.level>=7&&G.state!=="form"&&G.state!=="hyper"&&!G.test}
 function bgxStep(dt){const L=G.level;if(!BGX.id)bgxInit();BGX.mt+=dt;
   const av=BGX_POOL.filter(m=>m[0]<=L);if(!BGX.mode||BGX.mt>BGX.md){if(!BGX.mode||BGX.mt>BGX.md+1.6){let m;for(let k=0;k<6;k++){m=av[Math.floor(Math.random()*av.length)];if(m[1]!==BGX.last||av.length<2)break}
       BGX.mode=m;BGX.last=m[1];BGX.mt=0;BGX.md=18+Math.random()*16}}
@@ -1181,14 +1181,19 @@ function faceTint(col){const F=DEEP.face,t=mkC(F.width,F.height),x=t.getContext(
 
 /* ---------- v0.9.1 QUALITY: AUTO drops the costly extras if the frame rate sags (P = show FPS, Q on the menu = AUTO / HIGH / LOW) ---------- */
 let QL=2,QMODE="auto";try{QMODE=localStorage.getItem("hb3_q")||"auto"}catch(e){}if(QMODE==="low")QL=0;
-const Q={ema:1/60,lowT:0,highT:0,fps:60,show:false};
+const Q={ema:1/60,lowT:0,highT:0,fps:60,show:false,refresh:60,dlT:0,dhT:0};
+let DQ=3;   // v0.60 distortion quality 3..0: 3 all level effects, 2 no colour-split tunnels, 1 also no wall layer / drips, 0 also no wobble, CRT mask or vignette
 function qLabel(){const el=document.getElementById("mQ");if(el)el.textContent="M MUSIC // N NEXT // Q QUALITY: "+QMODE.toUpperCase()+(QMODE==="auto"?" ("+["LOW","MED","HIGH"][QL]+")":"")+" // P FPS // ESC PAUSE // R RESTART"}
-function qTick(dt){Q.ema+=(dt-Q.ema)*.05;Q.fps=1/Q.ema;if(QMODE!=="auto"||G.state==="menu"||document.hidden)return;
+function qTick(dt){Q.ema+=(dt-Q.ema)*.05;Q.fps=1/Q.ema;if(!document.hidden&&Q.fps>Q.refresh&&dt<.05)Q.refresh=Math.min(240,Q.fps);   // the best rate this screen has shown = its refresh rate
+  if(QMODE!=="auto"||G.state==="menu"||document.hidden)return;
+  {const tg=Math.max(50,Math.min(Q.refresh*.82,118));   // v0.60: on a fast screen a drop from 144 to 70 never reached the old 54 fps trigger; shed the level-driven extras one step at a time instead
+   if(Q.fps<tg){Q.dlT+=dt;Q.dhT=0;if(Q.dlT>1.4&&DQ>0){if(Q.dRaised!==undefined&&Q.age-Q.dRaised<120)Q.dCap=DQ-1;DQ--;Q.dlT=0;Q.ema=1/Math.max(60,Q.refresh*.9)}}
+   else if(Q.fps>tg*1.1){Q.dhT+=dt;Q.dlT=0;if(Q.dhT>45&&DQ<(Q.dCap===undefined?3:Q.dCap)){DQ++;Q.dhT=0;Q.dRaised=Q.age}}else{Q.dlT=0;Q.dhT=0}}
   Q.age=(Q.age||0)+dt;
   if(Q.fps<54){Q.lowT+=dt;Q.highT=0;if(Q.lowT>(Q.fps<36?.6:1.2)&&QL>0){const was=QL;QL-=(Q.fps<36&&QL>1)?2:1;if(QL<0)QL=0;if(Q.raisedAt!==undefined&&Q.age-Q.raisedAt<90)Q.cap=QL;Q.lowT=0;Q.ema=1/55;fit();qLabel()}}   // v0.57: sag fast, jump two steps when it is a real slowdown, and never climb back to a quality that just failed
   else if(Q.fps>58){Q.highT+=dt;Q.lowT=0;if(Q.highT>60&&QL<(Q.cap===undefined?2:Q.cap)){QL++;Q.highT=0;Q.raisedAt=Q.age;fit();qLabel()}}else{Q.lowT=0;Q.highT=0}}
 function drawFPS(W,H){if(!Q.show)return;ctx.save();ctx.font="bold 12px monospace";ctx.textAlign="center";ctx.fillStyle="#ffb000";
-  ctx.fillText(Q.fps.toFixed(0)+" FPS  //  QUALITY "+["LOW","MEDIUM","HIGH"][QL]+"  //  "+cv.width+"x"+cv.height,W/2,H-6);ctx.restore()}
+  ctx.fillText(Q.fps.toFixed(0)+" FPS ("+Q.refresh.toFixed(0)+"Hz)  //  QUALITY "+["LOW","MEDIUM","HIGH"][QL]+"  //  FX "+DQ+"  //  "+cv.width+"x"+cv.height,W/2,H-6);ctx.restore()}
 addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT"))return;const k=e.key.toLowerCase();if(k==="p")Q.show=!Q.show;
   if(k==="q"&&G.state==="menu"){QMODE=QMODE==="auto"?"high":QMODE==="high"?"low":"auto";QL=QMODE==="low"?0:2;try{localStorage.setItem("hb3_q",QMODE)}catch(e){}fit();qLabel()}});
 
@@ -2679,7 +2684,7 @@ LINES.push(...["...LEAVE IT AT THE DOOR", "...REPORT... TO...", "A FRIENDLY TAP"
 const DS={T:0,wob:0,twist:0,chroma:0,vign:0,breathe:0,red:0,rgb:"51,255,119",rgbR:"51,255,119",mx:"51,255,119",mxH:"210,255,225"};
 function distTick(dt){const L=G.state==="menu"?0:(G.zone==="face"||G.zone==="hell")?1:G.level+(MOD().dist||0);DS.T+=dt;
   DS.wob=L>=7?Math.min(.05,.006*(L-6)):0;DS.twist=L>=10?Math.min(1.1,.07*(L-9)):0;DS.breathe=L>=10?Math.min(3,.3*(L-9))*G.sc:0;
-  DS.chroma=L>=12?Math.min(3.5,.45*(L-11))*fxDist():0;DS.vign=L>=7?Math.min(.6,.05*(L-6)):.08;DS.red=L>=20?Math.min(.7,.05*(L-19)):0;if(G.state!=="menu"&&G.state!=="form"&&G.state!=="hyper"&&G.state!=="faceintro"&&G.state!=="hwin")G.zone=G.level>=41?"hell":G.level===40?"face":G.level>=25?"cyber":G.level>=15?"ocean":null;
+  DS.chroma=L>=12&&DQ>=3?Math.min(3.5,.45*(L-11))*fxDist():0;if(DQ<1){DS.wob=0;DS.twist=0;DS.breathe=0}DS.vign=L>=7?Math.min(.6,.05*(L-6)):.08;DS.red=L>=20?Math.min(.7,.05*(L-19)):0;if(G.state!=="menu"&&G.state!=="form"&&G.state!=="hyper"&&G.state!=="faceintro"&&G.state!=="hwin")G.zone=G.level>=41?"hell":G.level===40?"face":G.level>=25?"cyber":G.level>=15?"ocean":null;
   const mix=(a,b,k)=>a.map((v,i)=>Math.round(v+(b[i]-v)*k)).join(",");const oc=G.zone==="ocean"?(G.oceanA===undefined?1:G.oceanA):0,base=[51,255,119].map((v,i)=>Math.round(v+([50,160,255][i]-v)*oc));DS.rgb=mix(base,[150,190,110],Math.min(.4,DS.red*.5));DS.rgbR=mix(base,[220,30,50],DS.red);DS.mx=mix([51,255,119],[60,150,255],oc);DS.mxH=mix([210,255,225],[205,230,255],oc);if(G.zone==="cyber"){DS.rgb="80,240,255";DS.rgbR="255,90,220";DS.mx="255,90,220";DS.mxH="255,210,250";DS.red=0}if(G.zone==="face"){DS.rgb="170,20,34";DS.rgbR="255,40,60";DS.mx="120,0,24";DS.mxH="255,70,90";DS.red=0}if(G.zone==="hell"){DS.rgb="51,255,119";DS.rgbR="255,51,85";DS.mx="51,255,119";DS.mxH="210,255,225";DS.red=0}
   if(L>=7&&(G.state==="play"||G.state==="serve")){
     if(!G.hg){G.hgT=(G.hgT||6)-dt;if(G.hgT<=0){G.hg={line:pick(LINES),t:0,d:2.2+Math.random()};G.hgT=Math.max(2.5,9-(L-7)*.35)+Math.random()*4}}
@@ -2697,7 +2702,7 @@ function levelText(){{const x=nHud(1);if(x)return x}if(G.mode==="online")return 
   if(G.lvG&&DS.T<G.lvG.u)return G.lvG.t;if(Math.random()<.003*(L-14))G.lvG={t:pick(["LEVEL: ??","LEVEL: YOU","LEVEL: "+(L*7%97),"LEVEL: \u221e","LEVEL: STILL HERE"]),u:DS.T+1.4};return "LEVEL: "+L}
 function drawWhisper(){const w=G.wh;if(!w)return;const p=P(w.x,w.y,w.z),a=Math.sin(Math.min(1,w.t/w.d)*Math.PI)*.55;
   ctx.save();ctx.font="italic "+Math.max(9,Math.round(22*p[2]*view.s/3.2/G.sc))+"px 'Courier New',monospace";ctx.textAlign="center";ctx.fillStyle="rgba(255,68,85,"+a+")";ctx.shadowColor="#ff2244";ctx.shadowBlur=10;ctx.fillText(w.line,p[0],p[1]);ctx.restore()}
-function drawVignette(W,H){const e=ovEl("vig","");if(DS.vign<=0||G.state==="menu"){ovShow(e,false);return}const pu=.85+.15*Math.sin(DS.T*2.4),oc=G.zone==="ocean",a=Math.round((oc?Math.max(.35,DS.vign)*pu:DS.vign*pu)*40)/40,key=(oc?"o":"h")+a+"|"+W+"x"+H;
+function drawVignette(W,H){const e=ovEl("vig","");if(DS.vign<=0||G.state==="menu"||DQ<1){ovShow(e,false);return}const pu=.85+.15*Math.sin(DS.T*2.4),oc=G.zone==="ocean",a=Math.round((oc?Math.max(.35,DS.vign)*pu:DS.vign*pu)*40)/40,key=(oc?"o":"h")+a+"|"+W+"x"+H;
   if(e.dataset.k!==key){e.dataset.k=key;e.style.background="radial-gradient(circle at 50% 50%,rgba(0,0,0,0) "+Math.round(Math.min(W,H)*.3)+"px,"+(oc?"rgba(0,10,40,":"rgba(40,0,6,")+a+") "+Math.round(Math.max(W,H)*.75)+"px)"}ovShow(e,true)}
 function drawTrail(){if(!G.trail||G.trail.length<10)return;ctx.save();for(const j of[0,8]){const q=G.trail[j],a=P(q[0]-PW/2,q[1]-PH/2,DEPTH),b=P(q[0]+PW/2,q[1]+PH/2,DEPTH);
   ctx.strokeStyle="rgba(255,68,85,"+(j?.22:.12)+")";ctx.lineWidth=1;ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1])}ctx.restore()}
