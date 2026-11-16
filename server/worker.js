@@ -146,7 +146,7 @@ export class Board {
   async fetch(req) {
     const u = new URL(req.url);
     if (req.method === "GET") {
-      if (u.searchParams.get("fx")) return lbJSON({ fx: (await this.s.get("fx")) || null, h: (await this.s.get("fxh")) || [] });   // v0.44: the daily Fatalix reading + its 30-day history
+      if (u.searchParams.get("fx")) return lbJSON({ fx: (await this.s.get("fx")) || null, h: (await this.s.get("fxh")) || [], ks: !!(this.env && this.env.FX_KEY && String(this.env.FX_KEY).length >= 16) });   // v0.44: the daily Fatalix reading + its 30-day history
       const prof = u.searchParams.get("prof") || "";                // HELLBALL ULTIMATE: a player's public stat sheet
       if (prof) {
         if (!PUB_ID.test(prof)) return lbJSON({ error: "bad player" }, 400);
