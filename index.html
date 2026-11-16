@@ -56,23 +56,13 @@ body.touch #c{touch-action:none}
 #rot{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#010402;color:#33ff77;text-align:center;font:bold 16px "Courier New",monospace;letter-spacing:4px}
 @media (orientation:portrait) and (pointer:coarse){#rot{display:flex}}
 @media (max-height:560px){.ov{justify-content:flex-start;padding:10px}.ov>:first-child{margin-top:auto}.ov>:last-child{margin-bottom:auto}#menu{gap:5px}#menu .mb{padding:6px 0;font-size:14px}#menu #logo2{width:min(38vw,260px)}#menu .mg .mb{padding:6px 0}.mb{padding:8px 0}}
-html,body{overscroll-behavior:none}canvas{touch-action:none;-webkit-user-select:none;user-select:none}</style></head><body>
-<!--DISCORD--><script src="discord-sdk.js"></script>
-<script>
-/* Discord Activity handshake: only runs inside Discord (the iframe URL carries frame_id). The app id comes from <app-id>.discordsays.com */
-window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
-(async()=>{try{
-  if(!window.IN_DISCORD||!window.DiscordSDK)return;
-  const sdk=new DiscordSDK(location.hostname.split(".")[0]);await sdk.ready();window.DISCORD_SDK=sdk;
-  try{await sdk.commands.setOrientationLockState({lock_state:3})}catch(e){}   // landscape on phones
-}catch(e){console.warn("Discord SDK:",e)}})();
-</script><!--/DISCORD-->
+</style></head><body>
 <canvas id="c"></canvas><button class="tb" id="tbSpin">SPIN</button><button class="tb" id="tbFx">FLIP&#8596;</button><button class="tb" id="tbFy">FLIP&#8597;</button><button class="tb" id="tbRst">&#8635;</button><button class="tb" id="tbPause">II</button><div id="rot"><div style="font-size:34px">&#8635;</div><div>ROTATE YOUR PHONE</div><div style="font-size:11px;color:#119944;letter-spacing:2px">HELLBALL PLAYS SIDEWAYS</div></div>
 <div id="menu" class="ov"><canvas id="logo2" style="width:min(80vw,440px);height:auto;flex:none"></canvas><div class="dim" id="mWh" style="color:#663333;min-height:13px;font-style:italic;font-size:11px"></div>
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.51 // BUILD 20261116.0930 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.52 // BUILD 20261116.1400 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -276,7 +266,7 @@ function afterWait(){if(G.after==="clslevel"){clsLevelUp();return}
   if(G.after==="hellworld"){levelBeaten();FACE.on=false;G.state="hwin";G.hwT=0;S.form();return}
   if(G.after==="warp"){levelBeaten();G.state="warp";G.warpT=0;S.warp();return}
   if(G.after==="level"){levelBeaten();healPaddle();{const sk=fxSkip(G.level);G.level+=1+sk;if(sk)setTimeout(()=>popup("GEF "+fxGef()+"  //  LEVEL SKIPPED","#ff4455"),500)}G.el=3;say("LEVEL "+G.level+(G.level===35?"  //  THE WORLD TURNS":""),1.8);tn(660,.15,"square",.04);setTimeout(()=>tn(990,.25,"square",.04),120);startLevel()}
-  else if(G.after==="over"){G.state="over";if(!G.test&&G.score>G.best){G.best=G.score;try{localStorage.setItem("hb3_best",G.best)}catch(e){}}showOver()}
+  else if(G.after==="over"){G.state="over";if(!G.test&&G.score>G.best){G.best=G.score;try{localStorage.setItem("hb3_best",G.best)}catch(e){}pfSync()}showOver()}
   else if(G.after==="serve"&&G.aiWon&&G.aiCopy&&(COPY_MODES.includes(G.mode)||G.ghostMatch)){aiServe()}
   else{resetBall();G.state="serve"}}
 /* ---- input ---- */
@@ -366,7 +356,7 @@ const ACH=[
   {id:"hours2",name:"LOST TIME",desc:"Play for 2 hours.",prog:()=>[Math.floor((ST.time||0)/60),120]}];
 const ACHD=(()=>{try{return JSON.parse(localStorage.getItem("hb3_ach")||"{}")}catch(e){return{}}})();
 try{if(localStorage.getItem("hb3_achv")!=="2"){for(const k in ACHD)delete ACHD[k];localStorage.setItem("hb3_ach","{}");localStorage.setItem("hb3_achv","2")}}catch(e){}   // requirements went up: everyone re-earns them
-function ach(id){if(G.test&&G.state!=="menu")return;if(ACHD[id])return;const a=ACH.find(x=>x.id===id);if(!a)return;ACHD[id]=Date.now();try{localStorage.setItem("hb3_ach",JSON.stringify(ACHD))}catch(e){}
+function ach(id){if(G.test&&G.state!=="menu")return;if(ACHD[id])return;const a=ACH.find(x=>x.id===id);if(!a)return;ACHD[id]=Date.now();try{localStorage.setItem("hb3_ach",JSON.stringify(ACHD))}catch(e){}pfSync();
   const t=$("achToast");t.textContent="ACHIEVEMENT UNLOCKED  //  "+a.name;t.style.opacity=1;clearTimeout(ach.tm);ach.tm=setTimeout(()=>t.style.opacity=0,3200);
   [784,988,1175,1568].forEach((f,i)=>setTimeout(()=>tn(f,.14,"square",.03),i*70))}
 function achRender(){const n=ACH.filter(a=>ACHD[a.id]).length;$("achN").textContent=n+" / "+ACH.length+" UNLOCKED";
@@ -394,7 +384,7 @@ const SEL=(()=>{try{return Object.assign({border:"neon",tint:"green",ball:"b3d",
 const unl=it=>!it.un||!!ACHD[it.un];
 const cosGet=k=>{const it=COS[k].find(x=>x.id===SEL[k]);return it&&unl(it)?it:COS[k][0]};
 const TINT=()=>cosGet("tint");
-function cosSave(){try{localStorage.setItem("hb3_cos",JSON.stringify(SEL))}catch(e){}}
+function cosSave(){try{localStorage.setItem("hb3_cos",JSON.stringify(SEL));localStorage.setItem("hb3_costs",String(Date.now()))}catch(e){}pfSync()}
 /* ---- paddle borders (u = screen pixels per world unit). Every one is layered and animated ---- */
 const SIG="☉☽♄☿♃♂♀",RUNE="ᚠᚱᛟᛉᛞᚹᚨᛇᛒᛖᛚᛦ";
 function perim(x,y,w,h,s){let q=s%(2*(w+h));if(q<0)q+=2*(w+h);if(q<w)return[x+q,y,0];if((q-=w)<h)return[x+w,y+q,1];if((q-=h)<w)return[x+w-q,y+h,2];q-=w;return[x,y+h-q,3]}
@@ -1939,6 +1929,19 @@ function gLinkUse(code,msg,after){code=String(code||"").toUpperCase().replace(/[
     gStore("hb3_pid",r.pid);if(r.n)gStore("hb3_name",r.n);try{localStorage.removeItem("hb3_hwcache")}catch(e){}msg.textContent="LINKED. SCORES MERGED. RELOADING...";setTimeout(()=>location.reload(),700)}).catch(()=>{msg.textContent="COULD NOT REACH THE SERVER."})}
 g$("acLink").onclick=()=>gLinkUse(g$("acIn").value,g$("acMsg"));
 g$("naLkGo").onclick=()=>gLinkUse(g$("naLk").value,g$("naLkMsg"));
+/* ---------- v0.52: PROFILE SYNC - cosmetic picks, achievements and best score follow your link code (the server keeps one merged copy per player) ---------- */
+var PF=null;
+function pfSync(){if(!PF)return;clearTimeout(PF.tm);PF.tm=setTimeout(()=>{if(G.mode==="lab")return;let ts=0;try{ts=+localStorage.getItem("hb3_costs")||0}catch(e){}
+  gPost({op:"pfsync",pf:{cos:SEL,ach:ACHD,best:G.best|0,ts}}).then(r=>{if(r&&r.pf)pfApply(r.pf)}).catch(()=>{})},3000)}
+function pfApply(p){let ch=0;
+  for(const k in p.ach||{})if(ACH.some(a=>a.id===k)&&!ACHD[k]){ACHD[k]=p.ach[k];ch=1}
+  if(ch){try{localStorage.setItem("hb3_ach",JSON.stringify(ACHD))}catch(e){}}
+  if((p.best|0)>(G.best|0)){G.best=p.best|0;try{localStorage.setItem("hb3_best",G.best)}catch(e){}ch=1}
+  let lt=0;try{lt=+localStorage.getItem("hb3_costs")||0}catch(e){}
+  if((p.ts||0)>lt&&p.cos&&Object.keys(p.cos).length){let c2=0;for(const k in p.cos)if(COS[k]&&COS[k].some(x=>x.id===p.cos[k])&&SEL[k]!==p.cos[k]){SEL[k]=p.cos[k];c2=1}
+    try{localStorage.setItem("hb3_cos",JSON.stringify(SEL));localStorage.setItem("hb3_costs",String(p.ts))}catch(e){}if(c2)ch=1}
+  if(ch){try{achRender()}catch(e){}}}
+PF={tm:0};setTimeout(pfSync,2500);
 
 /* =====================================================================================================
    v0.23: CO-OP CAMPAIGN + BOSS RAIDS (2 players, host runs the game), KING OF THE HILL (up to 4),

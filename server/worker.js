@@ -117,6 +117,19 @@ function fxClean(f) {                                          // keep only numb
   const c = (Array.isArray(f.c) ? f.c : []).slice(0, 10).filter(r => Array.isArray(r) && /^[A-Z0-9 ]{1,8}$/.test(r[0]) && fxN(r[1], 0, 2) !== null).map(r => [r[0], Math.round(r[1]), r[2] ? 1 : 0]);
   return { d: f.d, g: Math.round(g), v: Math.round(v * 10) / 10, s: s === null ? 7.83 : Math.round(s * 100) / 100, p, c, t: Date.now() };
 }
+function pfClean(p) {                                         // v0.45: profile = cosmetic picks + achievements + best score (short strings and numbers only)
+  const cos = {}, ach = {};
+  if (p && typeof p.cos === "object" && p.cos) for (const [k, v] of Object.entries(p.cos).slice(0, 12)) if (/^[a-z0-9]{1,12}$/i.test(k) && typeof v === "string" && /^[a-z0-9_-]{1,24}$/i.test(v)) cos[k] = v;
+  if (p && typeof p.ach === "object" && p.ach) for (const [k, v] of Object.entries(p.ach).slice(0, 200)) if (/^[a-z0-9_]{1,24}$/i.test(k) && Number.isFinite(Number(v))) ach[k] = Math.floor(Number(v));
+  const ts = Math.floor(Number(p && p.ts)) || 0;
+  return { cos, ach, best: Math.max(0, Math.min(1e8, Math.floor(Number(p && p.best)) || 0)), ts: ts > 0 && ts < 4e12 ? ts : 0 };
+}
+function pfMerge(a, b) {                                       // achievements: union (earliest date); best: max; cosmetics: whichever was picked most recently
+  const ach = Object.assign({}, a.ach);
+  for (const k in b.ach) ach[k] = ach[k] ? Math.min(ach[k], b.ach[k]) : b.ach[k];
+  const bNew = Object.keys(b.cos).length && (b.ts > a.ts || !Object.keys(a.cos).length);
+  return { cos: bNew ? b.cos : a.cos, ach, best: Math.max(a.best, b.best), ts: Math.max(a.ts, b.ts) };
+}
 export class Board {
   constructor(state, env) { this.s = state.storage; this.env = env; }
   async view(b, pid) {
@@ -192,10 +205,19 @@ export class Board {
         list.sort((x, y) => y.s - x.s || x.t - y.t);
         await this.s.put(k, list);
       }
+      const pB = await this.s.get("pf:" + B), pA = await this.s.get("pf:" + A);   // v0.45: profile merges too (cosmetics, achievements, best)
+      if (pB) { await this.s.put("pf:" + A, { t: Date.now(), pf: pA ? pfMerge(pA.pf, pB.pf) : pB.pf }); await this.s.delete("pf:" + B); }
       const hB = await this.s.get("h:" + B); if (hB && !(await this.s.get("h:" + A))) await this.s.put("h:" + A, hB);
       await this.s.delete("h:" + B); await this.s.delete("n:" + B);
       const gp = ((await this.s.get("gp")) || []).filter(x => x.pid !== B); await this.s.put("gp", gp);
       return lbJSON({ ok: true, pid: A, n: (await this.s.get("n:" + A)) || "" });
+    }
+    if (m.op === "pfsync") {                                     // v0.45: merge this device's profile into the player's stored one and hand the merged copy back
+      const inc = pfClean(m.pf), old = await this.s.get("pf:" + m.pid), now = Date.now();
+      if (old && now - (old.t || 0) < 1500) return lbJSON({ ok: true, pf: old.pf });
+      const mg = old ? pfMerge(old.pf, inc) : inc;
+      await this.s.put("pf:" + m.pid, { t: now, pf: mg });
+      return lbJSON({ ok: true, pf: mg });
     }
     if (m.op === "hwsave") {                                     // HELLWORLD: the player's whole save, so the bud follows them between games and devices
       if (!m.save || typeof m.save !== "object" || !m.save.seed) return lbJSON({ error: "bad save" }, 400);
