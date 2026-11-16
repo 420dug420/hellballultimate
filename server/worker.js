@@ -146,7 +146,7 @@ export class Board {
   async fetch(req) {
     const u = new URL(req.url);
     if (req.method === "GET") {
-      if (u.searchParams.get("fx")) return lbJSON({ fx: (await this.s.get("fx")) || null, h: (await this.s.get("fxh")) || [], ks: !!(this.env && this.env.FX_KEY && String(this.env.FX_KEY).length >= 16) });   // v0.44: the daily Fatalix reading + its 30-day history
+      if (u.searchParams.get("fx")) return lbJSON({ fx: (await this.s.get("fx")) || null, h: (await this.s.get("fxh")) || [], ks: !!(this.env && this.env.FX_KEY && String(this.env.FX_KEY).length >= 16), ep: (await this.s.get("ep")) || 0 });   // v0.44: the daily Fatalix reading + its 30-day history
       const prof = u.searchParams.get("prof") || "";                // HELLBALL ULTIMATE: a player's public stat sheet
       if (prof) {
         if (!PUB_ID.test(prof)) return lbJSON({ error: "bad player" }, 400);
@@ -167,6 +167,17 @@ export class Board {
       return lbJSON(await this.view(b, LB_PID.test(pid) ? pid : ""));
     }
     let m; try { m = JSON.parse(await req.text()); } catch (e) { return lbJSON({ error: "bad json" }, 400); }
+    if (m && m.op === "wipe") {                                  // v0.46: OWNER ONLY (needs FX_KEY + a typed confirmation): erase every board, name, profile, link code and HELLWORLD save, keep the daily reading, and start a new epoch so devices reset their own local progress
+      const key = this.env && this.env.FX_KEY ? String(this.env.FX_KEY) : "";
+      if (key.length < 16 || typeof m.key !== "string" || m.key.length !== key.length) return lbJSON({ error: "forbidden" }, 403);
+      let diff = 0; for (let i = 0; i < key.length; i++) diff |= key.charCodeAt(i) ^ m.key.charCodeAt(i);
+      if (diff) return lbJSON({ error: "forbidden" }, 403);
+      if (m.confirm !== "WIPE EVERYTHING") return lbJSON({ error: "confirmation missing" }, 400);
+      const fx = await this.s.get("fx"), fxh = await this.s.get("fxh"), ep = Date.now();
+      await this.s.deleteAll();
+      await this.s.put("ep", ep); if (fx) await this.s.put("fx", fx); if (fxh) await this.s.put("fxh", fxh);
+      return lbJSON({ ok: true, ep });
+    }
     if (m && m.op === "fxpush") {                                // v0.44: Fatalix pushes one meters-only reading (secret FX_KEY set in the worker's Variables and Secrets)
       const key = this.env && this.env.FX_KEY ? String(this.env.FX_KEY) : "";
       if (key.length < 16 || typeof m.key !== "string" || m.key.length !== key.length) return lbJSON({ error: "forbidden" }, 403);
@@ -213,6 +224,8 @@ export class Board {
       return lbJSON({ ok: true, pid: A, n: (await this.s.get("n:" + A)) || "" });
     }
     if (m.op === "pfsync") {                                     // v0.45: merge this device's profile into the player's stored one and hand the merged copy back
+      const wep = (await this.s.get("ep")) || 0;                 // after a wipe, devices that have not reset yet may not push their old progress back
+      if (wep && (Math.floor(Number(m.ep)) || 0) < wep) return lbJSON({ ok: false, ep: wep });
       const inc = pfClean(m.pf), old = await this.s.get("pf:" + m.pid), now = Date.now();
       if (old && now - (old.t || 0) < 1500) return lbJSON({ ok: true, pf: old.pf });
       const mg = old ? pfMerge(old.pf, inc) : inc;
