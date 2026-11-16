@@ -49,7 +49,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.30 // BUILD 20261115.1900</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.31 // BUILD 20261115.1915</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="startm" class="ov hidden" style="gap:10px"><div class="ttl">START</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
  <button class="mb" id="sClassic">CLASSIC</button><div class="dim">LEVEL 1 FOREVER. NO TRANSITIONS, NO BOSSES. IT JUST GETS FASTER. MUSIC OFF (M TO TURN IT ON).</div>
@@ -227,7 +227,7 @@ function endPoint(won){G.tagGo=true;if(G.mode==="classic"){G.state="wait";G.wait
   if(won&&G.el<1&&G.level===24){G.state="wait";G.waitT=1.2;G.after="hyper";return}
   if(won&&G.el<1&&G.level===14){shatter(ball.x,ball.y);blowAway();G.state="wait";G.waitT=2.6;G.after="form";return}
   if(won&&G.el<1&&G.level===5){shatter(ball.x,ball.y);G.state="wait";G.waitT=1.7;G.after="warp";return}
-  if(won)G.ripple={sx:Math.max(0,Math.min(BW,ball.x)),sy:Math.max(0,Math.min(BH,ball.y)),t:0};G.state="wait";G.waitT=1.1;G.after=won?(G.el<1?"level":"serve"):(G.pl<1?"over":"serve")}
+  if(won)G.ripple={sx:Math.max(0,Math.min(BW,ball.x)),sy:Math.max(0,Math.min(BH,ball.y)),t:0};G.aiWon=!won;G.state="wait";G.waitT=1.1;G.after=won?(G.el<1?"level":"serve"):(G.pl<1?"over":"serve")}
 function shatter(ix,iy){ach("level5");G.ripple=null;G.broken=true;S.shatter();G.shards=[];const nx=8,ny=6,V=[];   // the back wall breaks into glass shards
   for(let j=0;j<=ny;j++){V.push([]);for(let i=0;i<=nx;i++){const e=i===0||i===nx||j===0||j===ny;V[j].push([i/nx*BW+(e&&(i===0||i===nx)?0:(Math.random()-.5)*BW/nx*.7),j/ny*BH+(e&&(j===0||j===ny)?0:(Math.random()-.5)*BH/ny*.7)])}}
   for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){const a=V[j][i],b=V[j][i+1],c=V[j+1][i+1],d=V[j+1][i],tris=Math.random()<.5?[[a,b,c],[a,c,d]]:[[a,b,d],[b,c,d]];
@@ -253,6 +253,7 @@ function afterWait(){if(G.after==="clslevel"){clsLevelUp();return}
   if(G.after==="warp"){levelBeaten();G.state="warp";G.warpT=0;S.warp();return}
   if(G.after==="level"){levelBeaten();healPaddle();G.level++;G.el=3;say("LEVEL "+G.level+(G.level===35?"  //  THE WORLD TURNS":""),1.8);tn(660,.15,"square",.04);setTimeout(()=>tn(990,.25,"square",.04),120);startLevel()}
   else if(G.after==="over"){G.state="over";if(!G.test&&G.score>G.best){G.best=G.score;try{localStorage.setItem("hb3_best",G.best)}catch(e){}}showOver()}
+  else if(G.after==="serve"&&G.aiWon&&G.aiCopy&&COPY_MODES.includes(G.mode)){aiServe()}
   else{resetBall();G.state="serve"}}
 /* ---- input ---- */
 let view={s:1,ox:0,oy:0};
@@ -538,14 +539,14 @@ const hkScore=h=>h.rep+h.w*120-h.l*45;
 const threat=v=>v>=2400?["OMEGA","#ff2244"]:v>=1800?["SEVERE","#ff4455"]:v>=1200?["HIGH","#ffb000"]:v>=700?["MODERATE","#33d6ff"]:["LOW","#33ff77"];
 const playerRep=()=>Math.round((ST.maxL||0)*110+(ST.pw||0)*3+(ST.bosses||0)*300+(ST.bestScore||0)/40);
 function boardRanked(){const L=HK.map(h=>({h,s:hkScore(h)}));L.push({you:true,s:playerRep()});L.sort((a,b)=>b.s-a.s);return L}
-function pickOpponent(){G.tagT=0;G.tagFade=0;G.tagGo=false;G.hk=null;
+function pickOpponent(){G.aiCopy=null;G.aiWon=false;G.tagT=0;G.tagFade=0;G.tagGo=false;G.hk=null;
   if(G.mode==="boss"){G.aiName="THE WARDEN";G.aiRival=0;return}
   const r=G.mode==="daily"?RNG:Math.random;
   if(r()<.015){const n=UN_RARE[Math.floor(r()*UN_RARE.length)];let h=HK.find(x=>x.n===n);if(!h){h=mkHacker(Math.random,n,2600);HK.push(h)}G.hk=h}            // very rare visitors
   else{const riv=HK.filter(h=>h.w>0);if(riv.length&&r()<.3&&G.mode!=="daily")G.hk=riv[Math.floor(r()*riv.length)];
     else{const sorted=HK.slice().sort((a,b)=>hkScore(a)-hkScore(b)),f=Math.min(1,(LVL()-1)/12),i=Math.max(0,Math.min(sorted.length-1,Math.round(f*(sorted.length-1)+(r()-.5)*8)));G.hk=sorted[i]}}  // deeper = scarier users
   G.hk.met=(G.hk.met||0)+1;G.aiName=G.hk.n;G.aiRival=G.hk.w;if(G.aiRival){stInc("rivalsMet");setTimeout(()=>{if(G.state!=="menu"){say("RIVAL  //  "+G.aiName,2.2);popup("IT HAS ENDED YOU "+G.aiRival+"x","#ff4455")}},1900)}
-  if(UN_RARE.includes(G.aiName))setTimeout(()=>{if(G.state!=="menu")say("!! "+G.aiName.toUpperCase()+" HAS ENTERED THE TUNNEL !!",2.6)},2000)}
+  if(UN_RARE.includes(G.aiName))setTimeout(()=>{if(G.state!=="menu")say("!! "+G.aiName.toUpperCase()+" HAS ENTERED THE TUNNEL !!",2.6)},2000);try{copyMaybe(.4)}catch(e){}}
 function levelBeaten(){if(G.test||!G.hk)return;if(G.hk.w>=3)ach("rival3");G.hk.l++;G.hk.rep=Math.max(100,G.hk.rep-25);hkSave();if(boardRanked()[0].you)ach("top1")}
 function recordKiller(){if(G.test||!G.hk||G.mode==="boss")return;G.hk.w++;G.hk.rep+=60+G.level*6;hkSave()}
 function drawNameTag(t){if(!G.aiName||G.state==="menu"||G.state==="warp"||G.state==="form"||G.blown)return;if(G.tagFade>=1)return;
@@ -2111,6 +2112,24 @@ function gpCardDraw(W,H){const q=GP.cards;if(!q||!q.length||G.state==="menu"||G.
   ctx.globalAlpha=a;ctx.fillStyle="rgba(0,0,0,.2)";for(let y=0;y<h;y+=3)ctx.fillRect(ox,oy+y,w,1);                                       // static scanlines
   const by=(t*38)%(h+30)-15;const bg=ctx.createLinearGradient(0,oy+by-14,0,oy+by+14);bg.addColorStop(0,"rgba(255,90,100,0)");bg.addColorStop(.5,"rgba(255,90,100,.1)");bg.addColorStop(1,"rgba(255,90,100,0)");ctx.fillStyle=bg;ctx.fillRect(ox,oy+by-14,w,28);  // slow soft roll
   ctx.restore()}
+
+/* ---------- v0.31: the ghost IS the opponent. A copy of a real player takes the AI paddle: their name, their serve style, their habits. When it wins a point it serves. ---------- */
+function gpDraw(){}function gpWorld(){}
+const COPY_MODES=["normal","hard","gef"];
+function gpStart(mode){GP.pr=null;GP.list=[];GP.cards=[];GP.sv=[];mode=mode||"normal";if(!GP.ok.includes(mode))return;GP.pr=[];
+  fetch(gAPI()+"?pool=1&pid="+encodeURIComponent(gPid)).then(r=>r.json()).then(d=>{if(!d||!Array.isArray(d.list)||!GP.ok.includes(G.mode))return;
+    GP.list=d.list.slice(0,3).map(g=>({p:typeof g.p==="string"?b64d(g.p):null,n:gClean(g.n)||"GHOST",s:g.s|0,l:g.l|0,si:0,
+      sv:(Array.isArray(g.v)?g.v:[]).slice(0,8).filter(a=>Array.isArray(a)&&a.length===4&&a.every(Number.isFinite))})).filter(g=>g.p&&g.p.length>=40);
+    if(G.state==="serve"&&!G.aiCopy&&G.score===0&&Math.random()<.6)copyMaybe(1)}).catch(()=>{})}
+function adoptCopy(g){G.aiCopy=g;G.hk=null;G.aiName=g.n;G.aiRival=0;G.tagFade=0;G.tagGo=false;AIH.key="";GP.cards=[{g,t:-.9,d:5.4}];setTimeout(()=>{if(G.state!=="menu"&&G.aiCopy===g)say("PLAYER COPY  //  "+g.n,2.4)},900)}
+function copyMaybe(p){if(!COPY_MODES.includes(G.mode)||!GP.list.length||Math.random()>=(p||.4))return;adoptCopy(GP.list[Math.floor(Math.random()*GP.list.length)])}
+function aiServe(){const c=G.aiCopy,s=c.sv.length?c.sv[c.si++%c.sv.length]:[128,128,0,0];resetBall();
+  ai.x=ai.ox=ai.px=s[0]/255*BW;ai.y=ai.oy=ai.py=s[1]/255*BH;
+  Object.assign(ball,{x:ai.x,y:ai.y,z:DEPTH,px:ai.x,py:ai.y,pz:DEPTH,vz:-LS(),vx:0,vy:0,cx:s[2]/LC(),cy:s[3]/LC(),stop:false});
+  G.vol=1;G.mult=1;G.state="play";aiSay(pick(["MY SERVE","HERE IT COMES","MY SERVE, LOSER","WATCH THIS ONE"]),"#ffb000")}
+function aiPers(){const k=G.aiName||"";if(AIH.key===k)return;AIH.key=k;let h=2166136261;for(const c of k){h^=c.charCodeAt(0);h=Math.imul(h,16777619)>>>0}
+  AIH.bx=((h%200)/100-1);AIH.by=(((h>>8)%200)/100-1)*.6;AIH.wob=.35+((h>>16)%70)/100;AIH.slow=((h>>20)%3);
+  const c=G.aiCopy;if(c&&c.sv.length){let px=0,py=0;for(const s of c.sv){px+=s[0];py+=s[1]}px/=c.sv.length;py/=c.sv.length;AIH.bx=(px/255-.5)*2;AIH.by=(py/255-.5)*1.2}}   // a copy drifts to where its player likes to stand
 
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
