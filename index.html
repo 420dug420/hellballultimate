@@ -52,7 +52,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.37 // BUILD 20261116.0010</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.38 // BUILD 20261116.0050</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="startm" class="ov hidden" style="gap:10px"><div class="ttl">START</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
  <button class="mb" id="sClassic">CLASSIC</button><div class="dim">LEVEL 1 FOREVER. NO TRANSITIONS, NO BOSSES. IT JUST GETS FASTER. MUSIC OFF (M TO TURN IT ON).</div>
@@ -2340,8 +2340,11 @@ function drawTunnel(rgb,ghost){
   // lines running down the tunnel: the 4 corners always, plus faint wall lines that show the waves rolling
   const lines=G.tube?tubeVerts():[[0,0],[BW,0],[BW,BH],[0,BH]],nc=lines.length;
   if(!G.tube){for(let i=1;i<6;i++){lines.push([BW*i/6,0],[BW*i/6,BH])}for(let i=1;i<4;i++){lines.push([0,BH*i/4],[BW,BH*i/4])}}
-  lines.forEach(([x,y],j)=>{ctx.strokeStyle=j<nc?"rgba("+rgb+",.5)":"rgba("+rgb+",.08)";ctx.lineWidth=j<nc?1.2:1;
-    if(fm<1)ctx.globalAlpha=fm;const pts=[];const m=rip?60:DS.wob||DS.twist?12:1;for(let i=0;i<=m;i++)pts.push(RP(x,y,DEPTH-(DEPTH*(1-i/m))*fm));poly(pts);ctx.globalAlpha=1});
+  {const m=rip?60:DS.wob||DS.twist?12:1;if(fm<1)ctx.globalAlpha=fm;
+   for(let g=0;g<2;g++){const a0=g?nc:0,a1=g?lines.length:nc;if(a0>=a1)continue;ctx.strokeStyle=g?"rgba("+rgb+",.08)":"rgba("+rgb+",.5)";ctx.lineWidth=g?1:1.2;ctx.beginPath();
+     for(let j=a0;j<a1;j++){const x=lines[j][0],y=lines[j][1];for(let i=0;i<=m;i++){const p=RP(x,y,DEPTH-(DEPTH*(1-i/m))*fm);i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])}}
+     ctx.stroke()}
+   ctx.globalAlpha=1}
   if(rip){const r=G.ripple,c=RP(r.sx,r.sy,DEPTH);           // rings spreading on the back wall where the point was won
     for(let k=0;k<4;k++){const rad=(RV*r.t-k*RL)*K(DEPTH)*view.s;if(rad<=0)continue;ctx.strokeStyle="rgba(255,176,0,"+(.5*(1-r.t/RT)*(1-k*.2))+")";ctx.lineWidth=1.4;
       ctx.save();const a=P(0,0,DEPTH),b=P(BW,BH,DEPTH);ctx.beginPath();ctx.rect(a[0],a[1],b[0]-a[0],b[1]-a[1]);ctx.clip();ctx.beginPath();ctx.arc(c[0],c[1],rad,0,Math.PI*2);ctx.stroke();ctx.restore()}}
@@ -2359,22 +2362,24 @@ function inject(t){t=String(t).replace(/\s+/g," ").trim().toUpperCase();if(!t||!
   if(Math.random()<.5){const r=pick(RING);r.txt=" "+t.slice(0,30)+" ";r.txtT=4}}
 function codeTick(dt){if(G.matrixA<=0||G.state==="menu")return;G.codeT=(G.codeT||5)-dt;if(G.codeT<=0){G.codeT=4+Math.random()*4;inject(Math.random()<.6?"SCORE "+G.score:Math.random()<.5?"LEVEL "+G.level:"VOLLEY "+G.vol)}}
 /* v0.34: the code rain draws pre-rendered glyph sprites instead of thousands of fillText calls */
-const GCH={};let GCHn=0;
-function gchGet(ch,fs,rgb){const key=rgb+"|"+fs;let g=GCH[key];
-  if(!g){if(GCHn>150){for(const k in GCH)delete GCH[k];GCHn=0}const cell=Math.ceil(fs*1.3),c=document.createElement("canvas");c.width=cell*128;c.height=cell;const x=c.getContext("2d");x.font="bold "+fs+"px monospace";x.textAlign="center";x.textBaseline="middle";x.fillStyle="rgb("+rgb+")";g=GCH[key]={c,x,cell,map:{},n:0};GCHn++}
+const GCM={};let GCHn=0;
+function gchGet(ch,fs,rgb){let m=GCM[rgb];if(!m)m=GCM[rgb]={};let g=m[fs];
+  if(!g){if(GCHn>150){for(const k in GCM)delete GCM[k];GCHn=0;m=GCM[rgb]={}}const cell=Math.ceil(fs*1.3),c=document.createElement("canvas");c.width=cell*128;c.height=cell;const x=c.getContext("2d");x.font="bold "+fs+"px monospace";x.textAlign="center";x.textBaseline="middle";x.fillStyle="rgb("+rgb+")";g=m[fs]={c,x,cell,map:{},n:0};GCHn++}
   let i=g.map[ch];if(i===undefined){if(g.n>=128)return null;i=g.map[ch]=g.n++;g.x.fillText(ch,i*g.cell+g.cell/2,g.cell/2)}return[g,i]}
 function drawMatrix(dt){const A=G.matrixA;if(A<=0)return;ctx.save();
-  const fsOf=k=>Math.max(7,Math.round(17*k*view.s/3.2)),put=(ch,fs,rgb,a,x,y)=>{if(a<.05)return;const r=gchGet(ch,fs,rgb);if(!r)return;const g=r[0];ctx.globalAlpha=a;ctx.drawImage(g.c,r[1]*g.cell,0,g.cell,g.cell,Math.round(x-g.cell/2),Math.round(y-g.cell/2),g.cell,g.cell)};
-  for(const L of MX)for(const d of L.drops){d.z-=d.sp*dt;if(d.z<-d.n*3){d.z=DEPTH+Math.random()*30;d.sp=8+Math.random()*14}
+  const vs=view.s,vx=view.ox,vy=view.oy;let la=-1;
+  const fsOf=k=>Math.max(7,Math.round(17*k*vs/3.2)),put=(ch,fs,rgb,a,x,y)=>{if(a<.05)return;const r=gchGet(ch,fs,rgb);if(!r)return;const g=r[0];if(a!==la){ctx.globalAlpha=a;la=a}ctx.drawImage(g.c,r[1]*g.cell,0,g.cell,g.cell,Math.round(x-g.cell/2),Math.round(y-g.cell/2),g.cell,g.cell)};
+  for(const L of MX){const lx=L.x,ly=L.y;for(const d of L.drops){d.z-=d.sp*dt;if(d.z<-d.n*3){d.z=DEPTH+Math.random()*30;d.sp=8+Math.random()*14}
     if(Math.random()<dt*6)d.ch[Math.floor(Math.random()*d.ch.length)]=rg();
-    const tx=d.txt;for(let i=0;i<d.n;i++){const z=d.z+i*3.2;if(z<0||z>DEPTH)continue;const p=P(L.x,L.y,z),fs=fsOf(p[2]);
-      if(tx&&i<tx.length){put(tx[i],fs,"255,176,0",.95*A,p[0],p[1]);continue}
-      if(i===0)put(d.ch[i]||rg(),fs,DS.mxH,.95*A,p[0],p[1]);else put(d.ch[i]||rg(),fs,DS.mx,(1-i/d.n)*.9*A,p[0],p[1])}
-    if(tx&&d.z<-tx.length*3.2){d.txt=null;d.n=6+Math.floor(Math.random()*8)}}
-  for(const r of RING){const z=G.cam?((r.z-G.cam)%DEPTH+DEPTH)%DEPTH:r.z;if(z<1)continue;const per=2*(BW+BH),spc=26,k=K(z),fs=fsOf(k);r.off+=dt*6;
-    for(let i=0;i<per/spc;i++){let s=(i*spc+r.off)%per,x,y;if(s<BW){x=s;y=0}else if((s-=BW)<BH){x=BW;y=s}else if((s-=BH)<BW){x=BW-s;y=BH}else{s-=BW;x=0;y=BH-s}
-      const p=P(x,y,z);if(Math.random()<dt*1.5)r.ch[i%60]=rg();const tc=r.txt&&i<r.txt.length?r.txt[i]:null;
-      if(tc)put(tc,fs,"255,176,0",.8*A,p[0],p[1]);else put(r.ch[i%60],fs,DS.mx,.5*A,p[0],p[1])}
+    const tx=d.txt;for(let i=0;i<d.n;i++){const z=d.z+i*3.2;if(z<0||z>DEPTH)continue;const k=K(z),px=vx+(WX-(WX-lx)*k)*vs,py=vy+(WY-(WY-ly)*k)*vs,fs=fsOf(k);
+      if(tx&&i<tx.length){put(tx[i],fs,"255,176,0",.95*A,px,py);continue}
+      if(i===0)put(d.ch[i]||rg(),fs,DS.mxH,.95*A,px,py);else put(d.ch[i]||rg(),fs,DS.mx,(1-i/d.n)*.9*A,px,py)}
+    if(tx&&d.z<-tx.length*3.2){d.txt=null;d.n=6+Math.floor(Math.random()*8)}}}
+  for(const r of RING){const z=G.cam?((r.z-G.cam)%DEPTH+DEPTH)%DEPTH:r.z;if(z<1)continue;const per=2*(BW+BH),spc=26,k=K(z),fs=fsOf(k),N=Math.ceil(per/spc),ox=vx+WX*(1-k)*vs,oy=vy+WY*(1-k)*vs,ks=k*vs;r.off+=dt*6;
+    for(let c=dt*1.5*N;c>0;c--){if(Math.random()<c)r.ch[Math.floor(Math.random()*N)%60]=rg()}
+    for(let i=0;i<N;i++){let s=(i*spc+r.off)%per,x,y;if(s<BW){x=s;y=0}else if((s-=BW)<BH){x=BW;y=s}else if((s-=BH)<BW){x=BW-s;y=BH}else{s-=BW;x=0;y=BH-s}
+      const px=ox+x*ks,py=oy+y*ks,tc=r.txt&&i<r.txt.length?r.txt[i]:null;
+      if(tc)put(tc,fs,"255,176,0",.8*A,px,py);else put(r.ch[i%60],fs,DS.mx,.5*A,px,py)}
     if(r.txt){r.txtT-=dt;if(r.txtT<=0)r.txt=null}}
   ctx.restore()}
 
