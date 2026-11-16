@@ -57,9 +57,9 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 <canvas id="c"></canvas>
 <div id="menu" class="ov"><canvas id="logo2" style="width:min(80vw,440px);height:auto;flex:none"></canvas><div class="dim" id="mWh" style="color:#663333;min-height:13px;font-style:italic;font-size:11px"></div>
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
- <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
+ <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.40 // BUILD 20261116.0235 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.41 // BUILD 20261116.0300 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -71,10 +71,10 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="mKoth" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">KING OF THE HILL</button><div class="dim">UP TO 4. WINNER STAYS ON. 5 IN A ROW WINS.</div>
  <button class="mb hidden" id="mGrudge" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">GRUDGE MATCH</button><div class="dim hidden" id="mGrudgeT" style="max-width:90vw;text-align:center"></div>
  <button class="mb" id="mBack">BACK</button></div>
-<div id="lb" class="ov hidden"><div class="ttl">LOCAL SCORES</div><div class="row" id="lbTabs"></div><div id="lbList" style="width:min(94vw,640px);max-height:58vh;overflow:auto"></div><div class="dim">STORED ON THIS COMPUTER // EVERYONE ELSE: MENU &gt; WORLD BOARD</div><button class="mb" id="lbBack">BACK</button></div>
+<div id="lb" class="ov hidden"><div class="ttl">LOCAL SCORES</div><div class="row" id="lbTabs"></div><div id="lbList" style="width:min(94vw,640px);max-height:58vh;overflow:auto"></div><div class="dim">STORED ON THIS COMPUTER // EVERYONE ELSE: MENU &gt; LEADERBOARD</div><button class="mb" id="lbBack">BACK</button></div>
 <div id="hkb" class="ov scroll hidden"><div class="ttl" style="color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</div><div class="dim">GLOBAL HACKER RANKING // ☠ = TIMES THEY ENDED YOU // CLICK A USER FOR THEIR DOSSIER</div><div id="hkList" style="width:min(94vw,720px)"></div><button class="mb" id="hkBack">BACK</button></div>
-<div id="wb" class="ov scroll hidden"><div class="ttl">WORLD BOARD</div><div class="dim">EVERY PLAYER, EVERYWHERE // CLICK A NAME FOR THEIR SUBJECT FILE AND GHOST</div><div class="row" id="wbTabs"></div><div id="wbList" style="width:min(94vw,640px)"></div><div class="dim" id="wbYou"></div><div id="wbGhost" class="hidden" style="text-align:center"></div><div id="wbProf" class="pf hidden" style="max-width:min(94vw,760px)"></div><button class="mb" id="wbBack">BACK</button></div>
-<div id="nameAsk" class="ov hidden" style="z-index:9;background:rgba(2,8,4,.97)"><div class="ttl">WHAT DO THEY CALL YOU?</div><div class="dim" style="text-align:center;max-width:90vw">YOUR NAME SHOWS ON THE WORLD BOARD AND IN ONLINE 1V1. YOU CAN CHANGE IT IN CUSTOMIZE.</div><input id="naIn" class="sb" maxlength="12" spellcheck="false" autocomplete="off" style="width:260px;text-transform:uppercase;font-size:18px;text-align:center;letter-spacing:3px"><button class="mb" id="naGo">ENTER</button></div>
+<div id="wb" class="ov scroll hidden"><div class="ttl">LEADERBOARD</div><div class="dim">EVERY PLAYER, EVERYWHERE // CLICK A NAME FOR THEIR SUBJECT FILE AND GHOST</div><div class="row" id="wbTabs"></div><div id="wbList" style="width:min(94vw,640px)"></div><div class="dim" id="wbYou"></div><div id="wbGhost" class="hidden" style="text-align:center"></div><div id="wbProf" class="pf hidden" style="max-width:min(94vw,760px)"></div><button class="mb" id="wbBack">BACK</button></div>
+<div id="nameAsk" class="ov hidden" style="z-index:9;background:rgba(2,8,4,.97)"><div class="ttl">WHAT DO THEY CALL YOU?</div><div class="dim" style="text-align:center;max-width:90vw">YOUR NAME SHOWS ON THE LEADERBOARD AND IN ONLINE 1V1. YOU CAN CHANGE IT IN CUSTOMIZE.</div><input id="naIn" class="sb" maxlength="12" spellcheck="false" autocomplete="off" style="width:260px;text-transform:uppercase;font-size:18px;text-align:center;letter-spacing:3px"><button class="mb" id="naGo">ENTER</button></div>
 <div id="rep" class="hidden"><div id="repWin"></div></div>
 <div id="olobby" class="ov hidden"><div class="ttl">ONLINE 1V1</div><div id="olCode" class="ttl" style="font-size:24px;color:#ffb000;letter-spacing:6px"></div><div id="olStatus" class="dim" style="text-align:center;max-width:90vw;line-height:1.8"></div>
  <div class="row" id="olShare"><input id="olLink" class="sb" readonly style="width:min(70vw,320px)"><button class="sb" id="olCopy">COPY INVITE LINK</button></div>
@@ -137,7 +137,7 @@ function newGame(mode){try{RUN.lv={};RUN.pb=((LB[mode||"normal"]||[])[0]||{}).s|
   G.streak=0;G.matrixA=G.level>=6?1:0;G.cam=0;G.shards=[];G.debris=[];G.blown=false;G.hg=null;G.wh=null;setField(1);droneOn();pad.cracks=[];ai.cracks=[];
   if(mode==="boss")bossSetup();G.prevR=readouts();
   startLevel();say(mode==="boss"?"THE WARDEN AWAITS":mode==="daily"?"DAILY  //  "+G.modNames.join("  +  "):mode==="endless"?"ENDLESS  //  HOW DEEP?":mode==="classic"?"CLASSIC  //  LEVEL 1":"LEVEL "+G.level,2.6)}
-function say(t,d){G.msg=t;G.msgT=d||1.5}
+function say(t,d){G.msg=t;G.msgT=d||1.5;G.msgD=d||1.5}
 function popup(t,col){G.pops.push({t,col:col||"#ffb000",a:1.4});if(G.pops.length>5)G.pops.shift();if(G.matrixA>0&&G.state!=="menu")inject(t)}
 /* ---- sound: short synth blips (HELLBALL style) ---- */
 let AC=null;function tn(f,d,type,v,f2){if(!AC)return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=type||"square";o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(v||.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02)}
@@ -1091,6 +1091,14 @@ function drawLogo2(){const el=document.getElementById("logo2");if(!el)return;con
   c.shadowBlur=0;c.font="bold "+10*S+"px 'Courier New',monospace";c.fillStyle="#119944";c.fillText("FATALIX INTELLIGENCE ENTERTAINMENT TERMINAL  //  C:\\HELLBALL>_",W/2,y+2*S);
   c.globalCompositeOperation="destination-out";c.fillStyle="rgba(0,0,0,.28)";for(let k=0;k<el.height;k+=3)c.fillRect(0,k,W,1)}
 try{drawLogo2()}catch(e){}
+/* v0.41: level / message banner is a DOS terminal window: title bar, phosphor text typed out, scanlines (style reference only) */
+function drawTermMsg(t,cx,cy,maxW){t=String(t);const m=/LEVEL\s+(\d+)/.exec(t),bar=m?"DEPTH: "+m[1]:"SYSTEM MESSAGE";ctx.save();let px=22;const F=p=>'bold '+p+'px "Courier New",monospace';ctx.font=F(px);let w=ctx.measureText(t).width;
+  if(w>maxW-40){px=Math.max(10,Math.floor(px*(maxW-40)/w));ctx.font=F(px);w=ctx.measureText(t).width}
+  const el=(G.msgD||1.5)-G.msgT,n=Math.min(t.length,Math.floor(el*45)),pw=Math.round(Math.max(w,190)+36),ph=px+38,x=Math.round(cx-pw/2),y=Math.round(cy-ph/2),by=y+14+(ph-14)/2;
+  ctx.fillStyle="rgba(2,12,6,.86)";ctx.fillRect(x,y,pw,ph);ctx.fillStyle="rgba(51,255,119,.9)";ctx.fillRect(x,y,pw,14);ctx.strokeStyle="#33ff77";ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,pw-1,ph-1);
+  ctx.textBaseline="middle";ctx.font=F(10);ctx.fillStyle="#02140a";ctx.textAlign="left";ctx.fillText("\\\\ "+bar+"  \\\\ CHANNEL: OPEN",x+6,y+8);ctx.textAlign="right";ctx.fillText("[X]",x+pw-5,y+8);
+  ctx.font=F(px);ctx.textAlign="left";ctx.fillStyle="#33ff77";const tx=Math.round(cx-w/2);ctx.fillText(t.slice(0,n),tx,by+1);if(n<t.length)ctx.fillRect(tx+ctx.measureText(t.slice(0,n)).width+2,by-px*.45,Math.ceil(px*.55),Math.ceil(px*.9));
+  ctx.fillStyle="rgba(0,0,0,.22)";for(let k=y+14;k<y+ph-1;k+=3)ctx.fillRect(x+1,k,pw-2,1);ctx.restore()}
 /* the menu logo (old, unused) */
 function drawLogo(){const el=document.getElementById("logo");if(!el)return;const A=artText("HELLBALL",{size:120,grad:["#ff2bd6","#ff1648","#d8ff3a"],drip:1.1}),
     B=artText("ULTIMATE",{size:78,grad:["#00e5ff","#ff2bd6","#3b2bff"],c1:"#ff0030",c2:"#0000ff",drip:.8}),K=artText("地獄",{size:70,grad:["#ff1030","#ff1030"],drip:.6,glitch:0});
@@ -1526,7 +1534,7 @@ g$("olCopy").onclick=()=>{const u=g$("olLink").value,b=g$("olCopy"),done=()=>{b.
   if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(u).then(done,()=>{g$("olLink").select();try{document.execCommand("copy")}catch(e){}done()});else{g$("olLink").select();try{document.execCommand("copy")}catch(e){}done()}};
 setTimeout(()=>{const j=location.hash.match(/join=([A-Z0-9]{5})/i);if(j&&!nInDc())nOpen(j[1])},300);
 
-/* ---------- v0.17 NAMES + WORLD BOARD: your name, world leaderboards and public stat sheets, kept on the same server as online 1v1 ---------- */
+/* ---------- v0.17 NAMES + LEADERBOARD: your name, world leaderboards and public stat sheets, kept on the same server as online 1v1 ---------- */
 const GB={scope:"hbu",tab:"normal",seq:0,lastProf:0};
 const gAPI=()=>nInDc()?"/.proxy/ws/lb/"+GB.scope:"https://hellball-ultimate.420dirtydoug420.workers.dev/ws/lb/"+GB.scope;
 const gStore=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}return v};
@@ -1549,10 +1557,10 @@ function gWin(){ST.w1v1=(ST.w1v1||0)+1;stSave();gPost({op:"win",b:"1v1"}).then(d
 function gOpen(){hideAll();g$("wb").classList.remove("hidden");g$("wbProf").classList.add("hidden");g$("wbGhost").classList.add("hidden");gLoad(GB.tab)}
 function gLoad(b){GB.tab=b;g$("wbTabs").innerHTML=GB_TABS.map(([k,t])=>'<button class="sb'+(k===b?" on":"")+'" data-wb="'+k+'">'+t+'</button>').join("");
   const n=++GB.seq;g$("wbList").innerHTML='<div class="dim">LOADING...</div>';g$("wbYou").textContent="";
-  fetch(gAPI()+"?b="+encodeURIComponent(gKey(b))+"&pid="+gPid).then(r=>r.json()).then(d=>{if(n!==GB.seq)return;if(!d||!d.top){g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>';return}
+  fetch(gAPI()+"?b="+encodeURIComponent(gKey(b))+"&pid="+gPid).then(r=>r.json()).then(d=>{if(n!==GB.seq)return;if(!d||!d.top){g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE LEADERBOARD.</div>';return}
     const unit=b==="classic"?"LV":b==="1v1"?"WINS":"";
     g$("wbList").innerHTML=d.top.length?d.top.map((e,i)=>'<div class="lbr wbr'+(e.me?" me":"")+'"'+(/^[a-f0-9]{12}$/.test(e.id||"")?' data-pid="'+e.id+'"':"")+'><span>'+String(i+1).padStart(2,"0")+'</span><span>'+gEsc(e.n)+'</span><span>'+(Number(e.s)|0)+(unit?" "+unit:"")+'</span><span>'+(b!=="classic"&&b!=="1v1"&&e.l?"LV "+(Number(e.l)|0):"")+'</span></div>').join(""):'<div class="dim">NO SCORES YET. BE THE FIRST.</div>';
-    if(d.top[0]&&d.top[0].me)ach("world_one");g$("wbYou").textContent=d.you?(d.you.rank>10?"YOU: #"+(d.you.rank|0)+" OF "+(d.total|0)+"   "+(d.you.s|0):""):"YOU ARE NOT ON THIS BOARD YET"},()=>{if(n===GB.seq)g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>'})}
+    if(d.top[0]&&d.top[0].me)ach("world_one");g$("wbYou").textContent=d.you?(d.you.rank>10?"YOU: #"+(d.you.rank|0)+" OF "+(d.total|0)+"   "+(d.you.s|0):""):"YOU ARE NOT ON THIS BOARD YET"},()=>{if(n===GB.seq)g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE LEADERBOARD.</div>'})}
 function medStrip(c){c=String(c||"");return c.split("").map(t=>{t=+t;return t>=1&&t<=5?'<span style="color:'+TIERS[t-1][1]+'">\u25AE'+t+'</span>':'<span style="color:#455">\u25AE0</span>'}).join(" ")}
 function gShowProfile(pid){if(!/^[a-f0-9]{12}$/.test(pid))return;gmShow(pid);const box=g$("wbProf");box.classList.remove("hidden");box.innerHTML='<div class="dim">PULLING SUBJECT FILE...</div>';
   fetch(gAPI()+"?prof="+encodeURIComponent(pid)).then(r=>r.json()).then(d=>{if(!d||!d.p){box.innerHTML='<div class="dim">NO SUBJECT FILE ON RECORD'+(d&&d.error?" (THE SERVER NEEDS ITS PROFILE UPDATE)":"")+'.</div>';return}
@@ -1561,7 +1569,7 @@ function gShowProfile(pid){if(!/^[a-f0-9]{12}$/.test(pid))return;gmShow(pid);con
       (p.ar?'<div class="pf-s">ARCHETYPE: '+gEsc(p.ar)+' &nbsp; '+medStrip(p.mc)+'</div>':"")+'<div class="pf-s">BEST: '+(p.best|0)+' &nbsp; DEEPEST: '+(p.maxL|0)+' &nbsp; RUNS: '+(p.games|0)+' &nbsp; TIME: '+(p.min|0)+'m &nbsp; 1V1 WINS: '+(p.w1|0)+' &nbsp; ACHIEVEMENTS: '+(p.ach|0)+'</div>'+
       '<div class="pf-s">HITS: '+(p.hits|0)+' &nbsp; ACES: '+(p.aces|0)+' &nbsp; SWEET SPOTS: '+(p.sweet|0)+' &nbsp; PADDLEFLIPS: '+(p.flips|0)+' &nbsp; POINTS WON/LOST: '+(p.pw|0)+'/'+(p.plost|0)+(p.bud?' &nbsp; HELLBUD: '+gEsc(p.bud):"")+'</div>'+
       (Array.isArray(p.r)?p.r.slice(0,names.length).map((v,i)=>'<div class="pf-r"><span class="pf-n">'+names[i].padEnd(18,".")+'</span><span class="pf-b">'+bar(Math.max(0,Math.min(100,v|0)))+'</span><span class="pf-v">'+String(v|0).padStart(3)+'%</span></div>').join(""):"")+
-      '<div class="dim" style="margin-top:6px">LAST SEEN '+gEsc(p.d||"?")+'</div>'},()=>{box.innerHTML='<div class="dim">COULD NOT REACH THE WORLD BOARD.</div>'})}
+      '<div class="dim" style="margin-top:6px">LAST SEEN '+gEsc(p.d||"?")+'</div>'},()=>{box.innerHTML='<div class="dim">COULD NOT REACH THE LEADERBOARD.</div>'})}
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-wb]");if(t){gLoad(t.dataset.wb);return}const r=e.target.closest&&e.target.closest("[data-pid]");if(r&&!g$("wb").classList.contains("hidden"))gShowProfile(r.dataset.pid)});
 g$("bWb").onclick=()=>{initAudio();gOpen()};g$("wbBack").onclick=()=>showMenu();
 /* your name: asked once on first launch, changeable in CUSTOMIZE */
@@ -1573,7 +1581,7 @@ g$("nmIn").value=gStore("hb3_name")||"";
 if(!gStore("hb3_name"))setTimeout(()=>{g$("nameAsk").classList.remove("hidden");g$("naIn").focus()},400);else setTimeout(()=>gSendProfile(),3000);
 
 /* =====================================================================================================
-   v0.19: FX ORB (glowing orb + glitch ball, stamped FX, unlocked by #1 on any World Board) and the
+   v0.19: FX ORB (glowing orb + glitch ball, stamped FX, unlocked by #1 on any Leaderboard) and the
    post-run HOLOGRAM REPORT: unlocks, letter grades for real + esoteric stats, charts, nearby players
    ===================================================================================================== */
 let FXSTAMP=null;
@@ -1581,7 +1589,7 @@ function fxStamp(){if(FXSTAMP)return FXSTAMP;GLY.F=["11111","10000","10000","111
   const pts=[],word="FX",cols=word.length*6-1;[...word].forEach((ch,i)=>GLY[ch].forEach((row,r)=>[...row].forEach((v,c)=>{if(v==="1"){
   const lon=((i*6+c)-(cols-1)/2)*5.6*Math.PI/180,lat=(3-r)*6.4*Math.PI/180;pts.push([Math.cos(lat)*Math.sin(lon),-Math.sin(lat),Math.cos(lat)*Math.cos(lon)])}})));
   return FXSTAMP=pts.concat(pts.map(([x,y,z])=>[-x,y,-z]))}
-ACH.push({id:"world_one",name:"NUMBER ONE",desc:"Reach #1 on any World Board."});
+ACH.push({id:"world_one",name:"NUMBER ONE",desc:"Reach #1 on any Leaderboard."});
 COS.ball.push({id:"fxorb",n:"FX ORB",un:"world_one"});
 function drawFXOrb(cx,cy,r,c){c=c||ctx;const gl=Math.random()<.06,j=()=>Math.random()<.04?(Math.random()-.5)*r*.25:0;
   c.save();c.globalCompositeOperation="lighter";const h=c.createRadialGradient(cx,cy,r*.9,cx,cy,r*4.2);h.addColorStop(0,"rgba(80,255,150,.3)");h.addColorStop(.15,"rgba(80,255,150,.12)");h.addColorStop(.4,"rgba(80,255,150,.04)");h.addColorStop(1,"rgba(80,255,150,0)");
@@ -1627,7 +1635,7 @@ function reportOpen(){if(G.mode==="online")return;const S2=runStats(),U=repUnloc
   h+=L('<div id="repUnl"></div>');
   h+='<div class="rp-cols"><div>'+L('<div class="rp-h">COMBAT METRICS</div>')+S2.real.map(([k,v,s])=>L('<div class="rp-row"><span>'+k+'</span><span>'+gEsc(v)+'</span>'+gr(s)+'</div>')).join("")+'</div>';
   h+='<div>'+L('<div class="rp-h">ESOTERIC READINGS</div>')+S2.eso.map(([k,v])=>L('<div class="rp-row"><span>'+k+'</span><span>'+v+'%</span>'+gr(v)+'</div>')).join("")+'</div></div>';
-  h+='<div class="rp-cols">'+L('<div class="rp-h">GRADE PROFILE</div><canvas id="repC1" width="440" height="170"></canvas>')+L('<div class="rp-h" id="repNearH">NEARBY SUBJECTS // WORLD BOARD</div><canvas id="repC2" width="440" height="170"></canvas><div class="rp-dim" id="repNearT">ACQUIRING NEARBY SUBJECTS...</div>')+'</div>';
+  h+='<div class="rp-cols">'+L('<div class="rp-h">GRADE PROFILE</div><canvas id="repC1" width="440" height="170"></canvas>')+L('<div class="rp-h" id="repNearH">NEARBY SUBJECTS // LEADERBOARD</div><canvas id="repC2" width="440" height="170"></canvas><div class="rp-dim" id="repNearT">ACQUIRING NEARBY SUBJECTS...</div>')+'</div>';
   h+=L('<div class="rp-foot"><span class="rp-dim">CLICK, ESC OR ANY KEY TO DISMISS</span><button class="sb" id="repX">DISMISS</button></div>');
   w.innerHTML=h;w.classList.remove("now");box.classList.remove("hidden");repUnlFill();repChart1(S2.real);repNear(null);
   const p=RUN.boardP;if(p)p.then(d=>{if(!box.classList.contains("hidden")){repNear(d);setTimeout(repUnlFill,100)}},()=>repNear({err:1}));else repNear({none:1});
@@ -1640,7 +1648,7 @@ function repChart1(real){const c=g$("repC1");if(!c)return;const x=c.getContext("
   real.forEach(([k,,s],i)=>{const h=(H-40)*s/100,X=i*bw+bw*.2;x.fillStyle="rgba(255,40,40,.25)";x.fillRect(X,H-28-h,bw*.6,h);x.strokeStyle="rgba(255,120,120,.9)";x.strokeRect(X,H-28-h,bw*.6,h);
     x.fillStyle="#ffe0e0";x.fillText(GRADE(s),X+bw*.3,H-31-h);x.fillStyle="rgba(255,150,150,.8)";x.fillText(k.split(" ")[0].slice(0,7),X+bw*.3,H-14)})}
 function repNear(d){const c=g$("repC2"),t=g$("repNearT");if(!c)return;const x=c.getContext("2d"),W=c.width,H=c.height;x.clearRect(0,0,W,H);
-  if(!d){return}if(d.err||d.none||(!d.near&&!d.top)){t.textContent=d.none?"NO BOARD FOR THIS MODE.":"WORLD BOARD UNREACHABLE.";return}
+  if(!d){return}if(d.err||d.none||(!d.near&&!d.top)){t.textContent=d.none?"NO BOARD FOR THIS MODE.":"LEADERBOARD UNREACHABLE.";return}
   const list=(d.near&&d.near.length?d.near:d.top.map((e,i)=>Object.assign({r:i+1},e))).slice(0,7),mx=Math.max(1,...list.map(e=>Number(e.s)||0)),rh=(H-6)/Math.max(4,list.length);
   x.font="10px 'Courier New',monospace";list.forEach((e,i)=>{const y=3+i*rh,w=(W-170)*(Number(e.s)||0)/mx;x.fillStyle=e.me?"rgba(255,255,255,.85)":"rgba(255,40,40,.35)";x.fillRect(150,y+2,w,rh-5);
     if(!e.me){x.strokeStyle="rgba(255,120,120,.8)";x.strokeRect(150,y+2,w,rh-5)}x.fillStyle=e.me?"#fff":"#ffb0b0";x.textAlign="left";x.fillText(("#"+(e.r|0)).padEnd(5)+String(e.n||"").slice(0,12),4,y+rh/2+3);
@@ -1918,7 +1926,7 @@ function coOver(m){const win=m&&m.win,sc=G.score,lv=G.level;if(CO.host)nSend({t:
   nLobby((win?"RAID COMPLETE":CO.raid?"THE RAID FAILED":"CO-OP RUN OVER")+"<br>SCORE "+sc+"  //  LEVEL "+lv+(net.live?"<br>READY UP TO GO AGAIN.":""),{ready:net.live})}
 function coTick(){if(CO.on&&!CO.host&&!net.live){CO.on=false;G.mode="normal"}}
 
-/* ---------- GHOST RACE: the daily run records your paddle; the World Board #1's recording plays back as a faint outline ---------- */
+/* ---------- GHOST RACE: the daily run records your paddle; the Leaderboard #1's recording plays back as a faint outline ---------- */
 const GH={rec:null,play:null,i:0};
 const b64e=u=>{let s="";for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)},b64d=s=>{try{const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}catch(e){return null}};
 function ghSet(g,src){if(!g||typeof g.p!=="string"||!Array.isArray(g.sc))return;const p=b64d(g.p);if(!p||p.length<20)return;if(GH.play&&GH.play.s>=(g.s|0))return;GH.play={p,sc:g.sc.slice(0,2000).map(v=>Number(v)|0),n:gClean(g.n)||"GHOST",s:g.s|0,src}}
@@ -2162,12 +2170,12 @@ setTimeout(gFlushPending,4000);
 function gAbandon(){try{if(["play","serve","wait"].includes(G.state)&&!G.test&&G.score>0&&G.mode!=="online"&&G.mode!=="coop"){if(G.score>G.best){G.best=G.score;try{localStorage.setItem("hb3_best",G.best)}catch(e){}}gSubmit()}}catch(e){}}
 addEventListener("pagehide",gAbandon);
 
-/* ---------- v0.35: click a name on the world board, then play their ghost in a first-to-5 match ---------- */
+/* ---------- v0.35: click a name on the leaderboard, then play their ghost in a first-to-5 match ---------- */
 function gmShow(pid){const b=g$("wbGhost");b.classList.remove("hidden");b.innerHTML='<button class="mb" data-gm="'+pid+'">PLAY THEIR GHOST  //  FIRST TO 5</button><div class="dim" id="gmMsg"></div>'}
 function gmStart(pid){const msg=g$("gmMsg");if(msg)msg.textContent="PULLING THEIR COPY...";
   fetch(gAPI()+"?gx="+encodeURIComponent(pid)).then(r=>r.json()).then(d=>{const x=d&&d.g;if(!x||typeof x.p!=="string"){if(g$("gmMsg"))g$("gmMsg").textContent="NO GHOST ON FILE FOR THEM YET. THEY HAVE TO FINISH A RUN FIRST.";return}
     const g={p:b64d(x.p),n:gClean(x.n)||"GHOST",s:x.s|0,l:x.l|0,m:String(x.m||""),ar:String(x.ar||""),si:0,sv:(Array.isArray(x.v)?x.v:[]).slice(0,8).filter(a=>Array.isArray(a)&&a.length===4&&a.every(Number.isFinite))};
-    gmPlay(g)}).catch(()=>{if(g$("gmMsg"))g$("gmMsg").textContent="COULD NOT REACH THE WORLD BOARD."})}
+    gmPlay(g)}).catch(()=>{if(g$("gmMsg"))g$("gmMsg").textContent="COULD NOT REACH THE LEADERBOARD."})}
 function gmPlay(g){initAudio();hideAll();G.paused=false;newGame("grudge");const lvl=Math.max(4,Math.min(12,g.l||9));G.level=lvl;G.matrixA=lvl>=6?1:0;G.pl=5;G.el=5;G.elMax=5;
   const h=mkHacker(Math.random,g.n,Math.round(300+g.s/4));G.hk=h;G.aiName=g.n;G.aiRival=0;G.tagFade=0;G.tagGo=false;G.aiCopy=g;G.ghostMatch=true;AIH.key="";
   G.grudge={h,rgb:hueRGB(strHash(g.n)%360),sayT:3};GP.pr=null;GP.cards=[{g,t:-.9,d:5.4}];droneOn();say("GHOST MATCH  //  "+g.n+"  //  FIRST TO 5",3)}
@@ -2235,7 +2243,7 @@ function reportOpen(){if(G.mode==="online")return;const S2=runStats(),box=g$("re
   h+=L('<div class="rp-foot"><span class="rp-dim">R  RESTART<br>ESC  CLOSE</span><button class="sb" id="repX">CLOSE</button></div>');
   w.innerHTML=h;w.classList.remove("now");box.classList.remove("hidden");repUnlFill();
   const p=RUN.boardP,tg=()=>g$("repTgt"),set=t=>{if(tg())tg().textContent=t};
-  if(p)p.then(d=>{if(!d||!d.you){set("NEXT TARGET: NOT RANKED YET");return}const nr=d.near||[],me=nr.findIndex(x=>x.me);if(d.you.rank===1){set("YOU ARE #1 ON THE WORLD BOARD");return}
+  if(p)p.then(d=>{if(!d||!d.you){set("NEXT TARGET: NOT RANKED YET");return}const nr=d.near||[],me=nr.findIndex(x=>x.me);if(d.you.rank===1){set("YOU ARE #1 ON THE LEADERBOARD");return}
       const t=me>0?nr[me-1]:nr.find(x=>x.s>G.score);set(t?"NEXT TARGET: #"+(t.r|0)+" "+t.n+"  +"+Math.max(1,(t.s|0)-(d.you.s|0))+" TO PASS":"NEXT TARGET: #"+((d.you.rank|0)-1))},()=>set("NEXT TARGET: BOARD OFFLINE"));else set("");
   g$("repX").onclick=reportClose}
 
@@ -2543,7 +2551,7 @@ function draw(t,dt){
   drawTelemetry(L,B,dt);drawBudPanel(R,B);if(G.zone!=="face")drawEdge(W,H,T);drawEventsFront(W,H,DS.T,dt);
   const mid=(T+B)/2;
   if(G.state==="serve"&&G.msgT<=0)text("PUT YOUR PADDLE ON THE BALL AND CLICK TO SERVE",(L+R)/2,B-12,12,"#119944","center");
-  if(G.msgT>0){G.msgT-=dt;ctx.globalAlpha=Math.min(1,G.msgT*2);drawTitle(G.msg,(L+R)/2,T+60,26,G.level>=7?"#ff4455":"#ffb000");ctx.globalAlpha=1}}
+  if(G.msgT>0){G.msgT-=dt;ctx.globalAlpha=Math.min(1,G.msgT*2);drawTermMsg(G.msg,(L+R)/2,T+60,(R-L)*.92);ctx.globalAlpha=1}}
 let acc=0,last=performance.now();
 function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(G.paused){draw(0,0);requestAnimationFrame(loop);return}acc+=dt;
   while(acc>=STEP){step();acc-=STEP;if(G.state==="wait"){G.waitT-=STEP;if(G.waitT<=0)afterWait()}}
