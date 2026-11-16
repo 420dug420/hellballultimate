@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.45 // BUILD 20261116.0530 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.46 // BUILD 20261116.0550 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -328,7 +328,7 @@ function trickTick(dt){
   if(pad.flip){pad.flip.t+=dt;if(pad.flip.t>=pad.flip.d){pad.flip=null;pad.flipEnd=performance.now()}}
   if(pad.heal){const h=pad.heal;h.t+=dt;pad.cracks.length=Math.max(0,Math.floor(h.n0*(1-Math.min(1,h.t/(h.d*.85)))));if(h.t>=h.d)pad.heal=null}}
 cv.addEventListener("pointermove",e=>{toWorld(e);
-  if(press&&!press.flip&&!press.slow&&!press.hold&&!pad.tw&&performance.now()-press.t<150&&(G.state==="play"||G.state==="serve"||G.state==="wait")){const dx=e.clientX-press.x,dy=e.clientY-press.y;   // v0.45: only a quick flick right after the press flips; never mid-spin or mid-hold
+  if(press&&!press.flip&&!press.slow&&!press.hold&&!pad.tw&&(G.state==="play"||G.state==="serve"||G.state==="wait")){const dx=e.clientX-press.x,dy=e.clientY-press.y;   // v0.46: flips work as before (drag any time), but never start while a spin is playing or held
     if(Math.hypot(dx,dy)>16){press.flip=true;startFlip(Math.abs(dx)>Math.abs(dy)?"y":"x")}}});
 cv.addEventListener("pointerdown",e=>{if(G.paused)return;toWorld(e);
   if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}
