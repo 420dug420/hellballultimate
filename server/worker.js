@@ -135,6 +135,8 @@ export class Board {
         for (let i = all.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [all[i], all[j]] = [all[j], all[i]]; }
         return lbJSON({ list: all.slice(0, 3).map(x => ({ n: x.n, s: x.s, l: x.l, p: x.p, v: x.v || [] })) });
       }
+      const gx = u.searchParams.get("gx") || "";                  // v0.35: one player's copy, looked up by the public id the world board shows
+      if (gx) { if (!PUB_ID.test(gx)) return lbJSON({ error: "bad player" }, 400); return lbJSON((await this.s.get("gx:" + gx)) || { g: null }); }
       const gh = u.searchParams.get("ghost") || "";               // the #1 player's recorded paddle for that board (daily ghost race)
       if (gh) { if (!LB_BOARD.test(gh)) return lbJSON({ error: "bad board" }, 400); return lbJSON((await this.s.get("g:" + gh)) || { g: null }); }
       const b = u.searchParams.get("b") || "", pid = u.searchParams.get("pid") || "";
@@ -159,6 +161,7 @@ export class Board {
       const v = Array.isArray(g.v) ? g.v.slice(0, 8).filter(r => Array.isArray(r) && r.length === 4 && r.every(Number.isFinite)).map(r => r.map(q => Math.round(q * 100) / 100)) : [];
       all.push({ pid: m.pid, n: name || (await this.s.get("n:" + m.pid)) || "PLAYER", s: Math.floor(Number(g.s)) || 0, l: Math.floor(Number(g.l)) || 1, p: g.p, v, t: Date.now() });
       await this.s.put("gp", all.slice(-60));
+      await this.s.put("gx:" + (await pubId(m.pid)), { g: { n: all[all.length - 1].n, s: all[all.length - 1].s, l: all[all.length - 1].l, p: g.p, v } });
       return lbJSON({ ok: true });
     }
     if (m.op === "ghost") {                                      // only the current #1 on that board may store the ghost
