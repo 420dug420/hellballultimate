@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.50 // BUILD 20261116.0840 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.51 // BUILD 20261116.0930 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -130,7 +130,7 @@ const K=z=>(90-Math.atan(z/VA)*180/Math.PI)/90;            // Curveball's depth 
 let WX=BW/2,WY=BH/2;
 const G={state:"menu",sc:1,spd:1,debris:[],trail:[],cam:0,matrixA:0,shards:[],level:1,score:0,pl:5,el:3,vol:0,streak:0,mult:1,lastMult:1,msg:"",msgT:0,pops:[],best:0,waitT:0};
 try{G.best=+localStorage.getItem("hb3_best")||0}catch(e){}
-const lv=()=>Math.min(G.mode==="classic"?(G.cl||1):G.level,12)-1,LS=()=>L_SPEED[lv()]*(G.spd||1);
+const lv=()=>Math.min(G.mode==="classic"?(G.cl||1):G.level,12)-1,LS=()=>L_SPEED[lv()]*(G.spd||1)*(G.mode==="lab"&&G.mod.labspd||1);
 let mouse={x:WX,y:WY};
 const pad={x:WX,y:WY,ox:WX,oy:WY,vx:0,vy:0,px:WX,py:WY,hl:null,hlT:0,cracks:[]};
 const ai ={x:WX,y:WY,ox:WX,oy:WY,vx:0,vy:0,px:WX,py:WY,hl:null,hlT:0,cracks:[]};
@@ -144,7 +144,7 @@ function spinBall(){if(G.state!=="play"||ball.stop){rotAxis(0,1,0,.012);return}
   rotAxis(1,0,0,-ball.vy*.045+ball.cy*7+ball.vz*.03)} // up/down drift + top spin + rolling down the tunnel
 function resetBall(){Object.assign(ball,{x:WX,y:WY,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,px:WX,py:WY,pz:0})}
 function startLevel(){try{RUN.lv=RUN.lv||{};RUN.lv[LVL()]=G.score}catch(e){}G.vol=0;if(G.mode==="classic")G.spd=1+Math.min(.5,Math.max(0,(G.cl||1)-12)*.025);resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck();G.dark=G.mode!=="online"&&G.level>=41&&Math.random()<.45;if(G.dark)setTimeout(()=>{if(G.dark)popup("LIGHTS OUT","#ff4455")},2600)}
-function newGame(mode){try{RUN.lv={};RUN.pb=((LB[mode||"normal"]||[])[0]||{}).s||0}catch(e){}G.subDone=false;G.ghostMatch=false;SV.pts=[];SV.said=false;if(mode!=="classic"&&G.clsMute)setTimeout(clsMusicBack,0);G.cl=1;runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test";
+function newGame(mode){try{RUN.lv={};RUN.pb=((LB[mode||"normal"]||[])[0]||{}).s||0}catch(e){}G.subDone=false;G.ghostMatch=false;SV.pts=[];SV.said=false;if(mode!=="classic"&&G.clsMute)setTimeout(clsMusicBack,0);G.cl=1;runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test"||mode==="lab";
   G.mod={};G.modNames=[];if(mode==="daily"){const ms=dailyMods();ms.forEach(m=>Object.assign(G.mod,m));G.modNames=ms.map(m=>m.n.split(":")[0]);RNG=mulberry(todayKey())}else RNG=Math.random;
   G.level=G.mod.start||1;G.score=0;G.pl=mode==="endless"?3:(G.mod.lives||5);G.el=(mode==="endless"||mode==="boss")?99:3;G.epts=0;G.bossWon=false;G.bossLost=false;G.zone=null;G.tube=false;G.tubeK=0;G.elMax=3;G.oceanA=1;ABYSS.length=0;EV.list=[];EV.t=8;BLK.length=0;G.hyCam=0;G.twins=false;ai.w=PW;ai.h=PH;
   G.streak=0;G.matrixA=G.level>=6?1:0;G.cam=0;G.shards=[];G.debris=[];G.blown=false;G.hg=null;G.wh=null;setField(1);droneOn();pad.cracks=[];ai.cracks=[];
@@ -216,7 +216,7 @@ function step(){if(CO.on&&!CO.host){coGuestStep();return}stepCore();if(CO.on&&CO
 function stepCore(){
   pad.h=isMaster(pad)?PH*.8:PH;
   pad.ox=pad.x;pad.oy=pad.y;pad.px=pad.x;pad.py=pad.y;
-  pad.x-= (pad.x-mouse.x)/1.5;pad.y-=(pad.y-mouse.y)/1.5;clampP(pad);pad.vx=pad.x-pad.px;pad.vy=pad.y-pad.py;if(G.state==="play")stInc("mv",Math.hypot(pad.vx,pad.vy)/PW);
+  pad.x-=(pad.x-(G.mode==="lab"&&G.mod.mirror?BW-mouse.x:mouse.x))/1.5;pad.y-=(pad.y-mouse.y)/1.5;clampP(pad);pad.vx=pad.x-pad.px;pad.vy=pad.y-pad.py;if(G.state==="play")stInc("mv",Math.hypot(pad.vx,pad.vy)/PW);
   // AI: chases the ball while it's coming, drifts home while it's leaving
   if(G.mode==="online")nAI();else{const sk=L_SKILL[lv()]*(MOD().aiSlow||1)*(G.mode==="boss"?(G.twins?.85:1.25):1);
   for(const[q,off]of G.twins?[[ai,-38],[ai2,38]]:[[ai,0]]){q.ox=q.x;q.oy=q.y;q.px=q.x;q.py=q.y;
@@ -224,7 +224,7 @@ function stepCore(){
     clampP(q);q.vx=q.x-q.px;q.vy=q.y-q.py}}
   ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;spinBall();
   if(G.state!=="play"||ball.stop)return;
-  ball.vx+=ball.cx;ball.vy+=ball.cy;ball.z+=ball.vz;ball.x+=ball.vx;ball.y-=ball.vy;
+  ball.vx+=ball.cx;ball.vy+=ball.cy;ball.z+=ball.vz;ball.x+=ball.vx;ball.y-=ball.vy;if(G.mode==="lab"&&G.mod.wob&&!ball.stop){ball.x+=Math.sin(ball.z*.35)*.9;ball.y+=Math.cos(ball.z*.29)*.7}
   if(ball.cx)ball.cx/=CURVE_DECAY;if(ball.cy)ball.cy/=CURVE_DECAY;
   if(G.tube)tubeWalls();else{if(ball.y-BR<0){ball.y=BR;ball.cy/=WALL_SPIN;ball.vy=-ball.vy;S.wall2()}else if(ball.y+BR>BH){ball.y=BH-BR;ball.cy/=WALL_SPIN;ball.vy=-ball.vy;S.wall2()}
   if(ball.x-BR<0){ball.x=BR;ball.cx/=WALL_SPIN;ball.vx=-ball.vx;S.wall1()}else if(ball.x+BR>BW){ball.x=BW-BR;ball.cx/=WALL_SPIN;ball.vx=-ball.vx;S.wall1()}}
@@ -505,7 +505,7 @@ function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a
 function dailyMods(){const r=mulberry(todayKey()*7+13),a=Math.floor(r()*MODS.length);let b=Math.floor(r()*MODS.length);if(b===a)b=(b+3)%MODS.length;return[MODS[a],MODS[b]]}
 const MOD=()=>G.mod||{};
 const LC=()=>L_CURVE[lv()]/(MOD().curve||1);
-const MODE_NAME={classic:"CLASSIC",grudge:"GRUDGE MATCH",coop:"CO-OP",online:"ONLINE",normal:"HELLBALL",daily:"DAILY",endless:"ENDLESS",boss:"BOSS",test:"TEST"};
+const MODE_NAME={lab:"THE LAB",classic:"CLASSIC",grudge:"GRUDGE MATCH",coop:"CO-OP",online:"ONLINE",normal:"HELLBALL",daily:"DAILY",endless:"ENDLESS",boss:"BOSS",test:"TEST"};
 
 /* ---- THE WARDEN: 10 health. A giant paddle; at half health it splits into twins ---- */
 const ai2={x:0,y:0,ox:0,oy:0,vx:0,vy:0,px:0,py:0,hl:null,hlT:0,cracks:[],rot:0};
@@ -1818,7 +1818,7 @@ function fxFetch(){try{fetch(gAPI()+"?fx=1").then(r=>r.json()).then(d=>{if(d&&d.
 fxLoad();setTimeout(fxFetch,900);setInterval(fxFetch,6e5);
 function fxAge(){if(!FXR.d)return 99;const a=new Date(FXR.d+"T12:00:00"),n=new Date();return Math.round((new Date(n.getFullYear(),n.getMonth(),n.getDate(),12)-a)/864e5)}
 const fxShort=()=>{const m=/^\d{4}-(\d\d)-(\d\d)$/.exec(FXR.d||"");return m?(+m[2])+" "+FX_MON[+m[1]-1]:""};
-function fxGef(){return!FXR.sim&&fxAge()<=3?FXR.g:5}
+function fxGef(){if(G.mode==="lab"&&FXR.lab)return FXR.lab;return!FXR.sim&&fxAge()<=3?FXR.g:5}
 function fxDist(){const g=fxGef();return g<=5?.5+.125*(g-1):1+.03*(g-5)}
 const fxDesc=g=>g>=10?"GEF LEVELS DANGEROUS":g>=9?"DANGEROUS":g>=7?"ELEVATED":g>=4?"ACTIVE":"QUIET";
 const fxDescS=g=>g>=9?"DANGEROUS":fxDesc(g);
@@ -1871,9 +1871,9 @@ function faMake(maxC){const g=fxGef(),V=fxView(DS.T||0),red=Math.min(.4,.04+(G.l
   if(fam<.5){const pl=place(),c=FA_R(FA_C),v=FA_R(FA_V),tm=FA_R(FA_T);t=c+" "+v+" "+pl[0]+" "+tm;if(t.length>maxC)t=c+" "+v+" "+pl[1]+" "+tm;if(t.length>maxC)t=c+" NEAR "+pl[1];conf=FA_N(41,97)}
   else{const pl=place()[1],gens=[()=>"SCHUMANN SPIKE "+(8+Math.random()*6).toFixed(1)+" HZ OVER "+pl,()=>"GEF LEVEL "+g+" // "+fxDesc(g),()=>"VEIL INDEX "+Math.round(V.v)+" // "+(V.v>=60?"ELEVATED":"WATCH"),()=>"UAP CLUSTER: "+FA_N(2,9)+" OBJECTS OVER "+pl,()=>"UNEXPLAINED HUM LOGGED // "+pl,()=>"POLTERGEIST CHARGE "+FA_N(40,96)+"% // "+pl,()=>"LEYLINE ACTIVITY M"+(2+Math.random()*2.5).toFixed(1)+" // "+pl,()=>"REDACTED ALERT: '"+FA_R(FA_A)+"' EDITED, 1 LINE REMOVED",()=>"SATURN STATIONS RETROGRADE",()=>"MARS CAUTION // "+FA_R(["NEWS MENTIONS RISING","RED SHIFT IN CHATTER"]),()=>"PROBABILITY OF CONTACT "+FA_N(12,88)+"% // "+pl,()=>"SIGNAL 4471 ACKNOWLEDGED BY UNKNOWN HOST",()=>"ENTITY_03 REQUESTS READ ACCESS",()=>"DO NOT LOOK UP "+FA_R(FA_T),()=>"FERAL PERSON REPORTED // "+pl,()=>"CATTLE REPORT: "+FA_N(2,14)+" HEAD // "+pl,()=>"TREE LINE ANOMALY // "+pl,()=>"RADIO SILENCE "+FA_N(3,40)+" MIN // "+pl,()=>"UNREST INDEX "+FA_N(18,71)+" // NUCLEAR INDEX "+FA_N(2,19),()=>"DOPPLER SHADOW OVER "+pl,()=>"OBSERVER COUNT +"+FA_N(1,4)+" // "+pl];t=FA_R(gens)();if(t.length>maxC)t=t.slice(0,maxC-1)+"."}
   return{t,sev,conf}}
-function faOK(){return G.level>=3&&G.state!=="menu"&&G.state!=="over"&&G.mode!=="classic"&&G.mode!=="online"&&G.zone!=="face"&&!G.paused}
+function faOK(){return(G.level>=3||G.mode==="lab")&&G.state!=="menu"&&G.state!=="over"&&G.mode!=="classic"&&G.mode!=="online"&&G.zone!=="face"&&!G.paused}
 function faTick(dt){if(!faOK())return;for(const a of FA.q)a.age+=dt;FA.q=FA.q.filter(a=>a.age<a.life);FA.t-=dt;if(FA.t>0)return;
-  const g=fxGef();FA.t=(38-Math.min(24,(G.level-3)*.9))*(1.25-.05*g)*(.7+Math.random()*.6);if(FA.q.length>=2){FA.t=3;return}
+  const g=fxGef();FA.t=(38-Math.min(24,(G.level-3)*.9))*(1.25-.05*g)*(.7+Math.random()*.6);if(G.mode==="lab"&&G.mod.storm)FA.t=1.3;if(FA.q.length>=(G.mode==="lab"&&G.mod.storm?3:2)){FA.t=2;return}
   const a=faMake(78);const d=new Date(),hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");FA.q.push({t:a.t,sev:a.sev,conf:a.conf,age:0,life:8.5});FA.log.unshift([hm,a.t,a.sev]);if(FA.log.length>12)FA.log.length=12}
 function drawFxAlerts(L,R,T,B,dt){if(!FA.q.length||G.state==="menu"||G.state==="over")return;const tags=["NOTICE","ALERT","BREACH"],cols=[FX_C,FX_O,FX_R],W=Math.min(560,(R-L)*.88);let y=T+(G.msgT>0?96:12);ctx.save();ctx.textAlign="left";
   for(const a of FA.q){const fi=Math.min(1,a.age/.35),fo=Math.min(1,(a.life-a.age)/.8),al=Math.max(0,Math.min(fi,fo)),x=(L+R)/2-W/2,col=cols[a.sev],tw=tags[a.sev].length*6.6+14;ctx.globalAlpha=al*.95;ctx.fillStyle="rgba(2,10,4,.9)";ctx.fillRect(x,y,W,22);ctx.strokeStyle=col;ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,W-1,21);ctx.fillStyle=col;ctx.fillRect(x+1,y+1,tw,20);ctx.font="bold 10px 'Courier New',monospace";ctx.fillStyle="#000";ctx.fillText(tags[a.sev],x+8,y+15);
@@ -1887,9 +1887,30 @@ function hwPay(){if(G.test||G.mode==="online")return;ST.hwEarn=(ST.hwEarn||0)+5;
 function hwFlush(){const p=ST.hwPend|0;if(p<=0||!BUD.g)return;ST.hwPend=0;stSave();for(let r=p;r>0;r-=50)hwBank(Math.min(50,r))}
 setTimeout(hwFlush,3500);
 {const _lb=levelBeaten;levelBeaten=function(){_lb();hwPay()}}
-{const _ng=newGame;newGame=function(){FXS.acc=0;FA.q=[];FA.t=14;return _ng.apply(this,arguments)}}
+{const _ng=newGame;newGame=function(){FXR.lab=null;FXS.acc=0;FA.q=[];FA.t=14;return _ng.apply(this,arguments)}}
 const FX_PROT=[5,14,15,24,25,29,30,35,39,40];
 function fxSkip(L){if(G.mode!=="normal"&&G.mode!=="daily")return 0;const g=fxGef();if(g<7||L<6)return 0;FXS.acc+=(g-6)/4;if(FXS.acc<1)return 0;FXS.acc-=1;const p=FX_PROT.find(q=>q>=L+1);return p!==undefined&&p>L+1?1:0}
+
+/* ---------- v0.51: THE LAB - hidden offline sandbox (hold R, then press PLAY). Nothing is recorded and nothing touches the network. ---------- */
+const HELD={};addEventListener("keydown",e=>{HELD[e.key.toLowerCase()]=true});addEventListener("keyup",e=>{HELD[e.key.toLowerCase()]=false});addEventListener("blur",()=>{for(const k in HELD)HELD[k]=false});
+{const _f=window.fetch.bind(window);window.fetch=function(u,o){if(G.mode==="lab"&&G.state!=="menu"&&/workers\.dev|\/\.proxy\//.test(String(u&&u.url||u)))return Promise.reject(new TypeError("the lab is offline"));return _f(u,o)}}
+const LAB_T=[["1","FAST BALL","labspd",1.45],["2","HEAVY CURVE","curve",1.6],["3","DRUNK BALL","wob",1],["4","PHANTOM BALL","phantom",1],["5","MIRROR CONTROLS","mirror",1],["6","SLOW-MO","ts",.5],["7","FAST-FORWARD","ts",1.7],["8","BIG AI","aiBig",1.8],["9","TINY AI","aiBig",.5],["0","ALERT STORM","storm",1]];
+let labHelp=true;
+function labApplyAI(){const v=G.mod.aiBig||1;ai.w=PW*v;ai.h=PH*v}
+function labToggle(T){const m=G.mod;if(m[T[2]]===T[3])delete m[T[2]];else m[T[2]]=T[3];if(T[2]==="aiBig")labApplyAI();popup(T[1]+(m[T[2]]===T[3]?"  ON":"  OFF"),"#33d6ff")}
+function labGef(d){const g=Math.max(1,Math.min(10,(FXR.lab||fxGef())+d));FXR.lab=g;popup("GEF "+g+" (LAB OVERRIDE)","#ff4455")}
+function labJump(n){jumpLevel(n);if(n===15){G.el=6;G.elMax=6}}
+function faFire(){const a=faMake(78),d=new Date(),hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");FA.q.push({t:a.t,sev:a.sev,conf:a.conf,age:0,life:8.5});FA.log.unshift([hm,a.t,a.sev]);if(FA.log.length>12)FA.log.length=12;while(FA.q.length>3)FA.q.shift()}
+function labChaos(){G.mod={};const ts=LAB_T.slice().sort(()=>Math.random()-.5).slice(0,3);ts.forEach(T=>{G.mod[T[2]]=T[3]});labApplyAI();FXR.lab=1+Math.floor(Math.random()*10);popup("CHAOS: "+ts.map(T=>T[1]).join(" + ")+"  GEF "+FXR.lab,"#ff4455")}
+function labReset(){G.mod={};FXR.lab=null;labApplyAI();popup("LAB RESET","#33d6ff")}
+addEventListener("keydown",e=>{if(G.mode!=="lab"||G.state==="menu"||G.state==="over"||e.repeat||(e.target&&e.target.tagName==="INPUT"))return;const k=e.key.toLowerCase(),T=LAB_T.find(t=>e.code==="Digit"+t[0]);
+  if(T){e.preventDefault();labToggle(T)}else if(k==="-")labGef(-1);else if(k==="=")labGef(1);else if(k==="\\"){FXR.lab=null;popup("GEF: AUTO","#33d6ff")}
+  else if(k==="c")labJump(15);else if(k==="v")labJump(40);else if(k==="h")labJump(41);else if(k==="a")faFire();else if(k==="x")labChaos();else if(k==="z")labReset();else if(k==="/")labHelp=!labHelp});
+function drawLab(L,R,T,B){if(G.mode!=="lab"||G.state==="menu"||G.state==="over")return;ctx.save();ctx.font="bold 10px 'Courier New',monospace";ctx.textAlign="left";
+  if(labHelp){const g=FXR.lab?"GEF "+FXR.lab+" OVERRIDE":"GEF AUTO ("+fxGef()+")",rows=LAB_T.map(t=>[t[0]+"  "+t[1],G.mod[t[2]]===t[3]]);const w=250,h=rows.length*12+92,x=L+8,y=T+8;ctx.globalAlpha=.62;ctx.fillStyle="rgba(2,10,4,.9)";ctx.fillRect(x,y,w,h);ctx.strokeStyle="#28dcff";ctx.strokeRect(x+.5,y+.5,w-1,h-1);ctx.globalAlpha=.95;ctx.font="bold 10px 'Courier New',monospace";ctx.fillStyle="#28dcff";ctx.fillText("THE LAB // NOTHING IS RECORDED",x+6,y+13);ctx.font="10px 'Courier New',monospace";
+    rows.forEach((r,i)=>{ctx.fillStyle=r[1]?"#ffaa1e":"#78c88c";ctx.fillText(r[0]+(r[1]?"  [ON]":""),x+6,y+28+i*12)});const by=y+28+rows.length*12;ctx.fillStyle="#ff6666";ctx.fillText(g,x+6,by+4);ctx.fillText("-/=  GEF -/+     \\  GEF AUTO",x+6,by+16);ctx.fillStyle="#78c88c";ctx.fillText("C CYLINDER  V FACE  H HELL",x+6,by+28);ctx.fillText("[ ] LEVEL +-5  L SKIP  E EVENT",x+6,by+40);ctx.fillText("A ALERT  X CHAOS  Z RESET  / HIDE",x+6,by+52)}
+  ctx.restore()}
+{const _db=drawBall;drawBall=function(t){if(G.mode==="lab"&&G.mod.phantom&&ball.z>DEPTH*.2&&ball.z<DEPTH*.75)return;return _db(t)}}
 
 /* ---------- v0.22 HELLWORLD link: one account for both games, the bud's save on the server, the bud idling in a corner panel ---------- */
 function budLoad(){BUD.g=null;BUD.s=null;const tryKey=(k,src)=>{if(BUD.g)return;try{const s=JSON.parse(localStorage.getItem(k)||"null");if(s&&s.seed){BUD.seed=hclean(s.seed);BUD.name=String(s.name||"HELLBUD").toUpperCase().slice(0,20);BUD.src=src;BUD.g=budGenome(BUD.seed);BUD.s=s.level!==undefined?s:null}}catch(e){}};
@@ -2011,7 +2032,7 @@ function coHostStep(){pad2.ox=pad2.x;pad2.oy=pad2.y;pad2.px=pad2.x;pad2.py=pad2.
   if(FACE.on)m.f={e:FACE.eyes.map(e=>[e.hp,r2(e.shut)]),m:r2(FACE.mouth),x:r2(FACE.sx),y:r2(FACE.sy),d:FACE.dead?1:0};
   const pp=G.pops.filter(p=>!CO.seen.has(p));if(pp.length){pp.forEach(p=>CO.seen.add(p));m.pp=pp.map(p=>[String(p.t).slice(0,60),p.col])}
   if(G.msg&&(G.msg!==CO.lastMsg||G.msgT>CO.lastMsgT+.2))m.sy=[String(G.msg).slice(0,60),r2(G.msgT)];CO.lastMsg=G.msg;CO.lastMsgT=G.msgT;nSend(m)}
-function coGuestStep(){pad.h=isMaster(pad)?PH*.8:PH;pad.ox=pad.x;pad.oy=pad.y;pad.px=pad.x;pad.py=pad.y;pad.x-=(pad.x-mouse.x)/1.5;pad.y-=(pad.y-mouse.y)/1.5;clampP(pad);pad.vx=pad.x-pad.px;pad.vy=pad.y-pad.py;if(G.state==="play")stInc("mv",Math.hypot(pad.vx,pad.vy)/PW);
+function coGuestStep(){pad.h=isMaster(pad)?PH*.8:PH;pad.ox=pad.x;pad.oy=pad.y;pad.px=pad.x;pad.py=pad.y;pad.x-=(pad.x-(G.mode==="lab"&&G.mod.mirror?BW-mouse.x:mouse.x))/1.5;pad.y-=(pad.y-mouse.y)/1.5;clampP(pad);pad.vx=pad.x-pad.px;pad.vy=pad.y-pad.py;if(G.state==="play")stInc("mv",Math.hypot(pad.vx,pad.vy)/PW);
   ball.px=ball.x;ball.py=ball.y;ball.pz=ball.z;ai.ox=ai.x;ai.oy=ai.y;pad2.ox=pad2.x;pad2.oy=pad2.y;spinBall();const s=CO.snap;if(!s||!Array.isArray(s.g)||!Array.isArray(s.b))return;
   const L=nNum(s.g[0],1,999)|0;if(L&&L!==G.level){jumpLevel(L);say("LEVEL "+L,1.6)}
   G.score=Number(s.g[1])|0;G.pl=Number(s.g[2])|0;G.el=Number(s.g[3])|0;G.elMax=Number(s.g[4])|0||3;G.vol=Number(s.g[6])|0;G.streak=Number(s.g[7])|0;const st=String(s.g[5]);
@@ -2375,8 +2396,8 @@ function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioC
 function showMenu(){try{gAbandon()}catch(e){}G.paused=false;if(G.clsMute)setTimeout(clsMusicBack,0);if(CO.on||net.ws){nClose();CO.on=false;if(G.mode==="coop")G.mode="normal"}if(G.mode==="online"&&typeof nClose==="function"){nClose();G.mode="normal"}musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
 const OVS=["medals","startm","menu","cust","achs","modes","lb","over","hkb","pause","olobby","wb"];
 function hideAll(){for(const id of OVS)$(id).classList.add("hidden")}
-function startMode(m){initAudio();G.paused=false;hideAll();newGame(m);droneOn();if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
-$("bModes").onclick=()=>{hideAll();const ms=dailyMods();let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}
+function startMode(m){initAudio();G.paused=false;hideAll();newGame(m);droneOn();if(m==="lab")setTimeout(()=>say("THE LAB  //  OFFLINE  //  NOTHING IS RECORDED",3.4),700);if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
+$("bModes").onclick=()=>{if(HELD.r){startMode("lab");return}hideAll();const ms=dailyMods();let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}
   $("dailyInfo").innerHTML="TODAY: "+ms.map(m=>m.n).join("<br>+ ")+"<br>"+(db&&db.date===todayKey()?"YOUR BEST TODAY: "+db.best:"NO RUN YET TODAY");$("modes").classList.remove("hidden")};
 $("mDaily").onclick=()=>startMode("daily");$("mEndless").onclick=()=>startMode("endless");$("mBack").onclick=()=>showMenu();
 $("bHk").onclick=()=>{hideAll();hkOpen=-1;hkRender();$("hkb").classList.remove("hidden")};$("hkBack").onclick=()=>showMenu();
@@ -2665,7 +2686,7 @@ function draw(t,dt){
   rollEnd();drawTwist();pad.hlT=Math.max(0,pad.hlT-dt);ai.hlT=Math.max(0,ai.hlT-dt);drawVignette(W,H);drawHellChrome(W,H);drawCRT(W,H);drawDescent(W,H,dt);
   const L=view.ox,R=view.ox+BW*view.s,T=view.oy,B=view.oy+BH*view.s;
   ledText(scoreText(),L,T-30,16,G.hg?"#ff4455":"#33ff77");ledText(G.mode==="endless"?levelText().replace("LEVEL","DEPTH"):G.mode==="daily"?"DAILY  "+levelText():levelText(),R,T-30,16,"#33ff77","right");
-  if(G.mode==="endless")text("\u221e",L+6,T-8,16,"#ff4455");else if(G.mode!=="boss")dots(G.el,G.elMax||3,L+6,"#ff4455");drawBossBar(L,R,T);if(G.test)text("\u221e TEST",R,T-10,13,"#ffb000","right");else dots(G.pl,5,R-6,"#33ff77",true);
+  if(G.mode==="endless")text("\u221e",L+6,T-8,16,"#ff4455");else if(G.mode!=="boss")dots(G.el,G.elMax||3,L+6,"#ff4455");drawBossBar(L,R,T);if(G.test)text(G.mode==="lab"?"\u221e LAB":"\u221e TEST",R,T-10,13,"#ffb000","right");else dots(G.pl,5,R-6,"#33ff77",true);
   text("VOLLEY: "+G.vol+"   NEXT HIT: "+hitValue1()+"   x"+(G.state==="play"?G.mult:1).toFixed(1),R,B+26,15,"#ffb000","right");
   text("BEST: "+G.best+(G.streak>1?"   STREAK x"+G.streak:""),L,B+26,13,"#119944");
   {const pp=P(pad.x,pad.y-PH/2,0),px=Math.max(L+120,Math.min(R-120,pp[0])),py=Math.max(T+80,pp[1]-18);                 // points pop up right above your paddle
@@ -2673,10 +2694,10 @@ function draw(t,dt){
   drawTelemetry(L,B,dt);drawBudPanel(R,B);drawFx(L,R,T,B,W,H,dt);if(G.zone!=="face")drawEdge(W,H,T);drawEventsFront(W,H,DS.T,dt);
   const mid=(T+B)/2;
   if(G.state==="serve"&&G.msgT<=0)text(document.body.classList.contains("touch")?"DRAG THE PADDLE ONTO THE BALL, THEN TAP SPIN TO SERVE":"PUT YOUR PADDLE ON THE BALL AND CLICK TO SERVE",(L+R)/2,B-12,12,"#119944","center");
-  drawFxAlerts(L,R,T,B,dt);
+  drawFxAlerts(L,R,T,B,dt);drawLab(L,R,T,B);
   if(G.msgT>0){G.msgT-=dt;ctx.globalAlpha=Math.min(1,G.msgT*2);drawTermMsg(G.msg,(L+R)/2,T+60,(R-L)*.92);ctx.globalAlpha=1}}
 let acc=0,last=performance.now();
-function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(G.paused){draw(0,0);requestAnimationFrame(loop);return}acc+=dt;
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(G.paused){draw(0,0);requestAnimationFrame(loop);return}acc+=dt*(G.mode==="lab"&&G.mod.ts||1);
   while(acc>=STEP){step();acc-=STEP;if(G.state==="wait"){G.waitT-=STEP;if(G.waitT<=0)afterWait()}}
   if(G.ripple){G.ripple.t+=dt;if(G.ripple.t>RT)G.ripple=null}
   trickTick(dt);evTick(dt);qTick(dt);zTick(dt);nTick();rTick();coTick();grudgeTick(dt);rollTick(dt);cylTick(dt);faTick(dt);
