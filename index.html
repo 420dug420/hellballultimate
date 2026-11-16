@@ -43,7 +43,20 @@ input[type=range]{accent-color:#33ff77;vertical-align:middle}
 .rp-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px}#repX{border-color:#ff5050;color:#ffd0d0}#rep{inset:0 auto 0 0;width:var(--repw,210px);background:none;padding:6px;align-items:flex-start;justify-content:flex-start;pointer-events:none}
 #repWin{pointer-events:auto;width:100%;max-height:calc(100vh - 12px);font-size:10px;letter-spacing:.4px;padding:8px 9px}
 #repWin .rp-big{font-size:42px}#repWin .rp-top{gap:10px;margin:4px 0}#repWin .rp-row{grid-template-columns:1fr auto 26px;gap:4px;line-height:1.45}
-.rp-nm{border:1px solid rgba(255,210,58,.55);padding:5px 6px;margin:6px 0;color:#ffe9a8;line-height:1.5}html,body{overscroll-behavior:none}canvas{touch-action:none;-webkit-user-select:none;user-select:none}</style></head><body>
+.rp-nm{border:1px solid rgba(255,210,58,.55);padding:5px 6px;margin:6px 0;color:#ffe9a8;line-height:1.5}
+/* v0.44: phone play. one finger drags the paddle (held above the thumb), buttons for the tricks, landscape only */
+body.touch #c{touch-action:none}
+.tb{position:fixed;z-index:4;display:none;align-items:center;justify-content:center;border:1px solid #33ff77;background:rgba(2,12,6,.55);color:#33ff77;font:bold 11px "Courier New",monospace;letter-spacing:1px;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;border-radius:50%;padding:0;cursor:pointer}
+.tb.on{display:flex}.tb:active{background:rgba(51,255,119,.28)}
+#tbSpin{left:calc(12px + env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:76px;height:76px;font-size:13px}
+#tbFx{left:calc(100px + env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-color:#33d6ff;color:#33d6ff}
+#tbFy{left:calc(30px + env(safe-area-inset-left,0px));bottom:calc(104px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-color:#33d6ff;color:#33d6ff}
+#tbPause,#tbRst{top:calc(8px + env(safe-area-inset-top,0px));width:38px;height:38px;border-radius:6px;font-size:14px}
+#tbPause{right:calc(10px + env(safe-area-inset-right,0px))}#tbRst{right:calc(56px + env(safe-area-inset-right,0px))}
+#rot{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#010402;color:#33ff77;text-align:center;font:bold 16px "Courier New",monospace;letter-spacing:4px}
+@media (orientation:portrait) and (pointer:coarse){#rot{display:flex}}
+@media (max-height:560px){.ov{justify-content:flex-start;padding:10px}.ov>:first-child{margin-top:auto}.ov>:last-child{margin-bottom:auto}#menu{gap:5px}#menu .mb{padding:6px 0;font-size:14px}#menu #logo2{width:min(38vw,260px)}#menu .mg .mb{padding:6px 0}.mb{padding:8px 0}}
+html,body{overscroll-behavior:none}canvas{touch-action:none;-webkit-user-select:none;user-select:none}</style></head><body>
 <!--DISCORD--><script src="discord-sdk.js"></script>
 <script>
 /* Discord Activity handshake: only runs inside Discord (the iframe URL carries frame_id). The app id comes from <app-id>.discordsays.com */
@@ -54,12 +67,12 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
   try{await sdk.commands.setOrientationLockState({lock_state:3})}catch(e){}   // landscape on phones
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
-<canvas id="c"></canvas>
+<canvas id="c"></canvas><button class="tb" id="tbSpin">SPIN</button><button class="tb" id="tbFx">FLIP&#8596;</button><button class="tb" id="tbFy">FLIP&#8597;</button><button class="tb" id="tbRst">&#8635;</button><button class="tb" id="tbPause">II</button><div id="rot"><div style="font-size:34px">&#8635;</div><div>ROTATE YOUR PHONE</div><div style="font-size:11px;color:#119944;letter-spacing:2px">HELLBALL PLAYS SIDEWAYS</div></div>
 <div id="menu" class="ov"><canvas id="logo2" style="width:min(80vw,440px);height:auto;flex:none"></canvas><div class="dim" id="mWh" style="color:#663333;min-height:13px;font-style:italic;font-size:11px"></div>
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.43 // BUILD 20261116.0410 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.44 // BUILD 20261116.0500 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -2556,7 +2569,7 @@ function draw(t,dt){
    G.pops.forEach((p,i)=>{p.a-=dt;ctx.globalAlpha=Math.max(0,Math.min(1,p.a*2));text(p.t,px,py-(G.pops.length-1-i)*16-(1.4-p.a)*14,12,p.col,"center")});ctx.globalAlpha=1;G.pops=G.pops.filter(p=>p.a>0)}
   drawTelemetry(L,B,dt);drawBudPanel(R,B);if(G.zone!=="face")drawEdge(W,H,T);drawEventsFront(W,H,DS.T,dt);
   const mid=(T+B)/2;
-  if(G.state==="serve"&&G.msgT<=0)text("PUT YOUR PADDLE ON THE BALL AND CLICK TO SERVE",(L+R)/2,B-12,12,"#119944","center");
+  if(G.state==="serve"&&G.msgT<=0)text(document.body.classList.contains("touch")?"DRAG THE PADDLE ONTO THE BALL, THEN TAP SPIN TO SERVE":"PUT YOUR PADDLE ON THE BALL AND CLICK TO SERVE",(L+R)/2,B-12,12,"#119944","center");
   if(G.msgT>0){G.msgT-=dt;ctx.globalAlpha=Math.min(1,G.msgT*2);drawTermMsg(G.msg,(L+R)/2,T+60,(R-L)*.92);ctx.globalAlpha=1}}
 let acc=0,last=performance.now();
 function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(G.paused){draw(0,0);requestAnimationFrame(loop);return}acc+=dt;
@@ -2576,4 +2589,34 @@ function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(G.paused){d
   if(!$("cust").classList.contains("hidden"))drawPreview(now/1000);
   draw(acc/STEP,dt);drawOverlays(innerWidth,innerHeight);drawFPS(innerWidth,innerHeight);requestAnimationFrame(loop)}
 showMenu();qLabel();musStart();requestAnimationFrame(loop);   // the exe allows autoplay; a plain browser starts the music on the first click
+
+/* ---------- v0.44 PHONE CONTROLS ---------- */
+(()=>{const tb=id=>document.getElementById(id);let touchy=false;
+  const setTouch=()=>{if(!touchy){touchy=true;document.body.classList.add("touch")}};
+  try{if(matchMedia("(pointer:coarse)").matches)setTouch()}catch(e){}
+  const mine=e=>e.pointerType!=="mouse"&&e.target===cv;
+  addEventListener("pointerdown",e=>{if(e.pointerType!=="mouse")setTouch();if(!mine(e))return;e.stopImmediatePropagation();if(G.paused||!e.isPrimary)return;toWorld(e);
+    if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}
+    if(G.state==="menu"||G.state==="warp")return;
+    if(CO.on&&!CO.host){if(G.state==="serve"||G.state==="play")nSend({t:"gsv"});return}
+    },true);       // touching the field never serves by accident: drag the paddle onto the ball, then tap SPIN
+  addEventListener("pointermove",e=>{if(!mine(e))return;e.stopImmediatePropagation();if(e.isPrimary&&!G.paused)toWorld(e)},true);
+  addEventListener("pointerup",e=>{if(mine(e))e.stopImmediatePropagation()},true);
+  // paddle sits above the finger so you can see it; the offset grows toward the bottom so every spot stays reachable
+  function toWorld(e){const r=cv.getBoundingClientRect();let sx=e.clientX-r.left,sy=e.clientY-r.top;
+    if(e.pointerType&&e.pointerType!=="mouse")sy-=Math.min(80,innerHeight*.14)*Math.max(0,Math.min(1,sy/innerHeight));
+    if(ROLL.a){const cx=innerWidth/2,cy=innerHeight/2,c=Math.cos(-ROLL.a),s=Math.sin(-ROLL.a),dx=(sx-cx)/ROLL.k,dy=(sy-cy)/ROLL.k;sx=cx+dx*c-dy*s;sy=cy+dx*s+dy*c}
+    mouse.x=(sx-view.ox)/view.s;mouse.y=(sy-view.oy)/view.s}
+  window.toWorld=toWorld;
+  const live=()=>(G.state==="play"||G.state==="serve"||G.state==="wait");
+  const down=(id,fn)=>tb(id).addEventListener("pointerdown",e=>{e.preventDefault();e.stopPropagation();if(G.paused)return;initAudioSafe();fn(e)});
+  const initAudioSafe=()=>{if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}};
+  down("tbSpin",e=>{if(G.state==="serve"&&touches(pad)){G.state="play";playerHit(true);if(G.mode==="online")nHit(true);return}
+    if(CO.on&&!CO.host){return}if(live())press={t:performance.now(),x:e.clientX,y:e.clientY,flip:false,hold:false,slow:false}});
+  down("tbFx",()=>{if(live())startFlip("y")});down("tbFy",()=>{if(live())startFlip("x")});
+  tb("tbPause").addEventListener("click",()=>{if(inRun())pauseOpen()});
+  tb("tbRst").addEventListener("click",()=>{if(inRun()&&G.mode!=="online"&&!CO.on)restartRun()});
+  for(const id of["tbSpin","tbFx","tbFy","tbRst","tbPause"])tb(id).addEventListener("contextmenu",e=>e.preventDefault());
+  setInterval(()=>{const on=touchy&&inRun()&&!G.paused&&$("pause").classList.contains("hidden");for(const id of["tbSpin","tbFx","tbFy","tbRst","tbPause"])tb(id).classList.toggle("on",on)},200);
+})();
 </script></body></html>
