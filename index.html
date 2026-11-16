@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.47 // BUILD 20261116.0620 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.48 // BUILD 20261116.0650 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -98,7 +98,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <div id="profO" class="pf"></div><div class="dim" style="font-size:11px"><span style="color:#ffd23a">YELLOW</span> = WENT UP THIS RUN &nbsp; <span style="color:#ff4455">RED</span> = WENT DOWN</div>
  <div class="row"><button class="mb" id="ovAgain">AGAIN</button><button class="mb" id="ovMenu">MENU</button></div></div>
 <div id="medals" class="ov scroll hidden"><div style="font-size:20px;letter-spacing:6px;text-shadow:0 0 8px #33ff77">MEDALS</div><div class="dim" id="medArch"></div><canvas id="medRack" style="max-width:94vw;width:min(94vw,420px)"></canvas><div id="medList" style="width:min(94vw,640px)"></div>
- <canvas id="medPrev" width="360" height="140" style="max-width:90vw"></canvas><div class="row" id="medEdge"></div><div class="dim">ONE STICK PER MEDAL TIER YOU HOLD. PICK THE EDGE OF YOUR PADDLE THEY SIT ON.</div><button class="mb" id="bMedBack">BACK</button></div>
+ <canvas id="medPrev" width="360" height="140" style="max-width:90vw"></canvas><div class="row" id="medEdge"></div><div class="dim">EVERY MEDAL YOU HOLD HANGS ON YOUR PADDLE, BEST FIRST. PICK THE EDGE IT SITS ON.</div><button class="mb" id="bMedBack">BACK</button></div>
 <div id="achs" class="ov hidden"><div style="font-size:20px;letter-spacing:6px;text-shadow:0 0 8px #33ff77">ACHIEVEMENTS</div><div class="dim" id="achN"></div>
  <div id="achList" style="width:min(92vw,620px);max-height:62vh;overflow:auto;display:flex;flex-direction:column;gap:6px"></div><button class="mb" id="bAchBack">BACK</button></div>
 <div id="achToast" style="position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:9;pointer-events:none;font:bold 14px 'Courier New',monospace;letter-spacing:2px;color:#ffb000;border:1px solid #ffb000;background:rgba(10,8,0,.85);padding:8px 16px;box-shadow:0 0 16px rgba(255,176,0,.35);opacity:0;transition:opacity .4s"></div>
@@ -2201,7 +2201,7 @@ function gmPlay(g){initAudio();hideAll();G.paused=false;newGame("grudge");const 
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-gm]");if(t)gmStart(t.dataset.gm)});
 
 /* ---------- v0.36: medals, archetypes, paddle sticks, near-miss grading in the left margin ---------- */
-const TIERS=[["BRONZE","#cd7f32"],["SILVER","#c9d1d9"],["GOLD","#ffd23a"],["PLATINUM","#8fe9ff"],["FX DIAMOND","#d78bff"]];
+const TIERS=[["BRONZE","#cd7f32"],["SILVER","#c9d1d9"],["GOLD","#ffd23a"],["PLATINUM","#8fe9ff"],["DIAMOND","#d78bff"]];
 const MED_DEF=[
  {id:"hb",n:"HELLBALL",mode:"normal",th:[1000,4000,10000,25000,60000],v:S=>S.mb_normal||0,d:"BEST HELLBALL SCORE"},
  {id:"en",n:"ENDLESS",mode:"endless",th:[1000,4000,10000,25000,60000],v:S=>S.mb_endless||0,d:"BEST ENDLESS SCORE"},
@@ -2216,18 +2216,19 @@ const medCode=()=>medLevels().join("");
 function archOf(S,base){let best=null,bf=0;for(const m of MED_DEF){if(!m.arch)continue;const v=base?m.v(S)-m.v(base):m.v(S),f=v/(base?m.th[0]:m.th[2]);if(f>bf){bf=f;best=m}}
   if(!best||bf<(base?.25:.05))return base?"BALANCED":"NEWCOMER";return best.n}
 function medSave(){if(G.test||!MED_DEF.some(m=>m.mode===G.mode))return;const k="mb_"+G.mode;if(G.score>(ST[k]||0)){ST[k]=G.score;try{stSave()}catch(e){}}}
-/* sticks: one small stick per medal tier held, coloured by tier, worn on the paddle edge you choose */
+/* paddle badges: your medals, worn on the paddle edge you choose */
 const STK={on:true,edge:"b"};try{Object.assign(STK,JSON.parse(localStorage.getItem("hb3_stk")||"{}"))}catch(e){}
 const stkSave=()=>{try{localStorage.setItem("hb3_stk",JSON.stringify(STK))}catch(e){}};
 function stkList(code){const out=[];const lv=code?String(code).split("").map(Number):medLevels();lv.forEach((t,i)=>{for(let j=0;j<Math.min(5,t|0);j++)out.push([t,TIERS[(t|0)-1][1],i])});out.sort((a,b)=>b[0]-a[0]||a[2]-b[2]);return out}
-function drawSticks(a,b,k,code,edge){const L=stkList(code);if(!L.length)return;const w=b[0]-a[0],h=b[1]-a[1],horiz=edge==="b"||edge==="t",sw=Math.max(1.6,Math.min(w,h)*.045),len=Math.max(5,h*.2),pitch=sw*2.1;
-  ctx.save();ctx.shadowBlur=0;const cap=horiz?Math.floor((w*.92)/pitch):Math.floor((h*.92)/pitch);let i=0;
-  for(const[t,col]of L){const r=Math.floor(i/cap),c=i%cap;let x,y,sx,sy;
-    if(horiz){sx=sw;sy=len;x=a[0]+w*.04+c*pitch;y=edge==="b"?b[1]-len-2-r*(len+2):a[1]+2+r*(len+2)}
-    else{sx=len;sy=sw;y=a[1]+h*.04+c*pitch;x=edge==="l"?a[0]+2+r*(len+2):b[0]-len-2-r*(len+2)}
-    ctx.fillStyle="rgba(0,0,0,.55)";ctx.fillRect(x-.7,y-.7,sx+1.4,sy+1.4);ctx.fillStyle=col;ctx.fillRect(x,y,sx,sy);i++}
-  ctx.restore()}
-/* v0.47: military-style medals in the game's own style: ribbon, pin bar, octagon medal, one ominous emblem each; the top tier gets the FX prestige halo */
+const MEDC={};function medCanvas(i,t){const k=i+"_"+t;if(MEDC[k])return MEDC[k];const c=document.createElement("canvas");c.width=44*3;c.height=64*3;medalDraw(c.getContext("2d"),i,t,0,0,3);return MEDC[k]=c}
+function medBadges(code){const lv=code?String(code).split("").map(Number):medLevels(),out=[];lv.forEach((t,i)=>{t=t|0;if(t>=1&&t<=5&&i<MED_DEF.length)out.push([i,t])});out.sort((a,b)=>b[1]-a[1]||a[0]-b[0]);return out}
+/* v0.48: the badges worn on the paddle are the miniature medals, best first, centred on the edge you pick */
+function drawSticks(a,b,k,code,edge){const L=medBadges(code);if(!L.length)return;const w=b[0]-a[0],h=b[1]-a[1],horiz=edge==="b"||edge==="t",n=L.length,asp=44/64;
+  const Hm=Math.max(6,horiz?Math.min(h*.4,w*.94/n/asp,46):Math.min(h*.94/n,w*.45/asp,46)),Wm=Hm*asp;
+  ctx.save();ctx.shadowBlur=0;ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";
+  L.forEach(([i,t],j)=>{let x,y;if(horiz){x=a[0]+(w-n*Wm)/2+j*Wm;y=edge==="b"?b[1]-Hm-2:a[1]+2}else{y=a[1]+(h-n*Hm)/2+j*Hm;x=edge==="l"?a[0]+2:b[0]-Wm-2}
+    ctx.drawImage(medCanvas(i,t),x,y,Wm,Hm)});ctx.restore()}
+/* v0.47: military-style medals in the game's own style: ribbon, pin bar, octagon medal, one ominous emblem each; the top tier gets a spiked halo */
 const MED_RIB=["#aa2233","#2255aa","#aa8822","#22aa66","#aa3399","#cc6622","#22aaaa"];
 function medEmblem(x,i,r,col){x.strokeStyle=col;x.fillStyle=col;x.lineWidth=Math.max(1,r*.13);x.lineCap="round";x.lineJoin="round";const dot=(a,b,q)=>{x.beginPath();x.arc(a,b,q,0,7);x.fill()};
   if(i===0){x.beginPath();x.moveTo(-r*.6,-r*.1);x.arc(0,-r*.1,r*.6,Math.PI,2*Math.PI);x.lineTo(r*.45,r*.55);x.lineTo(-r*.45,r*.55);x.closePath();x.stroke();dot(-r*.26,-r*.12,r*.17);dot(r*.26,-r*.12,r*.17);
@@ -2240,7 +2241,7 @@ function medEmblem(x,i,r,col){x.strokeStyle=col;x.fillStyle=col;x.lineWidth=Math
 function medalDraw(x,i,t,ox,oy,s){x.save();x.translate(ox,oy);x.scale(s,s);const on=t>0,col=on?TIERS[t-1][1]:"#2d3d35",cx=22,cy=42,R=15;
   x.fillStyle=on?MED_RIB[i]:"#1b2822";x.fillRect(14,3,16,24);if(on){x.fillStyle=col;x.fillRect(20,3,4,24);x.fillStyle="rgba(0,0,0,.35)";x.fillRect(14,3,2,24);x.fillRect(28,3,2,24)}
   x.fillStyle=col;x.fillRect(11,0,22,4);
-  if(t===5){x.beginPath();for(let k=0;k<16;k++){const a=k*Math.PI/8,q=k%2?R+1:R+4;x.lineTo(cx+Math.cos(a)*q,cy+Math.sin(a)*q)}x.closePath();x.strokeStyle=col;x.lineWidth=1;x.stroke();x.fillStyle="#02140a";x.font="bold 6px 'Courier New',monospace";x.textAlign="center";x.textBaseline="middle";x.fillText("FX",22,15)}
+  if(t===5){x.beginPath();for(let k=0;k<16;k++){const a=k*Math.PI/8,q=k%2?R+1:R+4;x.lineTo(cx+Math.cos(a)*q,cy+Math.sin(a)*q)}x.closePath();x.strokeStyle=col;x.lineWidth=1;x.stroke()}
   x.beginPath();for(let k=0;k<8;k++){const a=Math.PI/8+k*Math.PI/4;x.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R)}x.closePath();x.fillStyle="#04140a";x.fill();x.strokeStyle=col;x.lineWidth=2;x.stroke();
   x.beginPath();x.arc(cx,cy,R-3.6,0,7);x.lineWidth=.7;x.stroke();
   x.save();x.translate(cx,cy);if(on)medEmblem(x,i,8.4,col);else{x.fillStyle="#2d3d35";x.font="bold 12px 'Courier New',monospace";x.textAlign="center";x.textBaseline="middle";x.fillText("?",0,1)}x.restore();x.restore()}
@@ -2249,8 +2250,8 @@ function medRack(lv){const c=$("medRack");if(!c)return;const s=2,w=MED_DEF.lengt
 /* MEDALS screen */
 function medRender(){const lv=medLevels(),l=$("medList");l.innerHTML=MED_DEF.map((m,i)=>{const v=m.v(ST),t=lv[i],nx=t<5?m.th[t]:null,pc=nx?Math.min(100,Math.round(v/nx*100)):100;
   return '<div class="lbr" style="grid-template-columns:36px 118px 1fr 120px;gap:8px;align-items:center"><img src="'+medalURL(i,t)+'" width="33" height="48" style="display:block"><span style="color:'+(t?TIERS[t-1][1]:"#557")+'">'+m.n+'</span><span class="dim" style="text-align:left">'+m.d+'  '+v+(nx?' / '+nx:'')+'<div style="height:3px;background:#133;margin-top:3px"><div style="height:3px;width:'+pc+'%;background:'+(t<5?TIERS[t][1]:"#d78bff")+'"></div></div></span><span style="color:'+(t?TIERS[t-1][1]:"#557")+'">'+(t?TIERS[t-1][0]:"NONE")+'</span></div>'}).join("");
-  medRack(lv);$("medArch").textContent="ARCHETYPE: "+archOf(ST)+"   //   STICKS WORN: "+stkList().length;
-  $("medEdge").innerHTML=[["b","BOTTOM"],["t","TOP"],["l","LEFT"],["r","RIGHT"]].map(([k,n])=>'<button class="sb'+(STK.edge===k?" on":"")+'" data-stk="'+k+'">'+n+'</button>').join("")+'<button class="sb'+(STK.on?" on":"")+'" data-stk="tog">'+(STK.on?"STICKS ON":"STICKS OFF")+'</button>';
+  medRack(lv);$("medArch").textContent="ARCHETYPE: "+archOf(ST)+"   //   BADGES WORN: "+medBadges().length;
+  $("medEdge").innerHTML=[["b","BOTTOM"],["t","TOP"],["l","LEFT"],["r","RIGHT"]].map(([k,n])=>'<button class="sb'+(STK.edge===k?" on":"")+'" data-stk="'+k+'">'+n+'</button>').join("")+'<button class="sb'+(STK.on?" on":"")+'" data-stk="tog">'+(STK.on?"BADGES ON":"BADGES OFF")+'</button>';
   const c=$("medPrev"),x=c.getContext("2d");x.clearRect(0,0,c.width,c.height);const a=[90,30],b=[270,110];x.fillStyle="#04140a";x.fillRect(0,0,c.width,c.height);x.strokeStyle="#33ff77";x.lineWidth=2;x.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);
   const o=ctx;ctx=x;try{if(STK.on)drawSticks(a,b,1,null,STK.edge)}finally{ctx=o}}
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-stk]");if(!t)return;if(t.dataset.stk==="tog")STK.on=!STK.on;else STK.edge=t.dataset.stk;stkSave();medRender()});
