@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.63 // BUILD 20261116.2500 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.64 // BUILD 20261116.2600 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -1090,7 +1090,7 @@ function bloom(){return;const w=Math.max(2,cv.width>>3),h=Math.max(2,cv.height>>
 /* CRT / LED subpixel mask over the whole picture: barely there at first, heavier the deeper you go */
 const OVL={};function ovEl(id,css){let e=OVL[id];if(!e){e=OVL[id]=document.createElement("div");e.style.cssText="position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:3;display:none;"+css;document.body.appendChild(e)}return e}
 function ovShow(e,on){const v=on?"block":"none";if(e.style.display!==v)e.style.display=v}
-function drawCRT(W,H){const e=ovEl("crt","mix-blend-mode:multiply;image-rendering:pixelated");if(G.state==="menu"||QL<2||DQ<1){ovShow(e,false);return}
+function drawCRT(W,H){const e=ovEl("crt","mix-blend-mode:multiply;image-rendering:pixelated");if(G.state==="menu"||QL<2||DQ<1||TN.crt){ovShow(e,false);return}
   if(!ART.crt){const p=mkC(3,3),x=p.getContext("2d");const cols=["rgb(255,95,95)","rgb(95,255,95)","rgb(110,110,255)"];
     for(let i=0;i<3;i++){x.fillStyle=cols[i];x.fillRect(i,0,1,2)}x.fillStyle="rgb(70,70,70)";x.fillRect(0,2,3,1);ART.crt=p;e.style.backgroundImage="url("+p.toDataURL()+")"}
   const k=Math.min(.42,.15+.014*Math.max(0,G.level-29)).toFixed(2),sz=(3*innerWidth/Math.max(1,cv.width)).toFixed(2),key=k+"|"+sz;if(e.dataset.k!==key){e.dataset.k=key;e.style.opacity=k;e.style.backgroundSize=sz+"px "+sz+"px"}ovShow(e,true)}
@@ -1141,7 +1141,7 @@ const BGX_MODES={
 const BGX_POOL=[[7,"rgbcol",0,1.9],[7,"rain",1,1.7],[9,"drops",1,1.1],[10,"squares",0,1],[11,"spiral",1,1],[12,"hexdots",1,1.25],[13,"checker",0,2],[15,"blobs",1,1.6],[16,"veins",1,1.2]];   // [min level, mode, smooth upscale]
 function bgxSmear(L){const w=BGX.w,h=BGX.h,u=BGX.u,p=Math.min(.5,.05*(L-11));if(Math.random()>p*1.4)return;const tmp=new Uint32Array(w);let y=0;
   while(y<h){const bh=3+Math.floor(Math.random()*9);if(Math.random()<p){const dx=Math.floor((Math.random()-.5)*w*.5);for(let r=y;r<Math.min(h,y+bh);r++){const o=r*w;for(let x=0;x<w;x++)tmp[x]=u[o+x];for(let x=0;x<w;x++)u[o+((x+dx)%w+w)%w]=tmp[x]}}y+=bh}}
-function bgxOn(){return DQ>=2&&G.state!=="menu"&&G.zone!=="face"&&G.zone!=="hell"&&QL>=1&&G.level>=7&&G.state!=="form"&&G.state!=="hyper"&&!G.test}
+function bgxOn(){return DQ>=2&&!TN.bgx&&G.state!=="menu"&&G.zone!=="face"&&G.zone!=="hell"&&QL>=1&&G.level>=7&&G.state!=="form"&&G.state!=="hyper"&&!G.test}
 function bgxStep(dt){const L=G.level;if(!BGX.id)bgxInit();BGX.mt+=dt;
   const av=BGX_POOL.filter(m=>m[0]<=L);if(!BGX.mode||BGX.mt>BGX.md){if(!BGX.mode||BGX.mt>BGX.md+1.6){let m;for(let k=0;k<6;k++){m=av[Math.floor(Math.random()*av.length)];if(m[1]!==BGX.last||av.length<2)break}
       BGX.mode=m;BGX.last=m[1];BGX.mt=0;BGX.md=40+Math.random()*30}}
@@ -1186,18 +1186,18 @@ function faceTint(col){const F=DEEP.face,t=mkC(F.width,F.height),x=t.getContext(
 /* ---------- v0.9.1 QUALITY: AUTO drops the costly extras if the frame rate sags (P = show FPS, Q on the menu = AUTO / HIGH / LOW) ---------- */
 let QL=2,QMODE="auto";try{QMODE=localStorage.getItem("hb3_q")||"auto"}catch(e){}if(QMODE==="low")QL=0;
 const Q={ema:1/60,lowT:0,highT:0,fps:60,show:false,refresh:60,dlT:0,dhT:0};
-let DQ=3,RS=1,SHB=true;const LAD_RS=[1,1,.85,.72,.72,.6,.6],LAD_DQ=[3,3,3,2,1,1,0],LAD_SH=[1,0,0,0,0,0,0];function ladApply(){const n=Q.S|0;RS=LAD_RS[n];DQ=LAD_DQ[n];SHB=!!LAD_SH[n];fit();qLabel()}   // v0.63 ladder: canvas glow shadows go first, then the picture shrinks a little, then level extras go
+const TN={};let DQ=3,RS=1,SHB=true;const LAD_RS=[1,1,.85,.72,.72,.6,.6],LAD_DQ=[3,3,3,2,1,1,0],LAD_SH=[1,0,0,0,0,0,0];function ladApply(){const n=Q.S|0;RS=LAD_RS[n];DQ=LAD_DQ[n];SHB=!!LAD_SH[n];fit();qLabel()}   // v0.63 ladder: canvas glow shadows go first, then the picture shrinks a little, then level extras go
 //   // v0.60 distortion quality 3..0: 3 all level effects, 2 no colour-split tunnels, 1 also no wall layer / drips, 0 also no wobble, CRT mask or vignette
 function qLabel(){const el=document.getElementById("mQ");if(el)el.textContent="M MUSIC // N NEXT // Q QUALITY: "+QMODE.toUpperCase()+(QMODE==="auto"?" ("+["LOW","MED","HIGH"][QL]+")":"")+" // P FPS // ESC PAUSE // R RESTART"}
-function qTick(dt){Q.ema+=(dt-Q.ema)*.05;Q.fps=1/Q.ema;if(!document.hidden&&Q.fps>Q.refresh&&dt<.05)Q.refresh=Math.min(240,Q.fps);   // the best rate this screen has shown = its refresh rate
+function qTick(dt){tuneTick(dt);Q.ema+=(dt-Q.ema)*.05;Q.fps=1/Q.ema;if(!document.hidden&&Q.fps>Q.refresh&&dt<.05)Q.refresh=Math.min(240,Q.fps);   // the best rate this screen has shown = its refresh rate
   if(QMODE!=="auto"||G.state==="menu"||document.hidden)return;
   {const tg=Math.max(50,Math.min(Q.refresh*.82,118));   // v0.62: on a fast screen, sag below ~82% of refresh walks a ladder: render a bit smaller (barely visible), then shed level extras
-   if(Q.fps<tg){Q.dlT+=dt;Q.dhT=0;if(Q.dlT>1&&(Q.S|0)<6){const n=(Q.S|0)+1;if(Q.sUp!==undefined&&Q.age-Q.sUp<120)Q.sMin=n;Q.S=n;Q.dlT=0;Q.ema=1/Math.max(60,Q.refresh*.9);ladApply()}}
+   if(TU.on){Q.dlT=0;Q.dhT=0}else if(Q.fps<tg){Q.dlT+=dt;Q.dhT=0;if(Q.dlT>1&&(Q.S|0)<6){const n=(Q.S|0)+1;if(Q.sUp!==undefined&&Q.age-Q.sUp<120)Q.sMin=n;Q.S=n;Q.dlT=0;Q.ema=1/Math.max(60,Q.refresh*.9);ladApply()}}
    else if(Q.fps>tg*1.12){Q.dhT+=dt;Q.dlT=0;if(Q.dhT>40&&(Q.S|0)>(Q.sMin||0)){Q.S=(Q.S|0)-1;Q.dhT=0;Q.sUp=Q.age;ladApply()}}else{Q.dlT=0;Q.dhT=0}}
   Q.age=(Q.age||0)+dt;
   if(Q.fps<54){Q.lowT+=dt;Q.highT=0;if(Q.lowT>(Q.fps<36?.6:1.2)&&QL>0){const was=QL;QL-=(Q.fps<36&&QL>1)?2:1;if(QL<0)QL=0;if(Q.raisedAt!==undefined&&Q.age-Q.raisedAt<90)Q.cap=QL;Q.lowT=0;Q.ema=1/55;fit();qLabel()}}   // v0.57: sag fast, jump two steps when it is a real slowdown, and never climb back to a quality that just failed
   else if(Q.fps>58){Q.highT+=dt;Q.lowT=0;if(Q.highT>60&&QL<(Q.cap===undefined?2:Q.cap)){QL++;Q.highT=0;Q.raisedAt=Q.age;fit();qLabel()}}else{Q.lowT=0;Q.highT=0}}
-function drawFPS(W,H){if(!Q.show)return;ctx.save();ctx.font="bold 12px monospace";ctx.textAlign="center";ctx.fillStyle="#ffb000";
+function drawFPS(W,H){tuneDraw(W,H);if(!Q.show)return;ctx.save();ctx.font="bold 12px monospace";ctx.textAlign="center";ctx.fillStyle="#ffb000";
   ctx.fillText(Q.fps.toFixed(0)+" FPS ("+Q.refresh.toFixed(0)+"Hz)  //  QUALITY "+["LOW","MEDIUM","HIGH"][QL]+"  //  FX "+DQ+" RES "+Math.round(RS*100)+"% GLOW "+(SHB?"ON":"OFF")+"  //  "+cv.width+"x"+cv.height,W/2,H-6);ctx.restore()}
 addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT"))return;const k=e.key.toLowerCase();if(k==="p")Q.show=!Q.show;
   if(k==="q"&&G.state==="menu"){QMODE=QMODE==="auto"?"high":QMODE==="high"?"low":"auto";QL=QMODE==="low"?0:2;try{localStorage.setItem("hb3_q",QMODE)}catch(e){}fit();qLabel()}});
@@ -1795,7 +1795,7 @@ function drawFX2D(cx,cy,r,c){c=c||ctx;fxStamp();const gl=Math.random()<.06,m=ROT
    v0.21: PERFORMANCE (cached orb lighting, no blur filters on hot paths, cached crack paths, resolution cap),
    MOONSIDE theme + tints, many new balls, MASTER'S PADDLE, FX 2D reads as a turning ball
    ===================================================================================================== */
-{const d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,"shadowBlur");if(d&&d.set)Object.defineProperty(ctx,"shadowBlur",{configurable:true,get(){return d.get.call(this)},set(v){d.set.call(this,QL>=2&&SHB?v:0)}})}
+{const d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,"shadowBlur");if(d&&d.set)Object.defineProperty(ctx,"shadowBlur",{configurable:true,get(){return d.get.call(this)},set(v){d.set.call(this,QL>=2&&SHB&&!TN.glow?v:0)}})}
 /* orb lighting: the wall light is rebuilt only when the ball has actually moved (the game steps 30x a second), at 1/6 size, and stretched smooth */
 const LT2={c:mkC(2,2),key:""};
 /* v0.62: the orb's darkness and its light on the walls were two full-screen blits every frame. The light only exists inside the court, and the dark is flat far from the ball, so blit just the court (+margin) and fill the rest with one solid colour */
@@ -2696,7 +2696,7 @@ LINES.push(...["...LEAVE IT AT THE DOOR", "...REPORT... TO...", "A FRIENDLY TAP"
 const DS={T:0,wob:0,twist:0,chroma:0,vign:0,breathe:0,red:0,rgb:"51,255,119",rgbR:"51,255,119",mx:"51,255,119",mxH:"210,255,225"};
 function distTick(dt){const L=G.state==="menu"?0:(G.zone==="face"||G.zone==="hell")?1:G.level+(MOD().dist||0);DS.T+=dt;
   DS.wob=L>=7?Math.min(.05,.006*(L-6)):0;DS.twist=L>=10?Math.min(1.1,.07*(L-9)):0;DS.breathe=L>=10?Math.min(3,.3*(L-9))*G.sc:0;
-  DS.chroma=L>=12&&DQ>=3?Math.min(3.5,.45*(L-11))*fxDist():0;if(DQ<1){DS.wob=0;DS.twist=0;DS.breathe=0}DS.vign=L>=7?(L<30?Math.min(.2,.05*(L-6)):Math.min(.6,.2+.04*(L-29))):.08;DS.red=L>=20?Math.min(.7,.05*(L-19)):0;if(G.state!=="menu"&&G.state!=="form"&&G.state!=="hyper"&&G.state!=="faceintro"&&G.state!=="hwin")G.zone=G.level>=41?"hell":G.level===40?"face":G.level>=25?"cyber":G.level>=15?"ocean":null;
+  DS.chroma=L>=12&&DQ>=3&&!TN.chroma?Math.min(3.5,.45*(L-11))*fxDist():0;if(DQ<1||TN.tunlite){DS.wob=0;DS.twist=0;DS.breathe=0}DS.vign=L>=7?(L<30?Math.min(.2,.05*(L-6)):Math.min(.6,.2+.04*(L-29))):.08;DS.red=L>=20?Math.min(.7,.05*(L-19)):0;if(G.state!=="menu"&&G.state!=="form"&&G.state!=="hyper"&&G.state!=="faceintro"&&G.state!=="hwin")G.zone=G.level>=41?"hell":G.level===40?"face":G.level>=25?"cyber":G.level>=15?"ocean":null;
   const mix=(a,b,k)=>a.map((v,i)=>Math.round(v+(b[i]-v)*k)).join(",");const oc=G.zone==="ocean"?(G.oceanA===undefined?1:G.oceanA):0,base=[51,255,119].map((v,i)=>Math.round(v+([50,160,255][i]-v)*oc));DS.rgb=mix(base,[150,190,110],Math.min(.4,DS.red*.5));DS.rgbR=mix(base,[220,30,50],DS.red);DS.mx=mix([51,255,119],[60,150,255],oc);DS.mxH=mix([210,255,225],[205,230,255],oc);if(G.zone==="cyber"){DS.rgb="80,240,255";DS.rgbR="255,90,220";DS.mx="255,90,220";DS.mxH="255,210,250";DS.red=0}if(G.zone==="face"){DS.rgb="170,20,34";DS.rgbR="255,40,60";DS.mx="120,0,24";DS.mxH="255,70,90";DS.red=0}if(G.zone==="hell"){DS.rgb="51,255,119";DS.rgbR="255,51,85";DS.mx="51,255,119";DS.mxH="210,255,225";DS.red=0}
   if(L>=7&&(G.state==="play"||G.state==="serve")){
     if(!G.hg){G.hgT=(G.hgT||6)-dt;if(G.hgT<=0){G.hg={line:pick(LINES),t:0,d:2.2+Math.random()};G.hgT=Math.max(2.5,9-(L-7)*.35)+Math.random()*4}}
@@ -2714,7 +2714,7 @@ function levelText(){{const x=nHud(1);if(x)return x}if(G.mode==="online")return 
   if(G.lvG&&DS.T<G.lvG.u)return G.lvG.t;if(Math.random()<.003*(L-14))G.lvG={t:pick(["LEVEL: ??","LEVEL: YOU","LEVEL: "+(L*7%97),"LEVEL: \u221e","LEVEL: STILL HERE"]),u:DS.T+1.4};return "LEVEL: "+L}
 function drawWhisper(){const w=G.wh;if(!w)return;const p=P(w.x,w.y,w.z),a=Math.sin(Math.min(1,w.t/w.d)*Math.PI)*.55;
   ctx.save();ctx.font="italic "+Math.max(9,Math.round(22*p[2]*view.s/3.2/G.sc))+"px 'Courier New',monospace";ctx.textAlign="center";ctx.fillStyle="rgba(255,68,85,"+a+")";ctx.shadowColor="#ff2244";ctx.shadowBlur=10;ctx.fillText(w.line,p[0],p[1]);ctx.restore()}
-function drawVignette(W,H){const e=ovEl("vig","");if(DS.vign<=0||G.state==="menu"||DQ<1){ovShow(e,false);return}const pu=.85+.15*Math.sin(DS.T*2.4),oc=G.zone==="ocean",a=Math.round((oc?Math.max(.35,DS.vign)*pu:DS.vign*pu)*40)/40,key=(oc?"o":"h")+a+"|"+W+"x"+H;
+function drawVignette(W,H){const e=ovEl("vig","");if(DS.vign<=0||G.state==="menu"||DQ<1||TN.vig){ovShow(e,false);return}const pu=.85+.15*Math.sin(DS.T*2.4),oc=G.zone==="ocean",a=Math.round((oc?Math.max(.35,DS.vign)*pu:DS.vign*pu)*40)/40,key=(oc?"o":"h")+a+"|"+W+"x"+H;
   if(e.dataset.k!==key){e.dataset.k=key;e.style.background="radial-gradient(circle at 50% 50%,rgba(0,0,0,0) "+Math.round(Math.min(W,H)*.3)+"px,"+(oc?"rgba(0,10,40,":"rgba(40,0,6,")+a+") "+Math.round(Math.max(W,H)*.75)+"px)"}ovShow(e,true)}
 function drawTrail(){if(!G.trail||G.trail.length<10)return;ctx.save();for(const j of[0,8]){const q=G.trail[j],a=P(q[0]-PW/2,q[1]-PH/2,DEPTH),b=P(q[0]+PW/2,q[1]+PH/2,DEPTH);
   ctx.strokeStyle="rgba(255,68,85,"+(j?.22:.12)+")";ctx.lineWidth=1;ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1])}ctx.restore()}
@@ -2877,4 +2877,30 @@ showMenu();qLabel();musStart();requestAnimationFrame(loop);   // the exe allows 
   for(const id of["tbSpin","tbFx","tbFy","tbRst","tbPause"])tb(id).addEventListener("contextmenu",e=>e.preventDefault());
   setInterval(()=>{const on=touchy&&inRun()&&!G.paused&&$("pause").classList.contains("hidden");for(const id of["tbSpin","tbFx","tbFy","tbRst","tbPause"])tb(id).classList.toggle("on",on)},200);
 })();
+
+/* ---------- v0.64 AUTO-TUNE: measures, on THIS machine, what each visual layer costs and switches off only the ones that really hurt.
+   It runs by itself once per session when the frame rate has sagged (about 20 s of layers blinking off and on while you play), and on F9. Results are saved for 30 days. ---------- */
+const TU={on:false,done:false,arm:0,seq:[],i:0,fr:0,buf:[],res:{},bases:[],cur:null,msg:null,msgT:0};
+const TUNE_ALL=["bgx","chroma","glow","vig","crt","tunlite","rain","events","panels","debris","artback"];
+const TUNE_NAME={bgx:"WALL EFFECTS",chroma:"COLOUR-SPLIT TUNNEL",glow:"GLOW SHADOWS",vig:"EDGE VIGNETTE",crt:"CRT MASK",tunlite:"TUNNEL WOBBLE",rain:"CODE RAIN",events:"EVENTS",panels:"SIDE PANELS",debris:"SHARDS/DEBRIS",artback:"POSTER ART",abyss:"OCEAN"};
+const tuneMed=a=>{const b=a.slice().sort((x,y)=>x-y),m=b[Math.floor(b.length/2)]||.0167,t=a.filter(v=>v<=m*2.6);return t.reduce((x,y)=>x+y,0)/Math.max(1,t.length)};   // mean without the odd hitch: on a fast screen frames snap between 1 and 2 refresh intervals, so a median would hide partial gains
+function tuneStart(){if(TU.on||document.hidden)return;const L=TUNE_ALL.concat(G.zone==="ocean"||G.zone==="cyber"?["abyss"]:[]),seq=[null];L.forEach((k,j)=>{seq.push(k);if(j%3===2)seq.push(null)});seq.push(null);
+  TU.seq=seq;TU.i=0;TU.fr=0;TU.buf=[];TU.res={};TU.bases=[];TU.on=true;for(const k in TN)delete TN[k]}
+function tuneSet(){for(const k of TUNE_ALL.concat(["abyss"]))TN[k]=false;const k=TU.seq[TU.i];if(k)TN[k]=true;TU.fr=0;TU.buf=[]}
+function tuneEnd(abort){TU.on=false;for(const k of TUNE_ALL.concat(["abyss"]))TN[k]=false;if(abort){return}
+  const out=[],off={};let nb=0;for(const k in TU.res){const r=TU.res[k],g=(r.base-r.dt)/r.base;out.push([k,g]);if(g>=.07){off[k]=1;TN[k]=true}}
+  out.sort((a,b)=>b[1]-a[1]);TU.done=true;TU.msg=["AUTO-TUNE  //  "+Math.round(1/tuneMed(TU.bases))+" FPS BASELINE"].concat(out.slice(0,7).map(([k,g])=>(g>=.07?"OFF  ":"     ")+TUNE_NAME[k]+"  "+(g>=0?"+":"")+Math.round(g*100)+"%")).concat(Object.keys(off).length?["SWITCHED OFF: "+Object.keys(off).map(k=>TUNE_NAME[k]).join(", ")]:["NOTHING WAS COSTLY ENOUGH TO SWITCH OFF"]);TU.msgT=25;
+  try{localStorage.setItem("hb3_tune",JSON.stringify({v:1,t:Date.now(),off}))}catch(e){}Q.S=0;Q.dlT=0;Q.dhT=0;ladApply()}
+function tuneTick(dt){
+  if(!TU.on){if(TU.msgT>0)TU.msgT-=dt;if(!TU.done&&QMODE==="auto"&&(Q.S|0)>=1&&G.state==="play")TU.arm+=dt;else TU.arm=0;if(TU.arm>4){TU.arm=0;tuneStart();if(TU.on)tuneSet()}return}
+  if(G.state==="menu"||document.hidden||G.paused){tuneEnd(true);return}
+  TU.fr++;if(TU.fr<=10)return;TU.buf.push(dt);if(TU.buf.length<Math.max(80,Math.round(Q.refresh*.6)))return;
+  const m=tuneMed(TU.buf),k=TU.seq[TU.i];if(k===null)TU.bases.push(m);else TU.res[k]={dt:m,base:TU.bases.length?TU.bases[TU.bases.length-1]:m};
+  TU.i++;if(TU.i>=TU.seq.length){tuneEnd(false);return}tuneSet()}
+function tuneDraw(W,H){if(!TU.msg||TU.msgT<=0&&!TU.on)return;ctx.save();ctx.font="bold 12px 'Courier New',monospace";ctx.textAlign="left";
+  const lines=TU.on?["AUTO-TUNE RUNNING  "+Math.round(TU.i/Math.max(1,TU.seq.length)*100)+"%  (KEEP PLAYING)"]:TU.msg;ctx.fillStyle="rgba(0,0,0,.7)";ctx.fillRect(10,H-24-lines.length*15,360,lines.length*15+8);ctx.fillStyle="#33ff77";lines.forEach((t,i)=>ctx.fillText(t,16,H-12-(lines.length-1-i)*15));ctx.restore()}
+addEventListener("keydown",e=>{if(e.key==="F9"&&G.state!=="menu"){e.preventDefault();TU.done=false;TU.msg=TU.msg||[];tuneStart();if(TU.on)tuneSet()}});
+try{const t=JSON.parse(localStorage.getItem("hb3_tune")||"null");if(t&&t.v===1&&Date.now()-t.t<30*864e5){Object.assign(TN,t.off);TU.done=true}}catch(e){}
+for(const[k,names]of Object.entries({rain:["drawMatrix"],abyss:["drawAbyss"],events:["drawEventsBack","drawEventsFront"],panels:["drawFx","drawTelemetry","drawBudPanel"],debris:["drawShards","drawDebris"],artback:["drawArtBack"]}))for(const n of names){const f=window[n];if(typeof f==="function")window[n]=function(){if(TN[k])return;return f.apply(this,arguments)}}
+
 </script></body></html>
