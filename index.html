@@ -62,7 +62,7 @@ body.touch #c{touch-action:none}
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.52 // BUILD 20261116.1400 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.53 // BUILD 20261116.1500 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -1877,7 +1877,35 @@ function hwPay(){if(G.test||G.mode==="online")return;ST.hwEarn=(ST.hwEarn||0)+5;
 function hwFlush(){const p=ST.hwPend|0;if(p<=0||!BUD.g)return;ST.hwPend=0;stSave();for(let r=p;r>0;r-=50)hwBank(Math.min(50,r))}
 setTimeout(hwFlush,3500);
 {const _lb=levelBeaten;levelBeaten=function(){_lb();hwPay()}}
-{const _ng=newGame;newGame=function(){FXR.lab=null;FXS.acc=0;FA.q=[];FA.t=14;return _ng.apply(this,arguments)}}
+{const _ng=newGame;newGame=function(){FXR.lab=null;FXS.acc=0;FA.q=[];FA.t=14;if(DC){DC.q=[];DC.t=22}return _ng.apply(this,arguments)}}
+/* ---------- v0.53: DEEP CHANNEL pop-ups - the Fatalix operator-console meters and graphs drift into the side margins now and then from level 8 on (fade only, no flashing) ---------- */
+var DC=null;
+const DC_LBL=["GREY CORRIDOR LOAD","MOTHMAN PROXIMITY","DJINN SMOKE DENSITY","SHADOW PEOPLE LATENCY","OWL STARE COEFFICIENT","NULL CHOIR VOLUME","NODE 7 SIGIL INTEGRITY","GEF RESONANCE INDEX","SCHUMANN WOBBLE","ASTRAL BLEED-THROUGH","SATURNINE ALIGNMENT","ARCHON TRAFFIC","LEY LINE VOLTAGE","ENOCHIAN PACKET LOSS","AKASHIC CACHE HIT RATE","PINEAL SATURATION","BLACK STAR ECHO","TALL WHITE CHATTER","HOLLOW EARTH PRESSURE","MERIDIAN DRIFT","ANUNNAKI LEDGER SYNC","DREAMLINE BANDWIDTH"];
+const DC_MAP={"GREY CORRIDOR LOAD":"GREY","MOTHMAN PROXIMITY":"MOTHMAN","DJINN SMOKE DENSITY":"DJINN","SHADOW PEOPLE LATENCY":"SHADOW","OWL STARE COEFFICIENT":"DOGMAN","NULL CHOIR VOLUME":"POLTERGST","NODE 7 SIGIL INTEGRITY":"DEMON","GEF RESONANCE INDEX":"__gef","SCHUMANN WOBBLE":"UFO"};
+const DC_ST=["HANDSHAKE WITH THE FAR SIDE ... OK","SIGIL TABLE REBUILT (7 OF 7 GLYPHS RESPONDING)","WARNING: SOMETHING ANSWERED ON CHANNEL 0","LUNAR GATE QUERY ... NO RESPONSE (EXPECTED)","ROUTING THROUGH NODE SATURN-7","DECRYPTING WHISPER LAYER ... 3 VOICES FOUND","CHECKSUM FAILED ON /DEV/SOUL - IGNORING","THE MONGOOSE IS LISTENING","CALIBRATING AGAINST THE BLACK SUN","COUNTING THE WATCHERS ... COUNT CHANGED WHILE COUNTING","CARRIER WAVE CONTAINS A NAME. NAME REDACTED.","HEX OF ORIGIN: 0x1A4F 0x0666 0x0B1D 0xFA7E"];
+function dcOK(){return faOK()&&G.level>=8&&!document.body.classList.contains("touch")}
+function dcMk(kind){const pk=a=>a[Math.random()*a.length|0],ls=[];while(ls.length<3){const l=pk(DC_LBL);if(!ls.includes(l))ls.push(l)}
+  const hx=[];for(let i=0;i<4;i++){const v=[];for(let j=0;j<8;j++)v.push((Math.random()*256|0).toString(16).toUpperCase().padStart(2,"0"));hx.push("0x"+(Math.random()*65535|0).toString(16).toUpperCase().padStart(4,"0")+"  "+v.join(" "))}
+  const st=[];while(st.length<4){const s=pk(DC_ST);if(!st.includes(s))st.push(s)}
+  return{kind,side:Math.random()<.5?0:1,age:0,life:11+Math.random()*5,seed:Math.random()*100,ls,hx,st}}
+function dcTick(dt){if(!DC)return;if(!dcOK()){DC.q=[];return}for(const a of DC.q)a.age+=dt;DC.q=DC.q.filter(a=>a.age<a.life);DC.t-=dt;if(DC.t>0||DC.q.length)return;
+  const r=Math.random(),k=r<.4?"meters":r<.6?"spec":r<.75?"status":r<.85?"hex":"conv";DC.q.push(dcMk(k));DC.t=16+Math.random()*24}
+function dcVal(a,l,t){const m=DC_MAP[l];if(m){const V=fxView(t);if(m==="__gef")return{p:V.g*10,sp:V.g>=8};const row=V.p.find(r=>r[0]===m);if(row)return{p:Math.max(0,Math.min(100,row[1]+Math.sin(t*.9+a.seed)*3)),sp:!!row[2]}}
+  return{p:50+42*Math.sin(t*.35+a.seed+l.length),sp:false}}
+function drawDc(L,R,T,B,dt){if(!DC||!DC.q.length||G.state==="menu"||G.state==="over"||G.zone==="face")return;const t=DS.T||0,W=innerWidth,lw=Math.min(250,L-16),rw=Math.min(250,W-R-16);
+  for(const a of DC.q){let side=a.side;if(side===0&&lw<130)side=1;if(side===1&&rw<130)side=0;const w=side===0?lw:rw;if(w<130)continue;
+    const fi=Math.min(1,a.age/.6),fo=Math.min(1,(a.life-a.age)/.9),al=Math.max(0,Math.min(fi,fo)),x=side===0?8:R+8,n=a.kind,h=n==="meters"?112:n==="spec"?118:n==="status"?96:n==="hex"?84:62;
+    const y=side===0?Math.max(T+8,B-h-16):Math.max(T+8,Math.min(B-h-16,T+(B-T)*.5-h/2));
+    ctx.save();ctx.globalAlpha=al*.96;ctx.fillStyle="rgba(2,10,5,.94)";ctx.fillRect(x,y,w,h);ctx.strokeStyle=FX_C;ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,w-1,h-1);ctx.fillStyle="rgba(4,28,34,.96)";ctx.fillRect(x+1,y+1,w-2,16);
+    ctx.font="bold 9px 'Courier New',monospace";ctx.textAlign="left";ctx.fillStyle=FX_C;ctx.fillText("> DEEP CHANNEL // "+(n==="meters"?"READOUT":n==="spec"?"SPECTRUM":n==="status"?"LINK STATUS":n==="hex"?"RAW CARRIER":"CONVERGENCE"),x+6,y+12);
+    ctx.font="9px 'Courier New',monospace";const bw=w-16-44;
+    if(n==="meters")a.ls.forEach((l,i)=>{const v=dcVal(a,l,t),by=y+22+i*30;ctx.textAlign="left";ctx.fillStyle=FX_T;ctx.fillText(l,x+8,by+8);const k=Math.round(Math.floor(bw/6)*v.p/100),c=fxCol(v.p);ctx.strokeStyle=FX_D;ctx.strokeRect(x+8.5,by+12.5,bw,9);ctx.fillStyle=c;for(let j=0;j<k;j++)ctx.fillRect(x+10+j*6,by+14,4,6);ctx.textAlign="right";ctx.fillStyle=v.sp?FX_R:c;ctx.fillText(v.sp?"BREACH":v.p.toFixed(1)+"%",x+w-8,by+20)});
+    else if(n==="spec")a.ls.forEach((l,i)=>{const by=y+22+i*32;ctx.textAlign="left";ctx.fillStyle=FX_T;ctx.fillText(l.slice(0,28),x+8,by+8);const nb=Math.floor((w-16)/5);for(let j=0;j<nb;j++){const q=(Math.sin(j*.45+t*1.3+a.seed+i*2)*.5+.5)*(.55+.45*Math.sin(j*1.9+t*.7+a.seed)),bh=1+q*17;ctx.fillStyle=q>.8?FX_O:FX_G;ctx.globalAlpha=al*(.55+.4*q);ctx.fillRect(x+8+j*5,by+30-bh,3,bh)}ctx.globalAlpha=al*.96});
+    else if(n==="status"){ctx.textAlign="left";a.st.forEach((s,i)=>{const nc=Math.max(0,Math.min(s.length,Math.floor((a.age-.4-i*1.5)*34)));ctx.fillStyle=/WARNING|FAILED|NAME REDACTED/.test(s)?FX_O:FX_T;const mx=Math.floor((w-16)/5.4);let tx=s.slice(0,nc);if(tx.length>mx)tx=tx.slice(0,mx-1)+"~";ctx.fillText((nc>0?"> ":"")+tx,x+8,y+32+i*16)})}
+    else if(n==="hex"){ctx.textAlign="left";ctx.fillStyle=FX_G;a.hx.forEach((s,i)=>{const nc=Math.max(0,Math.min(s.length,Math.floor((a.age-.3-i*.8)*40)));ctx.fillText(s.slice(0,Math.min(nc,Math.floor((w-16)/5.4))),x+8,y+32+i*14)})}
+    else{const p=Math.max(0,Math.min(100,50+48*Math.sin(t*.18+a.seed))),c=fxCol(p);ctx.textAlign="left";ctx.fillStyle=c;ctx.fillText(">> CONVERGENCE "+p.toFixed(1)+"%  "+(p>80?"[CRITICAL]":p>50?"[RISING]":"[DORMANT]"),x+8,y+32);ctx.strokeStyle=FX_D;ctx.strokeRect(x+8.5,y+40.5,w-17,10);ctx.fillRect(x+10,y+42,(w-20)*p/100,7)}
+    ctx.restore()}}
+DC={q:[],t:25};
 const FX_PROT=[5,14,15,24,25,29,30,35,39,40];
 function fxSkip(L){if(G.mode!=="normal"&&G.mode!=="daily")return 0;const g=fxGef();if(g<7||L<6)return 0;FXS.acc+=(g-6)/4;if(FXS.acc<1)return 0;FXS.acc-=1;const p=FX_PROT.find(q=>q>=L+1);return p!==undefined&&p>L+1?1:0}
 
@@ -2697,13 +2725,13 @@ function draw(t,dt){
   drawTelemetry(L,B,dt);drawBudPanel(R,B);drawFx(L,R,T,B,W,H,dt);if(G.zone!=="face")drawEdge(W,H,T);drawEventsFront(W,H,DS.T,dt);
   const mid=(T+B)/2;
   if(G.state==="serve"&&G.msgT<=0)text(document.body.classList.contains("touch")?"DRAG THE PADDLE ONTO THE BALL, THEN TAP SPIN TO SERVE":"PUT YOUR PADDLE ON THE BALL AND CLICK TO SERVE",(L+R)/2,B-12,12,"#119944","center");
-  drawFxAlerts(L,R,T,B,dt);drawLab(L,R,T,B);
+  drawFxAlerts(L,R,T,B,dt);drawDc(L,R,T,B,dt);drawLab(L,R,T,B);
   if(G.msgT>0){G.msgT-=dt;ctx.globalAlpha=Math.min(1,G.msgT*2);drawTermMsg(G.msg,(L+R)/2,T+60,(R-L)*.92);ctx.globalAlpha=1}}
 let acc=0,last=performance.now();
 function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(G.paused){draw(0,0);requestAnimationFrame(loop);return}acc+=dt*(G.mode==="lab"&&G.mod.ts||1);
   while(acc>=STEP){step();acc-=STEP;if(G.state==="wait"){G.waitT-=STEP;if(G.waitT<=0)afterWait()}}
   if(G.ripple){G.ripple.t+=dt;if(G.ripple.t>RT)G.ripple=null}
-  trickTick(dt);evTick(dt);qTick(dt);zTick(dt);nTick();rTick();coTick();grudgeTick(dt);rollTick(dt);cylTick(dt);faTick(dt);
+  trickTick(dt);evTick(dt);qTick(dt);zTick(dt);nTick();rTick();coTick();grudgeTick(dt);rollTick(dt);cylTick(dt);faTick(dt);dcTick(dt);
   if(G.zone==="cyber"&&G.state!=="hyper")G.hyCam=(G.hyCam||0)+DEPTH*.5*dt;
   if(G.state==="hyper"){G.hyT+=dt;const ht=G.hyT;G.hyCam=(G.hyCam||0)+DEPTH*(ht<3?2.5:1)*dt;if(ht<2.8)G.cam+=Math.min(1,ht/.8)*90*dt;else{if(G.camT===undefined)G.camT=Math.ceil(G.cam/(DEPTH/10))*(DEPTH/10)+DEPTH/5;G.cam+=(G.camT-G.cam)*Math.min(1,dt*3.5)}
     if(ht>=3.7){G.cam=0;G.camT=undefined;healPaddle();G.level++;G.el=3;G.zone="cyber";say("LEVEL "+G.level+"  //  HYPER LANE  //  CYBER NET",3);startLevel()}}
