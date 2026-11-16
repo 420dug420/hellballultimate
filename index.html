@@ -49,7 +49,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 }catch(e){console.warn("Discord SDK:",e)}})();
 </script><!--/DISCORD-->
 <canvas id="c"></canvas>
-<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.31 // BUILD 20261115.1915</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
+<div id="menu" class="ov"><canvas id="logo" style="width:min(78vw,500px);height:auto;margin-bottom:2px;flex:none"></canvas><div class="dim">v0.32 // BUILD 20261115.1910</div><div class="dim" id="mMus" style="color:#33d6ff"></div><div class="dim" style="font-size:11px">M  MUSIC ON/OFF   //   N  NEXT TRACK</div><div class="dim" id="mQ" style="font-size:11px"></div><div class="dim" style="font-size:11px">IN GAME:  ESC  PAUSE   //   R  RESTART RUN</div><div class="dim" id="mWh" style="color:#663333;min-height:14px;font-style:italic"></div><button class="mb" id="bStart">START</button><button class="mb" id="bModes">MODES</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">WORLD BOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button><div class="dim" id="mBest"></div></div>
 <div id="startm" class="ov hidden" style="gap:10px"><div class="ttl">START</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
  <button class="mb" id="sClassic">CLASSIC</button><div class="dim">LEVEL 1 FOREVER. NO TRANSITIONS, NO BOSSES. IT JUST GETS FASTER. MUSIC OFF (M TO TURN IT ON).</div>
@@ -2000,7 +2000,7 @@ addEventListener("message",e=>{if(!HWF.el||e.source!==HWF.el.contentWindow||!e.d
 g$("bHw").onclick=openHellworld;
 
 /* ---------- v0.28 PLAYER GHOSTS: every finished run leaves a short copy of your paddle on the server; other players meet up to 3 of them as faint named paddles ---------- */
-const GP={ok:["normal","hard","gef","classic"],pr:null,list:[],MAX:1500};
+const GP={ok:["normal","endless","classic"],pr:null,list:[],MAX:1500};
 function gpStart(mode){GP.pr=null;GP.list=[];mode=mode||"normal";if(!GP.ok.includes(mode))return;GP.pr=[];
   fetch(gAPI()+"?pool=1&pid="+encodeURIComponent(gPid)).then(r=>r.json()).then(d=>{if(!d||!Array.isArray(d.list)||!GP.ok.includes(G.mode))return;
     GP.list=d.list.slice(0,3).map(g=>({p:typeof g.p==="string"?b64d(g.p):null,n:gClean(g.n)||"GHOST",s:g.s|0})).filter(g=>g.p&&g.p.length>=40)}).catch(()=>{})}
@@ -2115,7 +2115,7 @@ function gpCardDraw(W,H){const q=GP.cards;if(!q||!q.length||G.state==="menu"||G.
 
 /* ---------- v0.31: the ghost IS the opponent. A copy of a real player takes the AI paddle: their name, their serve style, their habits. When it wins a point it serves. ---------- */
 function gpDraw(){}function gpWorld(){}
-const COPY_MODES=["normal","hard","gef"];
+const COPY_MODES=["normal","endless"];
 function gpStart(mode){GP.pr=null;GP.list=[];GP.cards=[];GP.sv=[];mode=mode||"normal";if(!GP.ok.includes(mode))return;GP.pr=[];
   fetch(gAPI()+"?pool=1&pid="+encodeURIComponent(gPid)).then(r=>r.json()).then(d=>{if(!d||!Array.isArray(d.list)||!GP.ok.includes(G.mode))return;
     GP.list=d.list.slice(0,3).map(g=>({p:typeof g.p==="string"?b64d(g.p):null,n:gClean(g.n)||"GHOST",s:g.s|0,l:g.l|0,si:0,
