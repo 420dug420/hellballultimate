@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.58 // BUILD 20261116.2000 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.59 // BUILD 20261116.2100 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -1642,7 +1642,7 @@ function gLoad(b){GB.tab=b;g$("wbTabs").innerHTML=GB_TABS.map(([k,t])=>'<button 
   const n=++GB.seq;g$("wbList").innerHTML='<div class="dim">LOADING...</div>';g$("wbYou").textContent="";
   fetch(gAPI()+"?b="+encodeURIComponent(gKey(b))+"&pid="+gPid).then(r=>r.json()).then(d=>{if(n!==GB.seq)return;if(!d||!d.top){g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE LEADERBOARD.</div>';return}
     const unit=b==="classic"?"LV":b==="1v1"?"WINS":"";
-    g$("wbList").innerHTML=d.top.length?d.top.map((e,i)=>'<div class="lbr wbr'+(e.me?" me":"")+'"'+(/^[a-f0-9]{12}$/.test(e.id||"")?' data-pid="'+e.id+'"':"")+'><span>'+String(i+1).padStart(2,"0")+'</span><span>'+gEsc(e.n)+'</span><span>'+(Number(e.s)|0)+(unit?" "+unit:"")+'</span><span>'+(b!=="classic"&&b!=="1v1"&&e.l?"LV "+(Number(e.l)|0):"")+'</span></div>').join(""):'<div class="dim">NO SCORES YET. BE THE FIRST.</div>';
+    g$("wbList").innerHTML=d.top.length?d.top.map((e,i)=>'<div class="lbr wbr'+(e.me?" me":"")+'"'+(/^[a-f0-9]{12}$/.test(e.id||"")?' data-pid="'+e.id+'"':"")+'><span>'+String(i+1).padStart(2,"0")+'</span><span>'+gEsc(e.n)+'</span>'+(b==="classic"||b==="1v1"||b==="koth"?'<span>'+(Number(e.s)|0)+(unit?" "+unit:"")+'</span><span></span>':'<span>LV '+(Number(e.l)|0)+'</span><span>'+(Number(e.s)|0)+'</span>')+'</div>').join(""):'<div class="dim">NO SCORES YET. BE THE FIRST.</div>';
     if(d.top[0]&&d.top[0].me)ach("world_one");g$("wbYou").textContent=d.you?(d.you.rank>10?"YOU: #"+(d.you.rank|0)+" OF "+(d.total|0)+"   "+(d.you.s|0):""):"YOU ARE NOT ON THIS BOARD YET"},()=>{if(n===GB.seq)g$("wbList").innerHTML='<div class="dim">COULD NOT REACH THE LEADERBOARD.</div>'})}
 function medStrip(c){c=String(c||"");return c.split("").map(t=>{t=+t;return t>=1&&t<=5?'<span style="color:'+TIERS[t-1][1]+'">\u25AE'+t+'</span>':'<span style="color:#455">\u25AE0</span>'}).join(" ")}
 function gShowProfile(pid){if(!/^[a-f0-9]{12}$/.test(pid))return;gmShow(pid);const box=g$("wbProf");box.classList.remove("hidden");box.innerHTML='<div class="dim">PULLING SUBJECT FILE...</div>';
@@ -2717,7 +2717,7 @@ function musGraph(){if(MUS.wa||!AC)return;if(location.protocol==="file:"&&!/[?&]
   try{const W={};W.src=AC.createMediaElementSource(MUS.el);W.lp=AC.createBiquadFilter();W.lp.type="lowpass";W.lp.frequency.value=20000;W.g=AC.createGain();W.g.gain.value=0;
     W.an=AC.createAnalyser();W.an.fftSize=512;W.src.connect(W.lp);W.lp.connect(W.g);W.g.connect(AC.destination);W.src.connect(W.an);
     const N=Math.floor(AC.sampleRate*4);W.ring=[new Float32Array(N),new Float32Array(N)];W.pos=0;                 // keeps the last 4 s for the reverse effect
-    W.rec=AC.createScriptProcessor(4096,2,1);W.src.connect(W.rec);W.rec.connect(AC.destination);
+    W.rec=AC.createScriptProcessor(4096,2,1);W.recOn=false;   // v0.59: the recorder (a main-thread audio callback) is only wired in from level 11, when the reverse effect is near
     W.rec.onaudioprocess=e=>{const ib=e.inputBuffer,n=ib.length;for(let c=0;c<2;c++){const d=ib.getChannelData(Math.min(c,ib.numberOfChannels-1)),r=W.ring[c];for(let i=0;i<n;i++)r[(W.pos+i)%N]=d[i]}W.pos=(W.pos+n)%N;e.outputBuffer.getChannelData(0).fill(0)};
     MUS.W=W;MUS.wa=true;MUS.check=3}catch(e){MUS.wa=false}}
 function musTaintCheck(dt){if(!MUS.wa||MUS.check===undefined||MUS.el.paused)return;MUS.check-=dt;if(MUS.check>0)return;MUS.check=undefined;
@@ -2733,9 +2733,10 @@ function musTick(dt){if(!MUS.el)return;const L=G.state==="menu"?0:G.level;
   let r=1;if(L>=8)r=1-Math.min(.32,.018*(L-7))+Math.sin(DS.T*.7)*Math.min(.03,.004*(L-7));                   // slower + lower, with tape warble
   if(L>=15){MUS.stopT-=dt;if(MUS.stopT<=0&&G.state==="play"&&Math.random()<dt*.02){MUS.stopT=40;MUS.grind=2.2}}
   if(MUS.grind>0){MUS.grind-=dt;r*=.35+.65*Math.abs(MUS.grind-1.1)/1.1}                                      // grinds almost to a stop, then back
-  r=Math.max(.3,r);if(Math.abs(r-MUS.rate)>.002){MUS.rate=r;try{MUS.el.playbackRate=r}catch(e){}}
-  if(MUS.wa){MUS.W.lp.frequency.setTargetAtTime(L>=10?Math.max(1800,20000-1500*(L-9)):20000,AC.currentTime,.5);
-    MUS.revT=(MUS.revT===undefined?20:MUS.revT)-dt;if(L>=12&&MUS.revT<=0&&!MUS.el.paused&&MUS.vol>.02){MUS.revT=Math.max(12,38-(L-12)*1.5)+Math.random()*12;musReverse()}}
+  r=Math.max(.3,r);MUS.rt=(MUS.rt||0)-dt;if(MUS.rt<=0&&Math.abs(r-MUS.rate)>.012){MUS.rt=.12;MUS.rate=r;try{MUS.el.playbackRate=r}catch(e){}}   // v0.59: not every frame; each change makes the media pipeline re-stretch the audio
+  if(MUS.wa){const Wr=MUS.W;if(L>=11&&!Wr.recOn){try{Wr.src.connect(Wr.rec);Wr.rec.connect(AC.destination);Wr.recOn=true;MUS.recT=0}catch(e){}}else if(L<11&&Wr.recOn){try{Wr.src.disconnect(Wr.rec);Wr.rec.disconnect()}catch(e){}Wr.recOn=false}if(Wr.recOn)MUS.recT=(MUS.recT||0)+dt;
+    MUS.W.lp.frequency.setTargetAtTime(L>=10?Math.max(1800,20000-1500*(L-9)):20000,AC.currentTime,.5);
+    MUS.revT=(MUS.revT===undefined?20:MUS.revT)-dt;if(L>=12&&MUS.revT<=0&&MUS.W.recOn&&MUS.recT>6&&!MUS.el.paused&&MUS.vol>.02){MUS.revT=Math.max(12,38-(L-12)*1.5)+Math.random()*12;musReverse()}}
   musTaintCheck(dt)}
 function musNext(){if(MUS.fails>=TRACKS.length)return;if(!MUS.order.length){MUS.order=TRACKS.map((_,i)=>i).sort(()=>Math.random()-.5);if(MUS.cur&&TRACKS[MUS.order[0]]===MUS.cur&&TRACKS.length>1)MUS.order.push(MUS.order.shift())}
   MUS.cur=TRACKS[MUS.order.shift()];MUS.el.src=MUS.cur.f;MUS.vol=Math.min(MUS.vol,.02);try{MUS.el.playbackRate=MUS.rate}catch(e){}if(MUS.on&&!G.clsMute)MUS.el.play().catch(()=>{});musLabel()}

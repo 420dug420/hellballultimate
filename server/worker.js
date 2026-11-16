@@ -108,6 +108,8 @@ const lbJSON = (o, status) => new Response(JSON.stringify(o), { status: status |
 const pubId = async pid => { const h = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode("hbu|" + pid)));
   return Array.from(h.slice(0, 6), b => b.toString(16).padStart(2, "0")).join(""); };
 const PUB_ID = /^[a-f0-9]{12}$/;
+const lvBoard = k => !/(^|:)(1v1|koth)$/.test(k);                 // v0.48: every run-based board ranks by the deepest LEVEL reached; score breaks ties
+const lbCmp = k => lvBoard(k) ? (a, b) => (b.l || 0) - (a.l || 0) || b.s - a.s || a.t - b.t : (a, b) => b.s - a.s || a.t - b.t;
 const fxN = (x, lo, hi) => { x = Number(x); return Number.isFinite(x) && x >= lo && x <= hi ? x : null; };
 function fxClean(f) {                                          // keep only numbers and short A-Z labels; nothing else can ride along
   if (!f || typeof f !== "object" || !/^\d{4}-\d{2}-\d{2}$/.test(f.d || "")) return null;
@@ -133,7 +135,7 @@ function pfMerge(a, b) {                                       // achievements: 
 export class Board {
   constructor(state, env) { this.s = state.storage; this.env = env; }
   async view(b, pid) {
-    const list = (await this.s.get("b:" + b)) || [], top = list.slice(0, LB_SHOW);
+    const list = ((await this.s.get("b:" + b)) || []).sort(lbCmp(b)), top = list.slice(0, LB_SHOW);
     const names = top.length ? await this.s.get(top.map(e => "n:" + e.p)) : new Map();
     const i = pid ? list.findIndex(e => e.p === pid) : -1;
     const ids = await Promise.all(top.map(e => pubId(e.p)));
@@ -148,9 +150,9 @@ export class Board {
     for (const [k, list] of boards) {
       const eB = list.find(x => x.p === B); if (!eB) continue;
       const eA = list.find(x => x.p === A), count = k === "b:1v1" || k === "b:koth";
-      if (eA) { if (count) eA.s += eB.s; else if (eB.s > eA.s) { eA.s = eB.s; eA.l = eB.l; eA.t = eB.t; } list.splice(list.indexOf(eB), 1); }
+      if (eA) { if (count) eA.s += eB.s; else { if (eB.s > eA.s) { eA.s = eB.s; eA.t = eB.t; } eA.l = Math.max(eA.l || 0, eB.l || 0); } list.splice(list.indexOf(eB), 1); }
       else eB.p = A;
-      list.sort((x, y) => y.s - x.s || x.t - y.t);
+      list.sort(lbCmp(k));
       await this.s.put(k, list);
     }
     const pB = await this.s.get("pf:" + B), pA = await this.s.get("pf:" + A);   // v0.45: profile merges too (cosmetics, achievements, best)
@@ -315,7 +317,7 @@ export class Board {
       if (sc > e.s) { e.s = sc; e.t = Date.now(); }
       e.l = Math.max(e.l || 0, Math.min(999, lv));              // v0.48: the level shown is the deepest this player reached on this board, not just the level of their best-scoring run
     }
-    list.sort((a, b) => b.s - a.s || a.t - b.t);
+    list.sort(lbCmp(m.b));
     if (list.length > LB_KEEP) list.length = LB_KEEP;
     await this.s.put("b:" + m.b, list);
     return lbJSON(await this.view(m.b, m.pid));
