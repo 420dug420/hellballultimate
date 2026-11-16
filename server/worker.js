@@ -143,6 +143,24 @@ export class Board {
     return { board: b, top: top.map((e, k) => ({ n: names.get("n:" + e.p) || "PLAYER", s: e.s, l: e.l || 0, me: e.p === pid, id: ids[k] })),
       you: i >= 0 ? { rank: i + 1, s: list[i].s } : null, total: list.length, near };
   }
+  async mergePlayers(A, B) {                                     // fold player B into player A: boards (best score; counts add), profile, HELLWORLD save, name, ghost copy; B becomes an alias of A
+    const boards = await this.s.list({ prefix: "b:" });
+    for (const [k, list] of boards) {
+      const eB = list.find(x => x.p === B); if (!eB) continue;
+      const eA = list.find(x => x.p === A), count = k === "b:1v1" || k === "b:koth";
+      if (eA) { if (count) eA.s += eB.s; else if (eB.s > eA.s) { eA.s = eB.s; eA.l = eB.l; eA.t = eB.t; } list.splice(list.indexOf(eB), 1); }
+      else eB.p = A;
+      list.sort((x, y) => y.s - x.s || x.t - y.t);
+      await this.s.put(k, list);
+    }
+    const pB = await this.s.get("pf:" + B), pA = await this.s.get("pf:" + A);   // v0.45: profile merges too (cosmetics, achievements, best)
+    if (pB) { await this.s.put("pf:" + A, { t: Date.now(), pf: pA ? pfMerge(pA.pf, pB.pf) : pB.pf }); await this.s.delete("pf:" + B); }
+    const hB = await this.s.get("h:" + B); if (hB && !(await this.s.get("h:" + A))) await this.s.put("h:" + A, hB);
+    await this.s.delete("h:" + B); await this.s.delete("n:" + B);
+    const gp = ((await this.s.get("gp")) || []).filter(x => x.pid !== B); await this.s.put("gp", gp);
+    const cb = await this.s.get("lp:" + B); if (cb) { await this.s.delete("lk:" + cb); await this.s.delete("lp:" + B); }
+    await this.s.put("al:" + B, A);
+  }
   async fetch(req) {
     const u = new URL(req.url);
     if (req.method === "GET") {
@@ -164,9 +182,24 @@ export class Board {
       if (gh) { if (!LB_BOARD.test(gh)) return lbJSON({ error: "bad board" }, 400); return lbJSON((await this.s.get("g:" + gh)) || { g: null }); }
       const b = u.searchParams.get("b") || "", pid = u.searchParams.get("pid") || "";
       if (!LB_BOARD.test(b)) return lbJSON({ error: "bad board" }, 400);
-      return lbJSON(await this.view(b, LB_PID.test(pid) ? pid : ""));
+      return lbJSON(await this.view(b, LB_PID.test(pid) ? ((await this.s.get("al:" + pid)) || pid) : ""));
     }
     let m; try { m = JSON.parse(await req.text()); } catch (e) { return lbJSON({ error: "bad json" }, 400); }
+    if (m && m.op === "mergename") {                             // v0.47: OWNER ONLY (FX_KEY): merge every player with this exact name into the one with the best scores
+      const key = this.env && this.env.FX_KEY ? String(this.env.FX_KEY) : "";
+      if (key.length < 16 || typeof m.key !== "string" || m.key.length !== key.length) return lbJSON({ error: "forbidden" }, 403);
+      let diff = 0; for (let i = 0; i < key.length; i++) diff |= key.charCodeAt(i) ^ m.key.charCodeAt(i);
+      if (diff) return lbJSON({ error: "forbidden" }, 403);
+      const nm = lbName(m.name); if (!nm) return lbJSON({ error: "name missing" }, 400);
+      const names = await this.s.list({ prefix: "n:" }), ids = [];
+      for (const [k, v] of names) if (v === nm) ids.push(k.slice(2));
+      if (ids.length < 2) return lbJSON({ ok: true, found: ids.length, merged: 0 });
+      const sum = {}; for (const id of ids) sum[id] = 0;
+      for (const [k, list] of await this.s.list({ prefix: "b:" })) for (const e of list) if (e.p in sum) sum[e.p] += e.s;
+      ids.sort((a, b) => sum[b] - sum[a]);
+      const A = ids[0]; for (const B of ids.slice(1)) await this.mergePlayers(A, B);
+      return lbJSON({ ok: true, found: ids.length, merged: ids.length - 1 });
+    }
     if (m && m.op === "wipe") {                                  // v0.46: OWNER ONLY (needs FX_KEY + a typed confirmation): erase every board, name, profile, link code and HELLWORLD save, keep the daily reading, and start a new epoch so devices reset their own local progress
       const key = this.env && this.env.FX_KEY ? String(this.env.FX_KEY) : "";
       if (key.length < 16 || typeof m.key !== "string" || m.key.length !== key.length) return lbJSON({ error: "forbidden" }, 403);
@@ -189,6 +222,7 @@ export class Board {
       return lbJSON({ ok: true, d: f.d });
     }
     if (!m || !LB_PID.test(m.pid || "")) return lbJSON({ error: "bad player" }, 400);
+    { const al = await this.s.get("al:" + m.pid); if (al) m.pid = al; }          // v0.47: a device whose player was merged keeps posting, and it all lands on the merged player
     const name = lbName(m.n);
     if (name) await this.s.put("n:" + m.pid, name);
     if (m.op === "name") return lbJSON({ ok: true, n: name });
@@ -207,20 +241,8 @@ export class Board {
       if (rl.n >= 30) return lbJSON({ ok: false, err: "slow down" }, 429);
       const code = String(m.code || "").toUpperCase().replace(/[^A-Z0-9]/g, ""), rec = /^[A-Z2-9]{10}$/.test(code) ? await this.s.get("lk:" + code) : null;
       if (!rec || rec.p === m.pid) { rl.n++; await this.s.put("lkf", rl); return lbJSON({ ok: false, err: rec && rec.p === m.pid ? "same device" : "bad code" }); }
-      const A = rec.p, B = m.pid, boards = await this.s.list({ prefix: "b:" });
-      for (const [k, list] of boards) {
-        const eB = list.find(x => x.p === B); if (!eB) continue;
-        const eA = list.find(x => x.p === A), count = k === "b:1v1" || k === "b:koth";
-        if (eA) { if (count) eA.s += eB.s; else if (eB.s > eA.s) { eA.s = eB.s; eA.l = eB.l; eA.t = eB.t; } list.splice(list.indexOf(eB), 1); }
-        else eB.p = A;
-        list.sort((x, y) => y.s - x.s || x.t - y.t);
-        await this.s.put(k, list);
-      }
-      const pB = await this.s.get("pf:" + B), pA = await this.s.get("pf:" + A);   // v0.45: profile merges too (cosmetics, achievements, best)
-      if (pB) { await this.s.put("pf:" + A, { t: Date.now(), pf: pA ? pfMerge(pA.pf, pB.pf) : pB.pf }); await this.s.delete("pf:" + B); }
-      const hB = await this.s.get("h:" + B); if (hB && !(await this.s.get("h:" + A))) await this.s.put("h:" + A, hB);
-      await this.s.delete("h:" + B); await this.s.delete("n:" + B);
-      const gp = ((await this.s.get("gp")) || []).filter(x => x.pid !== B); await this.s.put("gp", gp);
+      const A = rec.p, B = m.pid;
+      await this.mergePlayers(A, B);
       return lbJSON({ ok: true, pid: A, n: (await this.s.get("n:" + A)) || "" });
     }
     if (m.op === "pfsync") {                                     // v0.45: merge this device's profile into the player's stored one and hand the merged copy back
