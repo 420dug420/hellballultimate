@@ -108,8 +108,17 @@ const lbJSON = (o, status) => new Response(JSON.stringify(o), { status: status |
 const pubId = async pid => { const h = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode("hbu|" + pid)));
   return Array.from(h.slice(0, 6), b => b.toString(16).padStart(2, "0")).join(""); };
 const PUB_ID = /^[a-f0-9]{12}$/;
+const fxN = (x, lo, hi) => { x = Number(x); return Number.isFinite(x) && x >= lo && x <= hi ? x : null; };
+function fxClean(f) {                                          // keep only numbers and short A-Z labels; nothing else can ride along
+  if (!f || typeof f !== "object" || !/^\d{4}-\d{2}-\d{2}$/.test(f.d || "")) return null;
+  const g = fxN(f.g, 1, 10), v = fxN(f.v, 0, 100), s = fxN(f.s, 0, 30);
+  if (g === null || v === null) return null;
+  const p = (Array.isArray(f.p) ? f.p : []).slice(0, 10).filter(r => Array.isArray(r) && /^[A-Z0-9 ]{1,10}$/.test(r[0]) && fxN(r[1], 0, 100) !== null).map(r => [r[0], Math.round(r[1]), r[2] ? 1 : 0]);
+  const c = (Array.isArray(f.c) ? f.c : []).slice(0, 10).filter(r => Array.isArray(r) && /^[A-Z0-9 ]{1,8}$/.test(r[0]) && fxN(r[1], 0, 2) !== null).map(r => [r[0], Math.round(r[1]), r[2] ? 1 : 0]);
+  return { d: f.d, g: Math.round(g), v: Math.round(v * 10) / 10, s: s === null ? 7.83 : Math.round(s * 100) / 100, p, c, t: Date.now() };
+}
 export class Board {
-  constructor(state) { this.s = state.storage; }
+  constructor(state, env) { this.s = state.storage; this.env = env; }
   async view(b, pid) {
     const list = (await this.s.get("b:" + b)) || [], top = list.slice(0, LB_SHOW);
     const names = top.length ? await this.s.get(top.map(e => "n:" + e.p)) : new Map();
@@ -124,6 +133,7 @@ export class Board {
   async fetch(req) {
     const u = new URL(req.url);
     if (req.method === "GET") {
+      if (u.searchParams.get("fx")) return lbJSON({ fx: (await this.s.get("fx")) || null, h: (await this.s.get("fxh")) || [] });   // v0.44: the daily Fatalix reading + its 30-day history
       const prof = u.searchParams.get("prof") || "";                // HELLBALL ULTIMATE: a player's public stat sheet
       if (prof) {
         if (!PUB_ID.test(prof)) return lbJSON({ error: "bad player" }, 400);
@@ -144,6 +154,16 @@ export class Board {
       return lbJSON(await this.view(b, LB_PID.test(pid) ? pid : ""));
     }
     let m; try { m = JSON.parse(await req.text()); } catch (e) { return lbJSON({ error: "bad json" }, 400); }
+    if (m && m.op === "fxpush") {                                // v0.44: Fatalix pushes one meters-only reading (secret FX_KEY set in the worker's Variables and Secrets)
+      const key = this.env && this.env.FX_KEY ? String(this.env.FX_KEY) : "";
+      if (key.length < 16 || typeof m.key !== "string" || m.key.length !== key.length) return lbJSON({ error: "forbidden" }, 403);
+      let diff = 0; for (let i = 0; i < key.length; i++) diff |= key.charCodeAt(i) ^ m.key.charCodeAt(i);
+      if (diff) return lbJSON({ error: "forbidden" }, 403);
+      const f = fxClean(m.fx); if (!f) return lbJSON({ error: "bad reading" }, 400);
+      const h = ((await this.s.get("fxh")) || []).filter(x => x.d !== f.d); h.push({ d: f.d, g: f.g, v: f.v }); h.sort((a, b) => a.d < b.d ? -1 : 1);
+      await this.s.put("fx", f); await this.s.put("fxh", h.slice(-30));
+      return lbJSON({ ok: true, d: f.d });
+    }
     if (!m || !LB_PID.test(m.pid || "")) return lbJSON({ error: "bad player" }, 400);
     const name = lbName(m.n);
     if (name) await this.s.put("n:" + m.pid, name);
@@ -202,6 +222,15 @@ export class Board {
       await this.s.put("g:" + m.b, { n: name || (await this.s.get("n:" + m.pid)) || "PLAYER", s: top.s, g: { p: m.g.p, sc: m.g.sc.slice(0, 2000).map(v => Math.floor(Number(v)) || 0) } });
       return lbJSON({ ok: true });
     }
+    if (m.op === "hwcash") {                                     // v0.44: HELLBALL pays HELLWORLD cash for levels won (small, rate limited, only into an existing save)
+      const amt = Math.floor(Number(m.amt)); if (!(amt >= 1 && amt <= 50)) return lbJSON({ error: "bad amount" }, 400);
+      const now = Date.now(); let w = (await this.s.get("hc:" + m.pid)) || { t: now, n: 0 }; if (now - w.t > 3600000) w = { t: now, n: 0 };
+      if (w.n + amt > 400) return lbJSON({ ok: false, err: "slow down" });
+      const r = await this.s.get("h:" + m.pid); if (!r || !r.save) return lbJSON({ ok: false, err: "no save" });
+      const sv = r.save; sv.cash = Math.max(0, Math.floor(Number(sv.cash) || 0)) + amt; sv._ts = now; w.n += amt;
+      await this.s.put("hc:" + m.pid, w); await this.s.put("h:" + m.pid, { t: now, save: sv });
+      return lbJSON({ ok: true, cash: sv.cash });
+    }
     if (m.op === "hwload") { const r = await this.s.get("h:" + m.pid); return lbJSON({ save: r ? r.save : null, t: r ? r.t : 0 }); }
     if (m.op === "prof") {                                       // HELLBALL ULTIMATE: store the stat sheet (numbers and short strings only, capped)
       const p = m.p && typeof m.p === "object" ? m.p : null;
@@ -235,7 +264,7 @@ export class Board {
   }
 }
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const m = new URL(req.url).pathname.match(/^\/(?:\.proxy\/)?(?:ws\/)?((?:kdc|kweb|dc|web)-[A-Za-z0-9_-]{1,80})$/);   // /ws/<room>, or just /<room> if a Discord URL mapping stripped the /ws
     if (m) {
       const r = new Request(req); r.headers.set("X-Room", m[1]);
@@ -245,6 +274,13 @@ export default {
     if (lb) {
       if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: lbCORS });
       if (req.method !== "GET" && req.method !== "POST") return lbJSON({ error: "method" }, 405);
+      if (req.method === "GET" && new URL(req.url).searchParams.get("fx") && typeof caches !== "undefined" && caches.default) {   // v0.44: the daily reading changes once a day, so serve it from the edge for a minute
+        const ck = new Request("https://fx.cache/" + lb[1]); const hit = await caches.default.match(ck); if (hit) return hit;
+        const r = await env.BOARDS.get(env.BOARDS.idFromName("lb:" + lb[1])).fetch(req);
+        const out = new Response(r.body, { status: r.status, headers: r.headers });
+        if (r.ok) { out.headers.set("Cache-Control", "public, max-age=60"); if (ctx && ctx.waitUntil) ctx.waitUntil(caches.default.put(ck, out.clone())); }
+        return out;
+      }
       return env.BOARDS.get(env.BOARDS.idFromName("lb:" + lb[1])).fetch(req);
     }
     return new Response("HELLBALL ULTIMATE server: online 1v1 relay + world board", { headers: { "Content-Type": "text/plain" } });

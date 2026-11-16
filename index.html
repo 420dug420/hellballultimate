@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.49 // BUILD 20261116.0720 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.50 // BUILD 20261116.0840 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -275,7 +275,7 @@ function afterWait(){if(G.after==="clslevel"){clsLevelUp();return}
   if(G.after==="faceintro"){levelBeaten();G.state="faceintro";G.fiT=0;return}
   if(G.after==="hellworld"){levelBeaten();FACE.on=false;G.state="hwin";G.hwT=0;S.form();return}
   if(G.after==="warp"){levelBeaten();G.state="warp";G.warpT=0;S.warp();return}
-  if(G.after==="level"){levelBeaten();healPaddle();G.level++;G.el=3;say("LEVEL "+G.level+(G.level===35?"  //  THE WORLD TURNS":""),1.8);tn(660,.15,"square",.04);setTimeout(()=>tn(990,.25,"square",.04),120);startLevel()}
+  if(G.after==="level"){levelBeaten();healPaddle();{const sk=fxSkip(G.level);G.level+=1+sk;if(sk)setTimeout(()=>popup("GEF "+fxGef()+"  //  LEVEL SKIPPED","#ff4455"),500)}G.el=3;say("LEVEL "+G.level+(G.level===35?"  //  THE WORLD TURNS":""),1.8);tn(660,.15,"square",.04);setTimeout(()=>tn(990,.25,"square",.04),120);startLevel()}
   else if(G.after==="over"){G.state="over";if(!G.test&&G.score>G.best){G.best=G.score;try{localStorage.setItem("hb3_best",G.best)}catch(e){}}showOver()}
   else if(G.after==="serve"&&G.aiWon&&G.aiCopy&&(COPY_MODES.includes(G.mode)||G.ghostMatch)){aiServe()}
   else{resetBall();G.state="serve"}}
@@ -722,7 +722,7 @@ const EV={list:[],t:8};
 const EV_DEFS=[{k:"tear",min:8},{k:"textstorm",min:8},{k:"sigil",min:10},{k:"geometry",min:10},{k:"eye",min:12},{k:"countdown",min:12},{k:"ghosts",min:16},{k:"veil",min:20}];
 function evStart(k){const d=k==="sigil"||k==="poster"?7.5:k==="countdown"?8:k==="tear"?2.2:4+Math.random()*3;EV.list.push({k,t:0,d,seed:Math.random(),data:k==="geometry"?[0,1,2].map(i=>({x:BW*(.2+Math.random()*.6),y:BH*(.2+Math.random()*.6),z:DEPTH*(1+i*.25),sh:i%3,r:Math.random()*6})):k==="textstorm"?Array.from({length:14},()=>({y:Math.random(),sp:20+Math.random()*60,x:Math.random(),l:pick(LINES.concat(OMEN))})):null})}
 function evTick(dt){if(G.mode==="online")return;if(G.state!=="play"&&G.state!=="serve"){return}if(G.zone==="face"||G.zone==="hell"){EV.list=EV.list.filter(e=>e.k==="twist"&&FACE.dead);return}const L=G.level;
-  EV.t-=dt;if(EV.t<=0&&L>=8){EV.t=Math.max(5,18-L*.45)+Math.random()*6;const ok=EV_DEFS.filter(e=>L>=e.min&&!EV.list.some(x=>x.k===e.k));if(ok.length)evStart(pick(ok).k)}
+  EV.t-=dt;if(EV.t<=0&&L>=8){EV.t=(Math.max(5,18-L*.45)+Math.random()*6)/fxDist();const ok=EV_DEFS.filter(e=>L>=e.min&&!EV.list.some(x=>x.k===e.k));if(ok.length)evStart(pick(ok).k)}
   for(const e of EV.list)e.t+=dt;EV.list=EV.list.filter(e=>e.t<e.d)}
 const ev=k=>EV.list.find(e=>e.k===k);
 const evA=e=>Math.min(1,e.t/.8,(e.d-e.t)/.8);
@@ -785,7 +785,7 @@ function drawBlocks(dt,A){if(!BLK.length)blkInit();const sp=DEPTH*.35*(G.state==
   ctx.restore()}
 function drawSpeedLines(W,H,t,A){ctx.save();ctx.strokeStyle="rgba(200,250,255,"+(.35*A)+")";ctx.lineWidth=1.2;for(let i=0;i<40;i++){const a=i*2.399+Math.floor(t*6+i)*.7,r0=((t*1.8+i*.137)%1),r1=r0+.12;
   const R=Math.max(W,H)*.75;ctx.beginPath();ctx.moveTo(W/2+Math.cos(a)*R*r0*r0,H/2+Math.sin(a)*R*r0*r0);ctx.lineTo(W/2+Math.cos(a)*R*r1*r1,H/2+Math.sin(a)*R*r1*r1);ctx.stroke()}ctx.restore()}
-function drawCyber(W,H,t,dt){if(G.zone!=="cyber"&&G.state!=="hyper")return;const A=G.state==="hyper"?Math.min(1,(G.hyT||0)/2.5):1;
+function drawCyber(W,H,t,dt){if(G.zone!=="cyber"&&G.state!=="hyper")return;const A=(G.state==="hyper"?Math.min(1,(G.hyT||0)/2.5):1)*Math.min(1,fxDist());
   if(!G.tube)drawEarthbound(W,H,t,A*(1-(G.tubeK||0)));if(G.tube||G.tubeK)drawVortex(W,H,t,A*(G.tube?.8:G.tubeK*.8),VX_MAG);drawBlocks(dt,A);drawTube(t,A);if(G.state==="hyper")drawSpeedLines(W,H,t,Math.min(1,G.hyT)*(1-Math.max(0,(G.hyT-3)/.6)))}
 
 /* ---- TEST START helpers: ] jump +5 levels, [ back 5, E fire a strange event ---- */
@@ -1282,7 +1282,7 @@ function aiTarget(sk){if(!G.tube)return aiTargetBox(sk);let T=Math.round((sk-1)*
    ===================================================================================================== */
 /* ---------- level 35 roll: render normally, then turn the whole finished picture once ---------- */
 const RTX={c:mkC(2,2)};
-function rollTick(dt){if(G.state!=="menu"&&G.level===35&&G.state!=="hwin"){ROLL.a=(ROLL.a+dt*TAU2/80)%TAU2;if(!ROLL.a)ROLL.a=1e-6}else ROLL.a=0;
+function rollTick(dt){if(G.state!=="menu"&&G.level===35&&G.state!=="hwin"){ROLL.a=(ROLL.a+dt*TAU2/80*fxDist())%TAU2;if(!ROLL.a)ROLL.a=1e-6}else ROLL.a=0;
   const c=Math.abs(Math.cos(ROLL.a)),s=Math.abs(Math.sin(ROLL.a)),w=BW*view.s,h=BH*view.s;ROLL.k=ROLL.a?Math.min(1,(innerWidth-32)/(w*c+h*s),(innerHeight-90)/(w*s+h*c)):1}
 function rollBegin(){}
 function rollEnd(){if(!ROLL.a)return;if(RTX.c.width!==cv.width||RTX.c.height!==cv.height){RTX.c.width=cv.width;RTX.c.height=cv.height}
@@ -1808,11 +1808,94 @@ function drawFX2D(cx,cy,r,c){c=c||ctx;fxStamp();const gl=Math.random()<.06,q=rot
     cell(r*.05,"rgba(255,34,85,.55)");cell(-r*.05,"rgba(34,136,255,.55)");cell(0,"rgba(190,255,205,"+Math.min(1,cs*1.6)+")");c.restore()}
   c.restore();if(gl){c.fillStyle="rgba(255,40,100,.5)";c.fillRect(cx-r,cy+(Math.random()-.5)*r*1.5,r*2,Math.max(1,r*.06))}c.restore()}
 
+/* ---------- v0.50: FATALIX LINK - the daily reading (pushed by hand from Fatalix), side panels, GEF effects, esoteric alerts, HELLWORLD cash ---------- */
+const FXR={d:"",g:5,v:30,s:7.83,p:[],c:[],h:[],sim:true,seed:1},FXS={acc:0};
+const FX_MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"],FX_TOP=["UFO","GREY","MIB","MOTHMAN","DOGMAN","POLTERGST","SHADOW","DJINN","DEMON","MANTIS"],FX_PLN=["SUN","MOON","MERCURY","VENUS","MARS","JUPITER","SATURN","URANUS","NEPTUNE","EARTH"];
+const FX_R="#ff3232",FX_O="#ffaa1e",FX_G="#33ff66",FX_D="#146e2d",FX_C="#28dcff",FX_T="#78c88c";
+function fxApply(fx,h){FXR.d=fx.d;FXR.g=Math.max(1,Math.min(10,fx.g|0));FXR.v=+fx.v||0;FXR.s=+fx.s||7.83;FXR.p=fx.p||[];FXR.c=fx.c||[];FXR.h=Array.isArray(h)?h:[];FXR.sim=false}
+function fxLoad(){try{const c=JSON.parse(localStorage.getItem("hb3_fx")||"null");if(c&&c.fx&&c.fx.d)fxApply(c.fx,c.h)}catch(e){}}
+function fxFetch(){try{fetch(gAPI()+"?fx=1").then(r=>r.json()).then(d=>{if(d&&d.fx&&d.fx.d){fxApply(d.fx,d.h);try{localStorage.setItem("hb3_fx",JSON.stringify({fx:d.fx,h:d.h}))}catch(e){}}}).catch(()=>{})}catch(e){}}
+fxLoad();setTimeout(fxFetch,900);setInterval(fxFetch,6e5);
+function fxAge(){if(!FXR.d)return 99;const a=new Date(FXR.d+"T12:00:00"),n=new Date();return Math.round((new Date(n.getFullYear(),n.getMonth(),n.getDate(),12)-a)/864e5)}
+const fxShort=()=>{const m=/^\d{4}-(\d\d)-(\d\d)$/.exec(FXR.d||"");return m?(+m[2])+" "+FX_MON[+m[1]-1]:""};
+function fxGef(){return!FXR.sim&&fxAge()<=3?FXR.g:5}
+function fxDist(){const g=fxGef();return g<=5?.5+.125*(g-1):1+.03*(g-5)}
+const fxDesc=g=>g>=10?"GEF LEVELS DANGEROUS":g>=9?"DANGEROUS":g>=7?"ELEVATED":g>=4?"ACTIVE":"QUIET";
+const fxDescS=g=>g>=9?"DANGEROUS":fxDesc(g);
+const fxCol=v=>v>=85?FX_R:v>=60?FX_O:FX_G;
+/* what the panels show: the real reading, or a slow simulated drift (marked SIM) when none has ever arrived */
+function fxView(t){if(!FXR.sim)return{g:FXR.g,v:FXR.v,s:FXR.s,p:FXR.p.map(r=>[String(r[0]).slice(0,10),r[1],r[2]]),c:FXR.c,h:FXR.h.map(x=>x.v),sim:false};
+  const sd=new Date().getDate()*7.3,p=FX_TOP.map((n,i)=>[n,Math.round(18+62*(.5+.5*Math.sin(t*.04+i*1.7+sd))),0]),c=FX_PLN.map((n,i)=>[n,(i*3+Math.floor(t/60))%7===0?1:0,i===6||i===7?1:0]),h=[];let q=40;for(let i=0;i<30;i++){q=Math.max(8,Math.min(92,q+Math.sin(i*1.3+sd)*9));h.push(q)}
+  return{g:5,v:Math.round(30+20*Math.sin(t*.02+sd)),s:7.83,p,c,h,sim:true}}
+function fxBox(x,y,w,h,title,col){ctx.fillStyle="rgba(2,12,5,.84)";ctx.fillRect(x,y,w,h);ctx.strokeStyle=FX_D;ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,w-1,h-1);ctx.fillStyle="rgba(8,30,14,.96)";ctx.fillRect(x+1,y+1,w-2,16);ctx.font="bold 10px 'Courier New',monospace";ctx.textAlign="left";ctx.fillStyle=col||FX_G;ctx.fillText(title,x+6,y+12)}
+function fxHBar(x,y,w,label,v,col){ctx.font="10px 'Courier New',monospace";ctx.textAlign="left";ctx.fillStyle=FX_T;ctx.fillText(label,x,y+9);const bx=x+68,bw=w-68-34,n=Math.floor(bw/6);ctx.strokeStyle=FX_D;ctx.strokeRect(bx+.5,y+1.5,bw,9);ctx.fillStyle=col;const k=Math.round(n*Math.max(0,Math.min(100,v))/100);for(let i=0;i<k;i++)ctx.fillRect(bx+2+i*6,y+3,4,6);ctx.textAlign="right";ctx.fillStyle=col;ctx.fillText(Math.round(v)+"%",x+w,y+9)}
+function fxSpark(x,y,w,h,a,col){ctx.strokeStyle=FX_D;ctx.strokeRect(x+.5,y+.5,w,h);if(!a.length)return;ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.beginPath();a.forEach((v,i)=>{const px=x+(a.length>1?i*w/(a.length-1):w/2),py=y+h-Math.max(0,Math.min(100,v))/100*h;i?ctx.lineTo(px,py):ctx.moveTo(px,py)});ctx.stroke();ctx.lineWidth=1;const lv=a[a.length-1];ctx.fillStyle=col;ctx.fillRect(x+w-2,y+h-lv/100*h-2,4,4)}
+function fxGefBox(x,y,w,V){fxBox(x,y,w,64,"GEF // THREAT",FX_R);const n=10,sw=Math.floor((w-16)/n);for(let i=0;i<n;i++){ctx.fillStyle=i<V.g?(i<4?FX_G:i<7?FX_O:FX_R):"rgba(20,45,26,.9)";ctx.fillRect(x+8+i*sw,y+24,sw-3,14)}ctx.font="10px 'Courier New',monospace";ctx.fillStyle=V.g>=7?FX_O:FX_G;ctx.textAlign="left";ctx.fillText("LEVEL "+V.g+" // "+fxDescS(V.g),x+8,y+54)}
+function fxVeilBox(x,y,w,V,tall){fxBox(x,y,w,tall?96:84,"VEIL // COMPOSITE",FX_O);ctx.font="bold 11px 'Courier New',monospace";ctx.textAlign="left";ctx.fillStyle=fxCol(V.v);ctx.fillText("INDEX "+Math.round(V.v)+"  "+(V.v>=60?"ELEVATED":V.v>=35?"ACTIVE":"QUIET"),x+8,y+32);fxSpark(x+8,y+40,w-16,tall?30:22,V.h,FX_O);ctx.font="10px 'Courier New',monospace";ctx.fillStyle=FX_T;ctx.fillText("SCHUMANN "+V.s.toFixed(2)+" HZ",x+8,y+(tall?86:76))}
+function fxPlanets(x,y,r,V,t){ctx.lineWidth=1;ctx.fillStyle=FX_O;ctx.beginPath();ctx.arc(x,y,3,0,6.283);ctx.fill();V.c.slice(0,9).forEach((b,i)=>{const rr=r*(.22+i*.085);ctx.strokeStyle="rgba(20,110,45,.6)";ctx.beginPath();ctx.arc(x,y,rr,0,6.283);ctx.stroke();const a=i*1.3+.5+t*(.05/(1+i*.6));ctx.fillStyle=b[1]>=2?FX_R:b[1]>=1?FX_O:FX_G;ctx.beginPath();ctx.arc(x+Math.cos(a)*rr,y+Math.sin(a)*rr,b[2]?2.2:3,0,6.283);ctx.fill()})}
+function fxLogLines(){const V=fxView(DS.T||0),o=FA.log.slice(),d=fxShort().replace(" ","").toUpperCase()||"SIM",rd=[];
+  if(G.level>=3){rd.push([d,"GEF LEVEL "+V.g+" // "+fxDescS(V.g),V.g>=7?1:0]);V.p.filter(r=>r[2]).forEach(r=>rd.push([d,"PULSE SPIKE // "+r[0],2]));V.p.filter(r=>!r[2]&&r[1]>=60).slice(0,2).forEach(r=>rd.push([d,r[0]+" CHARGE "+r[1]+"%",1]));rd.push([d,"VEIL INDEX "+Math.round(V.v),V.v>=60?1:0]);rd.push([d,"SCHUMANN "+V.s.toFixed(1)+" HZ",0]);V.c.forEach(b=>{if(b[1]>=1)rd.push([d,b[0]+(b[1]>=2?" WARNING":" CAUTION"),b[1]>=2?2:1]);if(b[2]&&b[0]!=="EARTH")rd.push([d,b[0]+" RETROGRADE",0])})}
+  return o.concat(rd).slice(0,16)}
+const FXO=document.createElement("canvas");FXO.style.cssText="position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:6";document.body.appendChild(FXO);const FXOC=FXO.getContext("2d");let FXOon=false;
+function fxoPrep(W,H){const d=Math.min(2,devicePixelRatio||1),w=Math.round(W*d),h=Math.round(H*d);if(FXO.width!==w||FXO.height!==h){FXO.width=w;FXO.height=h}FXOC.setTransform(1,0,0,1,0,0);FXOC.clearRect(0,0,w,h);FXOC.setTransform(d,0,0,d,0,0)}
+function fxoOff(){if(!FXOon)return;FXOon=false;FXOC.setTransform(1,0,0,1,0,0);FXOC.clearRect(0,0,FXO.width,FXO.height)}
+function fxMenuOn(){const m=document.getElementById("menu");return m&&!m.classList.contains("hidden")}
+function drawFx(L,R,T,B,W,H,dt){const t=DS.T||0;if(document.body.classList.contains("touch")){fxoOff();return}
+  if(G.state==="menu"&&fxMenuOn()){const _c=ctx;ctx=FXOC;fxoPrep(W,H);FXOon=true;try{fxMenu(L,R,T,B,W,H,t)}finally{ctx=_c}return}
+  fxoOff();if(G.state==="menu")return;
+  fxGame(L,R,T,B,W,H,t)}
+function fxMenu(L,R,T,B,W,H,t){{const cx=W/2,lw=Math.min(270,cx-300-8);if(lw<150)return;const V=fxView(t);ctx.save();ctx.globalAlpha=.94;
+    const lx=Math.max(8,cx-300-lw),rx=cx+300,y0=Math.max(T+30,70);
+    const hh=24+V.p.slice(0,9).length*20+22;fxBox(lx,y0,lw,hh,"TOPIC PULSE",FX_G);V.p.slice(0,9).forEach((r,i)=>fxHBar(lx+10,y0+26+i*20,lw-20,String(r[0]).slice(0,9),r[1],r[2]?FX_R:fxCol(r[1])));ctx.font="10px 'Courier New',monospace";ctx.textAlign="left";const sp=V.p.filter(r=>r[2]);ctx.fillStyle=sp.length?FX_R:FX_T;ctx.fillText(sp.length?"BREACH: "+sp.map(r=>r[0]).join(" / ").slice(0,28):"NO BREACH",lx+10,y0+hh-8);
+    fxGefBox(lx,y0+hh+10,lw,V);
+    fxVeilBox(rx,y0,lw,V,true);const py=y0+106,ph=Math.min(250,lw+20);fxBox(rx,py,lw,ph,"CELESTIAL OBJECTS",FX_G);fxPlanets(rx+lw/2,py+17+(ph-52)/2,(ph-60)/2,V,t);
+    const w2=V.c.filter(b=>b[1]>=1).slice(0,2);ctx.font="10px 'Courier New',monospace";ctx.textAlign="left";w2.forEach((b,i)=>{ctx.fillStyle=b[1]>=2?FX_R:FX_O;ctx.fillText(b[0]+"  "+(b[1]>=2?"WARNING":"CAUTION"),rx+10,py+ph-22+i*12)});if(!w2.length){ctx.fillStyle=FX_G;ctx.fillText("ALL BODIES NOMINAL",rx+10,py+ph-10)}
+    const lab=V.sim?"OFFLINE  //  SIMULATED":fxAge()<=2?"DAILY READING  "+fxShort():"LAST READING  "+fxShort(),cw=("FATALIX LINK // "+lab).length*6.7+30;ctx.fillStyle="rgba(30,16,0,.9)";ctx.fillRect(cx-cw/2,T+8,cw,22);ctx.strokeStyle=V.sim?FX_D:FX_O;ctx.strokeRect(cx-cw/2+.5,T+8.5,cw,22);ctx.font="bold 11px 'Courier New',monospace";ctx.textAlign="center";ctx.fillStyle=V.sim?FX_T:FX_O;ctx.fillText("FATALIX LINK // "+lab,cx,T+23);ctx.restore()}}
+function fxGame(L,R,T,B,W,H,t){
+  if(G.state==="over")return;const lw=Math.min(250,L-16),rw=Math.min(250,W-R-16);if(lw<130&&rw<130)return;const V=fxView(t);ctx.save();ctx.globalAlpha=.92;
+  if(lw>=130){const x=8,py=T,ph=Math.min(250,(B-T)*.44),n=Math.min(V.p.length,10);fxBox(x,py,lw,ph,"TOPIC PULSE",FX_G);const bw=(lw-16)/Math.max(1,n),bh=ph-52;V.p.slice(0,n).forEach((r,i)=>{const bx=x+8+i*bw+bw*.18,w=bw*.64;ctx.strokeStyle=FX_D;ctx.strokeRect(bx+.5,py+24.5,w,bh);const k=Math.round(bh/5*r[1]/100);for(let j=0;j<k;j++){ctx.fillStyle=j>bh/5*.85?FX_R:j>bh/5*.6?FX_O:FX_G;ctx.fillRect(bx+2,py+24+bh-3-j*5,w-3,3)}ctx.font="8px 'Courier New',monospace";ctx.textAlign="center";ctx.fillStyle=r[2]?FX_R:FX_T;ctx.fillText(String(r[0]).slice(0,bw<30?3:4),bx+w/2,py+ph-8)});
+    fxGefBox(x,py+ph+8,lw,V);fxVeilBox(x,py+ph+80,lw,V,false);ctx.font="9px 'Courier New',monospace";ctx.textAlign="left";ctx.fillStyle=V.sim?FX_T:FX_O;ctx.fillText(V.sim?"SIM  //  NO READING":(fxAge()<=2?"READING ":"LAST READING ")+fxShort(),x+2,py+ph+80+98)}
+  if(rw>=130){const x=R+8,py=T,ph=B-T,lg=fxLogLines(),n=Math.max(0,Math.floor((ph-30)/38));fxBox(x,py,rw,ph,"SIGNAL LOG",FX_C);ctx.textAlign="left";
+    if(G.level<3){ctx.font="10px 'Courier New',monospace";ctx.fillStyle=FX_D;ctx.fillText("STANDBY ...",x+8,py+36)}
+    else lg.slice(0,n).forEach((e,i)=>{const y=py+36+i*38;ctx.font="9px 'Courier New',monospace";ctx.fillStyle=FX_D;ctx.fillText(e[0],x+8,y);ctx.font=(e[2]>=2?"bold ":"")+"10px 'Courier New',monospace";ctx.fillStyle=e[2]>=2?FX_R:e[2]>=1?FX_O:FX_G;const mc=Math.max(10,Math.floor((rw-16)/6)),w=e[1].split(" ");let l1="",l2="";for(const q of w){if(!l2&&(l1+" "+q).trim().length<=mc)l1=(l1+" "+q).trim();else l2=(l2+" "+q).trim()}ctx.fillText(l1,x+8,y+12);if(l2)ctx.fillText(l2.length>mc?l2.slice(0,mc-1)+".":l2,x+8,y+23)})}
+  ctx.restore()}
+/* esoteric alerts: terminal bars that type in and fade out (no flashing). Nothing strange before level 3. */
+const FA={q:[],t:14,log:[]},FA_C=["WEREWOLF","SKINWALKER","MOTHMAN","DOGMAN","SASQUATCH","GREY ENTITY","MEN IN BLACK","BLACK-EYED CHILD","SHADOW PERSON","TALL MAN","WENDIGO","TALKING MONGOOSE","JERSEY DEVIL","DJINN","POLTERGEIST","THUNDERBIRD","FERAL PERSON","REPTILIAN","CHUPACABRA","HELLHOUND","MANTIS BEING","NORDIC CONTACT"],
+FA_V=["DETECTED IN","SIGHTED NEAR","CONTACT CONFIRMED IN","ACTIVITY REPORTED IN","LAST SEEN NEAR","SIGNATURE LOGGED IN","REPORTED NEAR"],
+FA_P=[["THOROLD, ONTARIO, CANADA","THOROLD, ONTARIO"],["ST. CATHARINES, ONTARIO, CANADA","ST. CATHARINES"],["WELLAND, ONTARIO, CANADA","WELLAND"],["NIAGARA FALLS, ONTARIO, CANADA","NIAGARA FALLS"],["FORT ERIE, ONTARIO, CANADA","FORT ERIE"],["SUDBURY, ONTARIO, CANADA","SUDBURY"],["ALGONQUIN PARK, ONTARIO, CANADA","ALGONQUIN PARK"],["POINT PLEASANT, WEST VIRGINIA","POINT PLEASANT"],["FLATWOODS, WEST VIRGINIA","FLATWOODS"],["SKINWALKER RANCH, UTAH","SKINWALKER RANCH"],["ROSWELL, NEW MEXICO","ROSWELL"],["RENDLESHAM FOREST, ENGLAND","RENDLESHAM"],["HESSDALEN, NORWAY","HESSDALEN"],["VARGINHA, BRAZIL","VARGINHA"],["THE PINE BARRENS, NEW JERSEY","PINE BARRENS"],["BRAY ROAD, WISCONSIN","BRAY ROAD"],["KECKSBURG, PENNSYLVANIA","KECKSBURG"],["DALBY, ISLE OF MAN","DALBY"],["LAKE ONTARIO","LAKE ONTARIO"],["LAKE ERIE","LAKE ERIE"],["AREA 51, NEVADA","AREA 51"],["TUNGUSKA, RUSSIA","TUNGUSKA"]],
+FA_T=["AT 6 PM","AT 3:07 AM","AT 11:11 PM","AT MIDNIGHT","AT 4:44 AM","AT DUSK","AT 9 PM","TONIGHT","IN 40 MINUTES","AT 2:22 AM","AT 5:55 PM","AT FIRST LIGHT"],
+FA_A=["MOTHMAN","GREY ALIEN","MEN IN BLACK","SKINWALKER","GEF THE TALKING MONGOOSE","ROSWELL INCIDENT","RENDLESHAM FOREST INCIDENT","DOGMAN","HESSDALEN LIGHTS"],
+FA_R=a=>a[Math.floor(Math.random()*a.length)],FA_N=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function faMake(maxC){const g=fxGef(),V=fxView(DS.T||0),red=Math.min(.4,.04+(G.level-3)*.012+Math.max(0,g-5)*.03),sev=Math.random()<red?2:Math.random()<.45?1:0;let t,conf=0;const place=()=>FA_R(FA_P);
+  const fam=Math.random();
+  if(fam<.5){const pl=place(),c=FA_R(FA_C),v=FA_R(FA_V),tm=FA_R(FA_T);t=c+" "+v+" "+pl[0]+" "+tm;if(t.length>maxC)t=c+" "+v+" "+pl[1]+" "+tm;if(t.length>maxC)t=c+" NEAR "+pl[1];conf=FA_N(41,97)}
+  else{const pl=place()[1],gens=[()=>"SCHUMANN SPIKE "+(8+Math.random()*6).toFixed(1)+" HZ OVER "+pl,()=>"GEF LEVEL "+g+" // "+fxDesc(g),()=>"VEIL INDEX "+Math.round(V.v)+" // "+(V.v>=60?"ELEVATED":"WATCH"),()=>"UAP CLUSTER: "+FA_N(2,9)+" OBJECTS OVER "+pl,()=>"UNEXPLAINED HUM LOGGED // "+pl,()=>"POLTERGEIST CHARGE "+FA_N(40,96)+"% // "+pl,()=>"LEYLINE ACTIVITY M"+(2+Math.random()*2.5).toFixed(1)+" // "+pl,()=>"REDACTED ALERT: '"+FA_R(FA_A)+"' EDITED, 1 LINE REMOVED",()=>"SATURN STATIONS RETROGRADE",()=>"MARS CAUTION // "+FA_R(["NEWS MENTIONS RISING","RED SHIFT IN CHATTER"]),()=>"PROBABILITY OF CONTACT "+FA_N(12,88)+"% // "+pl,()=>"SIGNAL 4471 ACKNOWLEDGED BY UNKNOWN HOST",()=>"ENTITY_03 REQUESTS READ ACCESS",()=>"DO NOT LOOK UP "+FA_R(FA_T),()=>"FERAL PERSON REPORTED // "+pl,()=>"CATTLE REPORT: "+FA_N(2,14)+" HEAD // "+pl,()=>"TREE LINE ANOMALY // "+pl,()=>"RADIO SILENCE "+FA_N(3,40)+" MIN // "+pl,()=>"UNREST INDEX "+FA_N(18,71)+" // NUCLEAR INDEX "+FA_N(2,19),()=>"DOPPLER SHADOW OVER "+pl,()=>"OBSERVER COUNT +"+FA_N(1,4)+" // "+pl];t=FA_R(gens)();if(t.length>maxC)t=t.slice(0,maxC-1)+"."}
+  return{t,sev,conf}}
+function faOK(){return G.level>=3&&G.state!=="menu"&&G.state!=="over"&&G.mode!=="classic"&&G.mode!=="online"&&G.zone!=="face"&&!G.paused}
+function faTick(dt){if(!faOK())return;for(const a of FA.q)a.age+=dt;FA.q=FA.q.filter(a=>a.age<a.life);FA.t-=dt;if(FA.t>0)return;
+  const g=fxGef();FA.t=(38-Math.min(24,(G.level-3)*.9))*(1.25-.05*g)*(.7+Math.random()*.6);if(FA.q.length>=2){FA.t=3;return}
+  const a=faMake(78);const d=new Date(),hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");FA.q.push({t:a.t,sev:a.sev,conf:a.conf,age:0,life:8.5});FA.log.unshift([hm,a.t,a.sev]);if(FA.log.length>12)FA.log.length=12}
+function drawFxAlerts(L,R,T,B,dt){if(!FA.q.length||G.state==="menu"||G.state==="over")return;const tags=["NOTICE","ALERT","BREACH"],cols=[FX_C,FX_O,FX_R],W=Math.min(560,(R-L)*.88);let y=T+(G.msgT>0?96:12);ctx.save();ctx.textAlign="left";
+  for(const a of FA.q){const fi=Math.min(1,a.age/.35),fo=Math.min(1,(a.life-a.age)/.8),al=Math.max(0,Math.min(fi,fo)),x=(L+R)/2-W/2,col=cols[a.sev],tw=tags[a.sev].length*6.6+14;ctx.globalAlpha=al*.95;ctx.fillStyle="rgba(2,10,4,.9)";ctx.fillRect(x,y,W,22);ctx.strokeStyle=col;ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,W-1,21);ctx.fillStyle=col;ctx.fillRect(x+1,y+1,tw,20);ctx.font="bold 10px 'Courier New',monospace";ctx.fillStyle="#000";ctx.fillText(tags[a.sev],x+8,y+15);
+    const n=Math.min(a.t.length,Math.floor(a.age*42));ctx.font="10px 'Courier New',monospace";ctx.fillStyle=a.sev>=2?"#ff8080":a.sev>=1?"#ffd080":"#a0f0ff";ctx.fillText(a.t.slice(0,n),x+tw+10,y+15);
+    if(a.conf){const k=Math.round(8*a.conf/100),bx=x+W-62;ctx.strokeStyle=FX_D;ctx.strokeRect(bx+.5,y+6.5,50,9);ctx.fillStyle=col;for(let i=0;i<k;i++)ctx.fillRect(bx+2+i*6,y+8,4,6)}
+    y+=28}ctx.restore()}
+/* HELLWORLD cash: $5 into your hellbud's save for every level won */
+function hwBank(a){let loc=false;for(const k of["hellworld_v1","hb3_hwcache"]){try{const s=JSON.parse(localStorage.getItem(k)||"null");if(s&&s.seed){s.cash=(Number(s.cash)||0)+a;s._ts=Date.now();localStorage.setItem(k,JSON.stringify(s));loc=true}}catch(e){}}
+  gPost({op:"hwcash",amt:a}).then(r=>{if(!(r&&r.ok)&&!loc){ST.hwPend=(ST.hwPend||0)+a;stSave()}}).catch(()=>{if(!loc){ST.hwPend=(ST.hwPend||0)+a;stSave()}})}
+function hwPay(){if(G.test||G.mode==="online")return;ST.hwEarn=(ST.hwEarn||0)+5;hwBank(5);popup("+$5  HELLWORLD CASH","#ffb000");stSave()}
+function hwFlush(){const p=ST.hwPend|0;if(p<=0||!BUD.g)return;ST.hwPend=0;stSave();for(let r=p;r>0;r-=50)hwBank(Math.min(50,r))}
+setTimeout(hwFlush,3500);
+{const _lb=levelBeaten;levelBeaten=function(){_lb();hwPay()}}
+{const _ng=newGame;newGame=function(){FXS.acc=0;FA.q=[];FA.t=14;return _ng.apply(this,arguments)}}
+const FX_PROT=[5,14,15,24,25,29,30,35,39,40];
+function fxSkip(L){if(G.mode!=="normal"&&G.mode!=="daily")return 0;const g=fxGef();if(g<7||L<6)return 0;FXS.acc+=(g-6)/4;if(FXS.acc<1)return 0;FXS.acc-=1;const p=FX_PROT.find(q=>q>=L+1);return p!==undefined&&p>L+1?1:0}
+
 /* ---------- v0.22 HELLWORLD link: one account for both games, the bud's save on the server, the bud idling in a corner panel ---------- */
 function budLoad(){BUD.g=null;BUD.s=null;const tryKey=(k,src)=>{if(BUD.g)return;try{const s=JSON.parse(localStorage.getItem(k)||"null");if(s&&s.seed){BUD.seed=hclean(s.seed);BUD.name=String(s.name||"HELLBUD").toUpperCase().slice(0,20);BUD.src=src;BUD.g=budGenome(BUD.seed);BUD.s=s.level!==undefined?s:null}}catch(e){}};
   let a=null,b=null;try{a=JSON.parse(localStorage.getItem("hellworld_v1")||"null");b=JSON.parse(localStorage.getItem("hb3_hwcache")||"null")}catch(e){}
   if(a&&b&&(b._ts||0)>(a._ts||0)){tryKey("hb3_hwcache","HELLWORLD SAVE")}tryKey("hellworld_v1","HELLWORLD SAVE");tryKey("hb3_hwcache","HELLWORLD SAVE");tryKey("hellpet_v1","HELLWORLD SAVE");tryKey("hb3_bud","SEED")}
-function budPull(){gPost({op:"hwload"}).then(d=>{if(d&&d.save&&d.save.seed){try{localStorage.setItem("hb3_hwcache",JSON.stringify(d.save))}catch(e){}budLoad()}}).catch(()=>{})}
+function budPull(){gPost({op:"hwload"}).then(d=>{if(d&&d.save&&d.save.seed){try{localStorage.setItem("hb3_hwcache",JSON.stringify(d.save))}catch(e){}budLoad();hwFlush()}}).catch(()=>{})}
 setTimeout(budPull,1500);
 function drawBudPanel(R,B){if(!BUD.g||G.state==="menu"||G.state==="over"||G.zone==="face"||G.zone==="hell")return;const w=150,h=92,x=R-w-10,y=B-h-10,t=DS.T,s=BUD.s,g=BUD.g,col=a=>budCol(g,a);
   ctx.save();ctx.globalAlpha=.8;ctx.fillStyle="rgba(0,6,3,.72)";ctx.fillRect(x,y,w,h);ctx.strokeStyle=col(.7);ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,w,h);
@@ -2427,7 +2510,7 @@ const GCM={};let GCHn=0;
 function gchGet(ch,fs,rgb){let m=GCM[rgb];if(!m)m=GCM[rgb]={};let g=m[fs];
   if(!g){if(GCHn>150){for(const k in GCM)delete GCM[k];GCHn=0;m=GCM[rgb]={}}const cell=Math.ceil(fs*1.3),c=document.createElement("canvas");c.width=cell*128;c.height=cell;const x=c.getContext("2d");x.font="bold "+fs+"px monospace";x.textAlign="center";x.textBaseline="middle";x.fillStyle="rgb("+rgb+")";g=m[fs]={c,x,cell,map:{},n:0};GCHn++}
   let i=g.map[ch];if(i===undefined){if(g.n>=128)return null;i=g.map[ch]=g.n++;g.x.fillText(ch,i*g.cell+g.cell/2,g.cell/2)}return[g,i]}
-function drawMatrix(dt){const A=G.matrixA;if(A<=0)return;ctx.save();
+function drawMatrix(dt){const A=G.matrixA*Math.min(1,fxDist());if(A<=0)return;ctx.save();
   const vs=view.s,vx=view.ox,vy=view.oy;let la=-1;
   const fsOf=k=>Math.max(7,Math.round(17*k*vs/3.2)),put=(ch,fs,rgb,a,x,y)=>{if(a<.05)return;const r=gchGet(ch,fs,rgb);if(!r)return;const g=r[0];if(a!==la){ctx.globalAlpha=a;la=a}ctx.drawImage(g.c,r[1]*g.cell,0,g.cell,g.cell,Math.round(x-g.cell/2),Math.round(y-g.cell/2),g.cell,g.cell)};
   for(const L of MX){const lx=L.x,ly=L.y;for(const d of L.drops){d.z-=d.sp*dt;if(d.z<-d.n*3){d.z=DEPTH+Math.random()*30;d.sp=8+Math.random()*14}
@@ -2461,7 +2544,7 @@ LINES.push(...["...LEAVE IT AT THE DOOR", "...REPORT... TO...", "A FRIENDLY TAP"
 const DS={T:0,wob:0,twist:0,chroma:0,vign:0,breathe:0,red:0,rgb:"51,255,119",rgbR:"51,255,119",mx:"51,255,119",mxH:"210,255,225"};
 function distTick(dt){const L=G.state==="menu"?0:(G.zone==="face"||G.zone==="hell")?1:G.level+(MOD().dist||0);DS.T+=dt;
   DS.wob=L>=7?Math.min(.05,.006*(L-6)):0;DS.twist=L>=10?Math.min(1.1,.07*(L-9)):0;DS.breathe=L>=10?Math.min(3,.3*(L-9))*G.sc:0;
-  DS.chroma=L>=12?Math.min(3.5,.45*(L-11)):0;DS.vign=L>=7?Math.min(.6,.05*(L-6)):.08;DS.red=L>=20?Math.min(.7,.05*(L-19)):0;if(G.state!=="menu"&&G.state!=="form"&&G.state!=="hyper"&&G.state!=="faceintro"&&G.state!=="hwin")G.zone=G.level>=41?"hell":G.level===40?"face":G.level>=25?"cyber":G.level>=15?"ocean":null;
+  DS.chroma=L>=12?Math.min(3.5,.45*(L-11))*fxDist():0;DS.vign=L>=7?Math.min(.6,.05*(L-6)):.08;DS.red=L>=20?Math.min(.7,.05*(L-19)):0;if(G.state!=="menu"&&G.state!=="form"&&G.state!=="hyper"&&G.state!=="faceintro"&&G.state!=="hwin")G.zone=G.level>=41?"hell":G.level===40?"face":G.level>=25?"cyber":G.level>=15?"ocean":null;
   const mix=(a,b,k)=>a.map((v,i)=>Math.round(v+(b[i]-v)*k)).join(",");const oc=G.zone==="ocean"?(G.oceanA===undefined?1:G.oceanA):0,base=[51,255,119].map((v,i)=>Math.round(v+([50,160,255][i]-v)*oc));DS.rgb=mix(base,[150,190,110],Math.min(.4,DS.red*.5));DS.rgbR=mix(base,[220,30,50],DS.red);DS.mx=mix([51,255,119],[60,150,255],oc);DS.mxH=mix([210,255,225],[205,230,255],oc);if(G.zone==="cyber"){DS.rgb="80,240,255";DS.rgbR="255,90,220";DS.mx="255,90,220";DS.mxH="255,210,250";DS.red=0}if(G.zone==="face"){DS.rgb="170,20,34";DS.rgbR="255,40,60";DS.mx="120,0,24";DS.mxH="255,70,90";DS.red=0}if(G.zone==="hell"){DS.rgb="51,255,119";DS.rgbR="255,51,85";DS.mx="51,255,119";DS.mxH="210,255,225";DS.red=0}
   if(L>=7&&(G.state==="play"||G.state==="serve")){
     if(!G.hg){G.hgT=(G.hgT||6)-dt;if(G.hgT<=0){G.hg={line:pick(LINES),t:0,d:2.2+Math.random()};G.hgT=Math.max(2.5,9-(L-7)*.35)+Math.random()*4}}
@@ -2587,15 +2670,16 @@ function draw(t,dt){
   text("BEST: "+G.best+(G.streak>1?"   STREAK x"+G.streak:""),L,B+26,13,"#119944");
   {const pp=P(pad.x,pad.y-PH/2,0),px=Math.max(L+120,Math.min(R-120,pp[0])),py=Math.max(T+80,pp[1]-18);                 // points pop up right above your paddle
    G.pops.forEach((p,i)=>{p.a-=dt;ctx.globalAlpha=Math.max(0,Math.min(1,p.a*2));text(p.t,px,py-(G.pops.length-1-i)*16-(1.4-p.a)*14,12,p.col,"center")});ctx.globalAlpha=1;G.pops=G.pops.filter(p=>p.a>0)}
-  drawTelemetry(L,B,dt);drawBudPanel(R,B);if(G.zone!=="face")drawEdge(W,H,T);drawEventsFront(W,H,DS.T,dt);
+  drawTelemetry(L,B,dt);drawBudPanel(R,B);drawFx(L,R,T,B,W,H,dt);if(G.zone!=="face")drawEdge(W,H,T);drawEventsFront(W,H,DS.T,dt);
   const mid=(T+B)/2;
   if(G.state==="serve"&&G.msgT<=0)text(document.body.classList.contains("touch")?"DRAG THE PADDLE ONTO THE BALL, THEN TAP SPIN TO SERVE":"PUT YOUR PADDLE ON THE BALL AND CLICK TO SERVE",(L+R)/2,B-12,12,"#119944","center");
+  drawFxAlerts(L,R,T,B,dt);
   if(G.msgT>0){G.msgT-=dt;ctx.globalAlpha=Math.min(1,G.msgT*2);drawTermMsg(G.msg,(L+R)/2,T+60,(R-L)*.92);ctx.globalAlpha=1}}
 let acc=0,last=performance.now();
 function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;if(G.paused){draw(0,0);requestAnimationFrame(loop);return}acc+=dt;
   while(acc>=STEP){step();acc-=STEP;if(G.state==="wait"){G.waitT-=STEP;if(G.waitT<=0)afterWait()}}
   if(G.ripple){G.ripple.t+=dt;if(G.ripple.t>RT)G.ripple=null}
-  trickTick(dt);evTick(dt);qTick(dt);zTick(dt);nTick();rTick();coTick();grudgeTick(dt);rollTick(dt);cylTick(dt);
+  trickTick(dt);evTick(dt);qTick(dt);zTick(dt);nTick();rTick();coTick();grudgeTick(dt);rollTick(dt);cylTick(dt);faTick(dt);
   if(G.zone==="cyber"&&G.state!=="hyper")G.hyCam=(G.hyCam||0)+DEPTH*.5*dt;
   if(G.state==="hyper"){G.hyT+=dt;const ht=G.hyT;G.hyCam=(G.hyCam||0)+DEPTH*(ht<3?2.5:1)*dt;if(ht<2.8)G.cam+=Math.min(1,ht/.8)*90*dt;else{if(G.camT===undefined)G.camT=Math.ceil(G.cam/(DEPTH/10))*(DEPTH/10)+DEPTH/5;G.cam+=(G.camT-G.cam)*Math.min(1,dt*3.5)}
     if(ht>=3.7){G.cam=0;G.camT=undefined;healPaddle();G.level++;G.el=3;G.zone="cyber";say("LEVEL "+G.level+"  //  HYPER LANE  //  CYBER NET",3);startLevel()}}
