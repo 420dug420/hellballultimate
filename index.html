@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.65 // BUILD 20261116.2700 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.66 // BUILD 20261116.2800 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -1095,9 +1095,9 @@ function drawCRT(W,H){const e=ovEl("crt","mix-blend-mode:multiply;image-renderin
     for(let i=0;i<3;i++){x.fillStyle=cols[i];x.fillRect(i,0,1,2)}x.fillStyle="rgb(70,70,70)";x.fillRect(0,2,3,1);ART.crt=p;e.style.backgroundImage="url("+p.toDataURL()+")"}
   const k=Math.min(.42,.15+.014*Math.max(0,G.level-29)).toFixed(2),sz=(3*innerWidth/Math.max(1,cv.width)).toFixed(2),key=k+"|"+sz;if(e.dataset.k!==key){e.dataset.k=key;e.style.opacity=k;e.style.backgroundSize=sz+"px "+sz+"px"}ovShow(e,true)}
 /* background art: blue drip curtains with RGB stripe texture from level 7, and huge drippy words (POSTER event) */
-function dripCurtain(W,H){const key=W+"x"+H;if(ART.dripKey===key)return ART.drip;const C=mkC(W*.5,H*.275),c=C.getContext("2d"),r=mulberry(666);c.scale(.5,.5);c.fillStyle="#0000ff";
+function dripCurtain(W,H){const key=W+"x"+H;if(ART.dripKey===key)return ART.drip;const C=mkC(W*.5,H*.275),c=C.getContext("2d"),r=mulberry(666);c.scale(.5,.5);c.fillStyle="#22cc66";
   let x=0;while(x<W){const w=W*(.01+r()*.05),gap=r()<.35?W*(.01+r()*.06):0;if(!gap){const len=H*(.04+r()*r()*.5);c.fillRect(x,0,w,len);c.beginPath();c.ellipse(x+w/2,len,w/2,w*.7,0,0,TAU2);c.fill()}x+=w+gap}
-  c.globalCompositeOperation="source-atop";for(let i=0;i<W;i+=6){c.fillStyle="rgba(255,0,40,.55)";c.fillRect(i,0,2,H);c.fillStyle="rgba(0,255,80,.4)";c.fillRect(i+2,0,1,H)}
+  c.globalCompositeOperation="source-atop";for(let i=0;i<W;i+=6){c.fillStyle="rgba(255,176,0,.22)";c.fillRect(i,0,2,H);c.fillStyle="rgba(51,255,119,.45)";c.fillRect(i+2,0,1,H)}
   c.fillStyle="rgba(0,0,0,.55)";for(let j=0;j<H*.55;j+=7)c.fillRect(0,j+4,W,2);ART.drip=C;ART.dripKey=key;return C}
 const POSTER_W=["FREAK","FREAKS","GHOUL","REBOOT","HOLLOW EARTH","ANIMUS","ANIMA","NIGHT SCREAMS","NIGHT FREAK","ESOTERICA","HELLBALL","地獄","鬼","呪い"];
 const POSTER_G=[["#ff2bd6","#ff1648","#d8ff3a"],["#00e5ff","#ff2bd6","#0000ff"],["#ffe600","#ff3c00","#ff0030"],["#00ffd0","#00a0ff","#ffffff"]];
@@ -1113,11 +1113,15 @@ const BGX={w:160,h:90,c:mkC(160,90),id:null,d:null,u:null,mode:null,last:null,mt
 function bgxInit(){const w=BGX.w,h=BGX.h;BGX.x=BGX.c.getContext("2d");BGX.id=BGX.x.createImageData(w,h);BGX.d=BGX.id.data;BGX.u=new Uint32Array(BGX.d.buffer);
   BGX.rw=new Float32Array(w*h);for(let y=0;y<h;y++)for(let x=0;x<w;x++){const r=Math.hypot((x-w/2)/h*2,(y-h/2)/h*2),s=Math.min(1,Math.max(0,(r-.2)/.7));BGX.rw[y*w+x]=.3+.7*s*s*(3-2*s)}
   BGX.hr=new Uint8Array(256);BGX.hg=new Uint8Array(256);BGX.hb=new Uint8Array(256);
-  for(let i=0;i<256;i++){const H=i/256*6,f=H-Math.floor(H),q=Math.floor(H)%6,v=255,p=0,qq=255*(1-f),tt=255*f,c=[[v,tt,p],[qq,v,p],[p,v,tt],[p,qq,v],[tt,p,v],[v,p,qq]][q];BGX.hr[i]=c[0];BGX.hg[i]=c[1];BGX.hb[i]=c[2]}
+  bgxScheme();
   const r=mulberry(5150);BGX.rain=[];for(let i=0;i<64;i++)BGX.rain.push({x:r()*w,sp:14+r()*46,off:r()*400,len:10+r()*46,hu:r(),ph:r()*6.3})}
+/* v0.66: every BGX mode is a single phosphor tint (green mostly, amber / cyan / red now and then) - no rainbow */
+const BGX_SCH=[[.62,[51,255,119],[200,255,215]],[.14,[255,176,0],[255,235,170]],[.14,[51,214,255],[200,240,255]],[.10,[255,68,85],[255,200,200]]];
+function bgxScheme(){let r=Math.random(),k=0;for(;k<BGX_SCH.length-1;k++){r-=BGX_SCH[k][0];if(r<0)break}const S=BGX_SCH[k];BGX.sc=S;
+  for(let i=0;i<256;i++){const v=.28+.72*(.5+.5*Math.sin(i/256*6.2832)),b=Math.max(0,(v-.8)/.2)*.5;BGX.hr[i]=Math.min(255,S[1][0]*v+(S[2][0]-S[1][0])*b);BGX.hg[i]=Math.min(255,S[1][1]*v+(S[2][1]-S[1][1])*b);BGX.hb[i]=Math.min(255,S[1][2]*v+(S[2][2]-S[1][2])*b)}}
 const BGX_MODES={
-  rgbcol(d,w,h,t,L){let i=0;for(let y=0;y<h;y++){const uy=(y-h/2)/h*2,ev=!(y&1);for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2,dd=Math.abs(ux)+Math.abs(uy),s=Math.sin(dd*8.5-t*1.5+Math.sin(uy*3+t*.4)*.7),c=x%3;let r=5,g=0,b=26;
-      if(s>.05&&ev){const k=(.35+.65*s)*255;if(c===0)r=k;else if(c===1)g=k*.28;else b=k;r=Math.max(r,k*.1)}d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}},
+  rgbcol(d,w,h,t,L){const S=BGX.sc[1];let i=0;for(let y=0;y<h;y++){const uy=(y-h/2)/h*2,ev=!(y&1);for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2,dd=Math.abs(ux)+Math.abs(uy),s=Math.sin(dd*8.5-t*1.5+Math.sin(uy*3+t*.4)*.7);let k=.04;
+      if(s>.05&&ev)k+=(.35+.65*s)*(x%3===1?1:.55);d[i]=S[0]*k;d[i+1]=S[1]*k;d[i+2]=S[2]*k;d[i+3]=255}}},
   rain(d,w,h,t){d.fill(0);for(let k=0;k<h*w*4;k+=4)d[k+3]=255;for(const s of BGX.rain){const y0=((t*s.sp+s.off)%(h+s.len))-s.len,hu=s.hu<.6?.5+s.hu*.1:.62+s.hu*.1;
       for(let j=0;j<s.len;j++){const y=Math.floor(y0+j);if(y<0||y>=h)continue;const f=Math.pow(j/s.len,1.6),xx=Math.floor(s.x+Math.sin(y*.17+t*.8+s.ph)*1.6),hh=Math.floor(hu*256)&255;
         for(let q=-1;q<=1;q++){const x=xx+q;if(x<0||x>=w)continue;const a=(q?.28:1)*f,p=(y*w+x)*4;d[p]=Math.min(255,d[p]+BGX.hr[hh]*a*.55);d[p+1]=Math.min(255,d[p+1]+BGX.hg[hh]*a);d[p+2]=Math.min(255,d[p+2]+BGX.hb[hh]*a)}}}},
@@ -1125,26 +1129,26 @@ const BGX_MODES={
       s=(1.1+(1-Math.min(1,rr/.9))*2.4)*(.72+.28*Math.sin(t*2.2+cx*.7+cy*.5)),yy=ly+s*.2;let on=0;
       if(lx*lx+yy*yy<s*s)on=1;else if(yy<0&&yy>-s*3.2&&Math.abs(lx)<s*.95*(1+yy/(s*3.2)))on=1;
       if(on){const hh=((cx*11+cy*5)*5+t*36-yy*9)&255;d[i]=BGX.hr[hh];d[i+1]=BGX.hg[hh];d[i+2]=BGX.hb[hh]}else{d[i]=d[i+1]=d[i+2]=0}d[i+3]=255}}},
-  squares(d,w,h,t){const ox=Math.sin(t*.27)*.45,oy=Math.cos(t*.21)*.3;let i=0;for(let y=0;y<h;y++){const uy=(y-h/2)/h*2-oy;for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2-ox,m=Math.max(Math.abs(ux),Math.abs(uy)),z=1/(m+.05)*1.5+t*1.3;
-      const f=z-Math.floor(z),f2=(z+.05)-Math.floor(z+.05),f3=(z-.05)-Math.floor(z-.05);d[i]=f2<.3?235:0;d[i+1]=f<.3?235:0;d[i+2]=f3<.3?255:0;d[i+3]=255}}},
-  spiral(d,w,h,t){const PAL=[[255,50,170],[255,255,255],[0,225,255],[255,200,0]];let i=0;for(let y=0;y<h;y++){const uy=(y-h/2)/h*2;for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2,a=Math.atan2(uy,ux)/6.2832,r=Math.hypot(ux,uy),ph=a*7+Math.log(r+.04)*1.5-t*.45,f=ph-Math.floor(ph),k=Math.floor(f*4),g=f*4-k;
+  squares(d,w,h,t){const S=BGX.sc[1],ox=Math.sin(t*.27)*.45,oy=Math.cos(t*.21)*.3;let i=0;for(let y=0;y<h;y++){const uy=(y-h/2)/h*2-oy;for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2-ox,m=Math.max(Math.abs(ux),Math.abs(uy)),z=1/(m+.05)*1.5+t*1.3;
+      const f=z-Math.floor(z),f2=(z+.05)-Math.floor(z+.05),f3=(z-.05)-Math.floor(z-.05),k=(f<.3?.95:0)+(f2<.3?.28:0)+(f3<.3?.28:0);d[i]=S[0]*k;d[i+1]=S[1]*k;d[i+2]=S[2]*k;d[i+3]=255}}},
+  spiral(d,w,h,t){const S=BGX.sc[1],B=BGX.sc[2],PAL=[[S[0]*.25,S[1]*.25,S[2]*.25],[S[0]*.6,S[1]*.6,S[2]*.6],S,[B[0]*.8,B[1]*.8,B[2]*.8]];let i=0;for(let y=0;y<h;y++){const uy=(y-h/2)/h*2;for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2,a=Math.atan2(uy,ux)/6.2832,r=Math.hypot(ux,uy),ph=a*7+Math.log(r+.04)*1.5-t*.45,f=ph-Math.floor(ph),k=Math.floor(f*4),g=f*4-k;
       if(g<.18||r<.04){d[i]=d[i+1]=d[i+2]=0}else{const c=PAL[k];d[i]=c[0];d[i+1]=c[1];d[i+2]=c[2]}d[i+3]=255}}},
   hexdots(d,w,h,t){const sx=8.5,sy=7.4;let i=0;for(let y=0;y<h;y++){const j=Math.floor(y/sy),off=(j&1)*sx/2,cy=(j+.5)*sy,ly=y-cy;for(let x=0;x<w;x++,i+=4){const q=Math.floor((x-off)/sx),cx=(q+.5)*sx+off,lx=x-cx,pr=Math.hypot(cx-w/2,cy-h/2),
       rad=(.35+.65*(.5+.5*Math.sin(pr*.2-t*2.3)))*3.8;if(lx*lx+ly*ly<rad*rad){const hh=(Math.atan2(cy-h/2,cx-w/2)*40.7+t*34+pr*1.6)&255;d[i]=BGX.hr[hh];d[i+1]=BGX.hg[hh];d[i+2]=BGX.hb[hh]}else{d[i]=d[i+1]=d[i+2]=0}d[i+3]=255}}},
-  checker(d,w,h,t){let i=0;for(let y=0;y<h;y++){const uy=(y-h/2)/h*2;for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2,m=Math.max(Math.abs(ux),Math.abs(uy)),p=1/(m+.22),xs=ux*p,ys=uy*p,c=(Math.floor(xs*2.1+t*.4)+Math.floor(ys*2.1-t*.25))&1,k=.35+Math.min(1,p*.28);
-      d[i]=(c?18:5)*k*1.3;d[i+1]=(c?170:34)*k;d[i+2]=(c?150:78)*k;d[i+3]=255}}},
-  blobs(d,w,h,t){const B=[];for(let k=0;k<5;k++)B.push([Math.sin(t*.23+k*1.9)*1.1,Math.cos(t*.19+k*2.7)*.62,.2+.08*((k*37)%5)]);let i=0;
+  checker(d,w,h,t){const S=BGX.sc[1];let i=0;for(let y=0;y<h;y++){const uy=(y-h/2)/h*2;for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2,m=Math.max(Math.abs(ux),Math.abs(uy)),p=1/(m+.22),xs=ux*p,ys=uy*p,c=(Math.floor(xs*2.1+t*.4)+Math.floor(ys*2.1-t*.25))&1,k=(.35+Math.min(1,p*.28))*(c?.62:.07);
+      d[i]=S[0]*k;d[i+1]=S[1]*k;d[i+2]=S[2]*k;d[i+3]=255}}},
+  blobs(d,w,h,t){const S=BGX.sc[1],B=[];for(let k=0;k<5;k++)B.push([Math.sin(t*.23+k*1.9)*1.1,Math.cos(t*.19+k*2.7)*.62,.2+.08*((k*37)%5)]);let i=0;
     for(let y=0;y<h;y++){const uy=(y-h/2)/h*2,sc=(y&1)?1:.45;for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2+Math.sin(uy*4+t*.7)*.14;let f=0;for(const b of B){const dx=ux-b[0],dy=uy-b[1];f+=b[2]*b[2]/(dx*dx+dy*dy+.002)}
-      let r=2,g=2,bl=34;if(f>1){const k=(f>2.4?.5:1)*sc;r=150*k;g=150*k;bl=235*k}d[i]=r;d[i+1]=g;d[i+2]=bl;d[i+3]=255}}},
-  veins(d,w,h,t){let i=0;for(let y=0;y<h;y++){const uy=(y-h/2)/h*2;for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2,v=Math.sin(ux*6+Math.sin(uy*5+t*.5)*2.2+t*.3)+Math.sin(uy*7+Math.sin(ux*4-t*.4)*2),rg=Math.pow(Math.max(0,1-Math.abs(v)*.55),5),c=v*.12+t*.04+ux*.1;
-      d[i]=(.5+.5*Math.cos(6.283*c))*255*rg;d[i+1]=(.5+.5*Math.cos(6.283*(c+.33)))*255*rg;d[i+2]=(.5+.5*Math.cos(6.283*(c+.67)))*255*rg;d[i+3]=255}}}};
+      let k=.04;if(f>1)k=(f>2.4?.4:.85)*sc;d[i]=S[0]*k;d[i+1]=S[1]*k;d[i+2]=S[2]*k;d[i+3]=255}}},
+  veins(d,w,h,t){let i=0;for(let y=0;y<h;y++){const uy=(y-h/2)/h*2;for(let x=0;x<w;x++,i+=4){const ux=(x-w/2)/h*2,v=Math.sin(ux*6+Math.sin(uy*5+t*.5)*2.2+t*.3)+Math.sin(uy*7+Math.sin(ux*4-t*.4)*2),rg=Math.pow(Math.max(0,1-Math.abs(v)*.55),5),c=v*.12+t*.04+ux*.1,hh=Math.floor((c-Math.floor(c))*256)&255;
+      d[i]=BGX.hr[hh]*rg;d[i+1]=BGX.hg[hh]*rg;d[i+2]=BGX.hb[hh]*rg;d[i+3]=255}}}};
 const BGX_POOL=[[7,"rgbcol",0,1.9],[7,"rain",1,1.7],[9,"drops",1,1.1],[10,"squares",0,1],[11,"spiral",1,1],[12,"hexdots",1,1.25],[13,"checker",0,2],[15,"blobs",1,1.6],[16,"veins",1,1.2]];   // [min level, mode, smooth upscale]
 function bgxSmear(L){const w=BGX.w,h=BGX.h,u=BGX.u,p=Math.min(.5,.05*(L-11));if(Math.random()>p*1.4)return;const tmp=new Uint32Array(w);let y=0;
   while(y<h){const bh=3+Math.floor(Math.random()*9);if(Math.random()<p){const dx=Math.floor((Math.random()-.5)*w*.5);for(let r=y;r<Math.min(h,y+bh);r++){const o=r*w;for(let x=0;x<w;x++)tmp[x]=u[o+x];for(let x=0;x<w;x++)u[o+((x+dx)%w+w)%w]=tmp[x]}}y+=bh}}
 function bgxOn(){return DQ>=2&&!TN.bgx&&G.state!=="menu"&&G.zone!=="face"&&G.zone!=="hell"&&QL>=1&&G.level>=7&&G.state!=="form"&&G.state!=="hyper"&&!G.test}
 function bgxStep(dt){const L=G.level;if(!BGX.id)bgxInit();BGX.mt+=dt;
   const av=BGX_POOL.filter(m=>m[0]<=L);if(!BGX.mode||BGX.mt>BGX.md){if(!BGX.mode||BGX.mt>BGX.md+1.6){let m;for(let k=0;k<6;k++){m=av[Math.floor(Math.random()*av.length)];if(m[1]!==BGX.last||av.length<2)break}
-      BGX.mode=m;BGX.last=m[1];BGX.mt=0;BGX.md=40+Math.random()*30}}
+      BGX.mode=m;BGX.last=m[1];BGX.mt=0;bgxScheme();BGX.md=40+Math.random()*30}}
   BGX.acc+=dt;const per=QL>=2?1/20:1/12;if(BGX.acc<per)return;BGX.acc%=per;
   const m=BGX.mode,w=BGX.w,h=BGX.h,t=DS.T;BGX_MODES[m[1]](BGX.d,w,h,t,L);
   const d=BGX.d,rw=BGX.rw;for(let i=0,k=0;k<w*h;k++,i+=4){const f=rw[k];d[i]*=f;d[i+1]*=f;d[i+2]*=f}   // dim the middle of the picture
