@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.66 // BUILD 20261116.2800 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.67 // BUILD 20261117.0300 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -81,9 +81,12 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="mEndless">ENDLESS</button><div class="dim">THE AI NEVER RUNS OUT. 3 LIVES. HOW DEEP CAN YOU GO?</div>
   <button class="mb" id="mCoop" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">CO-OP CAMPAIGN</button><div class="dim">2 PLAYERS, 2 BALLS VS THE MACHINE. SHARED LIVES.</div>
  <div class="row"><button class="mb" id="mRaid15" style="width:230px;font-size:14px;letter-spacing:3px;border-color:#33d6ff;color:#33d6ff">RAID: THE CYLINDER</button><button class="mb" id="mRaid40" style="width:230px;font-size:14px;letter-spacing:3px;border-color:#33d6ff;color:#33d6ff">RAID: THE FACE</button></div><div class="dim">2 PLAYERS VS A BOSS WITH DOUBLE HEALTH.</div>
+ <button class="mb" id="mTest" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">TEST</button><div class="dim">CLASSIC WITH EXPERIMENTS: LONGER TUNNEL, ROUND TUBE WALLS. NOTHING IS SAVED.</div>
  <button class="mb" id="mKoth" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">KING OF THE HILL</button><div class="dim">UP TO 4. WINNER STAYS ON. 5 IN A ROW WINS.</div>
  <button class="mb hidden" id="mGrudge" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">GRUDGE MATCH</button><div class="dim hidden" id="mGrudgeT" style="max-width:90vw;text-align:center"></div>
  <button class="mb" id="mBack">BACK</button></div>
+<div id="tmenu" class="ov hidden" style="gap:8px"><div class="ttl">TEST</div><div class="dim" style="text-align:center;max-width:90vw">CLASSIC MODE WITH EXPERIMENTS. NO SCORES, MEDALS OR STATS ARE SAVED. L SKIPS A LEVEL.</div>
+ <button class="mb" id="tLong"></button><button class="mb" id="tTube"></button><button class="mb" id="tGo" style="border-color:#ffb000;color:#ffb000;text-shadow:0 0 8px #ffb000">START</button><button class="mb" id="tBack">BACK</button></div>
 <div id="lb" class="ov hidden"><div class="ttl">LOCAL SCORES</div><div class="row" id="lbTabs"></div><div id="lbList" style="width:min(94vw,640px);max-height:58vh;overflow:auto"></div><div class="dim">STORED ON THIS COMPUTER // EVERYONE ELSE: MENU &gt; LEADERBOARD</div><button class="mb" id="lbBack">BACK</button></div>
 <div id="hkb" class="ov scroll hidden"><div class="ttl" style="color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</div><div class="dim">GLOBAL HACKER RANKING // ☠ = TIMES THEY ENDED YOU // CLICK A USER FOR THEIR DOSSIER</div><div id="hkList" style="width:min(94vw,720px)"></div><button class="mb" id="hkBack">BACK</button></div>
 <div id="wb" class="ov scroll hidden"><div class="ttl">LEADERBOARD</div><div class="dim">EVERY PLAYER, EVERYWHERE // CLICK A NAME FOR THEIR SUBJECT FILE AND GHOST</div><div class="row" id="wbTabs"></div><div id="wbList" style="width:min(94vw,640px)"></div><div class="dim" id="wbYou"></div><div id="wbGhost" class="hidden" style="text-align:center"></div><div id="wbProf" class="pf hidden" style="max-width:min(94vw,760px)"></div><button class="mb" id="wbBack">BACK</button></div>
@@ -126,7 +129,7 @@ function epCheck(ep){ep=Math.floor(Number(ep))||0;let lo=0;try{lo=+localStorage.
    300 x 200 box, depth 75, 60 x 40 paddles, 30 px ball, arctan depth scaling.
    Simulation runs at a fixed 30 steps/second exactly like the original; drawing is interpolated. */
 const cv=document.getElementById("c");let ctx=cv.getContext("2d");
-let BW=300,BH=200,DEPTH=75,VA=31.066017;const PW=60,PH=40,BR=15,STEP=1/30;
+let BW=300,BH=200,DEPTH=75,VA=31.066017;let PW=60,PH=40,BR=15;const STEP=1/30;
 const L_SPEED=[2,2.4,2.8,3.1,3.4,3.7,4.0,4.15,4.3,4.4,4.4,4.4];
 const L_SKILL=[17,14,11,9,7,5.5,4.6,4.1,3.7,3.4,3.4,3.4];
 const L_CURVE=[25,22.5,20,17.5,15,12.5,11,10.5,10,10,10,10];
@@ -138,7 +141,7 @@ try{G.best=+localStorage.getItem("hb3_best")||0}catch(e){}
 const lv=()=>Math.min(G.mode==="classic"?(G.cl||1):G.level,12)-1;
 /* v0.62: the table used to be maxed out by level 10; now levels 1-4 are as before, then it climbs 0.4 of a step per level and tops out at level 24 */
 const tbl=a=>{if(G.mode==="classic")return a[lv()];const L=G.level,i=Math.min(11,L<=4?L-1:3+(L-4)*.4),k=Math.floor(i);return a[k]+(a[Math.min(11,k+1)]-a[k])*(i-k)};
-const LS=()=>tbl(L_SPEED)*(G.spd||1)*(G.mode==="lab"&&G.mod.labspd||1);
+const LS=()=>tbl(L_SPEED)*(G.spd||1)*(G.tl>1?1.5:1)*(G.mode==="lab"&&G.mod.labspd||1);
 let mouse={x:WX,y:WY};
 const pad={x:WX,y:WY,ox:WX,oy:WY,vx:0,vy:0,px:WX,py:WY,hl:null,hlT:0,cracks:[]};
 const ai ={x:WX,y:WY,ox:WX,oy:WY,vx:0,vy:0,px:WX,py:WY,hl:null,hlT:0,cracks:[]};
@@ -152,10 +155,10 @@ function spinBall(){if(G.state!=="play"||ball.stop){rotAxis(0,1,0,.012);return}
   rotAxis(1,0,0,-ball.vy*.045+ball.cy*7+ball.vz*.03)} // up/down drift + top spin + rolling down the tunnel
 function resetBall(){Object.assign(ball,{x:WX,y:WY,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,px:WX,py:WY,pz:0})}
 function startLevel(){try{RUN.lv=RUN.lv||{};RUN.lv[LVL()]=G.score}catch(e){}G.vol=0;if(G.mode==="classic")G.spd=1+Math.min(.5,Math.max(0,(G.cl||1)-12)*.025);resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck();G.dark=G.mode!=="online"&&G.level>=41&&Math.random()<.45;if(G.dark)setTimeout(()=>{if(G.dark)popup("LIGHTS OUT","#ff4455")},2600)}
-function newGame(mode){try{RUN.lv={};RUN.pb=((LB[mode||"normal"]||[])[0]||{}).s||0}catch(e){}G.subDone=false;G.ghostMatch=false;SV.pts=[];SV.said=false;if(mode!=="classic"&&G.clsMute)setTimeout(clsMusicBack,0);G.cl=1;runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test"||mode==="lab";
+function newGame(mode){try{RUN.lv={};RUN.pb=((LB[mode||"normal"]||[])[0]||{}).s||0}catch(e){}G.subDone=false;G.ghostMatch=false;SV.pts=[];SV.said=false;if(mode!=="classic"&&G.clsMute)setTimeout(clsMusicBack,0);G.cl=1;runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test"||mode==="lab"||(mode==="classic"&&!!G.ctest);G.tl=(mode==="classic"&&G.ctest&&G.ctest.long)?2:1;G.tubeN=(mode==="classic"&&G.ctest&&G.ctest.tube)?32:8;
   G.mod={};G.modNames=[];if(mode==="daily"){const ms=dailyMods();ms.forEach(m=>Object.assign(G.mod,m));G.modNames=ms.map(m=>m.n.split(":")[0]);RNG=mulberry(todayKey())}else RNG=Math.random;
   G.level=G.mod.start||1;G.score=0;G.pl=mode==="endless"?3:(G.mod.lives||5);G.el=(mode==="endless"||mode==="boss")?99:3;G.epts=0;G.bossWon=false;G.bossLost=false;G.zone=null;G.tube=false;G.tubeK=0;G.elMax=3;G.oceanA=1;ABYSS.length=0;EV.list=[];EV.t=8;BLK.length=0;G.hyCam=0;G.twins=false;ai.w=PW;ai.h=PH;
-  G.streak=0;G.matrixA=G.level>=6?1:0;G.cam=0;G.shards=[];G.debris=[];G.blown=false;G.hg=null;G.wh=null;setField(1);droneOn();pad.cracks=[];ai.cracks=[];
+  G.streak=0;G.matrixA=G.level>=6?1:0;G.cam=0;G.shards=[];G.debris=[];G.blown=false;G.hg=null;G.wh=null;setField(1);if(mode==="classic"&&G.ctest&&G.ctest.tube){G.tube=true;G.tubeK=1}droneOn();pad.cracks=[];ai.cracks=[];
   if(mode==="boss")bossSetup();G.prevR=readouts();
   startLevel();say(mode==="boss"?"THE WARDEN AWAITS":mode==="daily"?"DAILY  //  "+G.modNames.join("  +  "):mode==="endless"?"ENDLESS  //  HOW DEEP?":mode==="classic"?"CLASSIC  //  LEVEL 1":"LEVEL "+G.level,2.6)}
 function say(t,d){G.msg=t;G.msgT=d||1.5;G.msgD=d||1.5}
@@ -767,7 +770,7 @@ function drawEventsFront(W,H,t,dt){                               // over the sc
    LEVEL 25: THE HYPER LANE / CYBER NET - a racing tube, wavy psychedelic battle backgrounds, polygon file-system towers
    ===================================================================================================== */
 const EB={c:document.createElement("canvas")};EB.c.width=160;EB.c.height=90;EB.x=EB.c.getContext("2d");EB.img=EB.x.createImageData(160,90);
-function drawEarthbound(W,H,t,A){EB.f=(EB.f||0)+1;if(EB.f%(QL<2?4:2)===0||!EB.done)ebRender(t);EB.done=1;ctx.save();ctx.globalAlpha=.45*A;ctx.imageSmoothingEnabled=true;(ROLL.a?ctx.drawImage(EB.c,-W*.35,-H*.35,W*1.7,H*1.7):ctx.drawImage(EB.c,0,0,W,H));ctx.restore()}
+function drawEarthbound(W,H,t,A){EB.f=(EB.f||0)+1;if(!EB.done||due(EB,DQ>=3?1/30:1/18))ebRender(t);EB.done=1;ctx.save();ctx.globalAlpha=.45*A;ctx.imageSmoothingEnabled=true;(ROLL.a?ctx.drawImage(EB.c,-W*.35,-H*.35,W*1.7,H*1.7):ctx.drawImage(EB.c,0,0,W,H));ctx.restore()}
 function ebRender(t){const d=EB.img.data,hue=t*.05;                                         // every scanline wobbles sideways; the palette drifts slowly
   for(let y=0;y<90;y++){const off=Math.sin(y*.11+t*1.3)*10+Math.sin(y*.033-t*.6)*6,yy=y+Math.sin(t*.7+y*.02)*4;
     for(let x=0;x<160;x++){const u=x+off,band=((Math.floor(u/12)^Math.floor(yy/12))&3),w2=Math.sin(u*.08+yy*.05+t)*.5+.5,k=(band*.22+w2*.35+hue)%1;
@@ -1208,16 +1211,17 @@ addEventListener("keydown",e=>{if(e.repeat||(e.target&&e.target.tagName==="INPUT
 
 /* ---------- v0.9.2 THE OCEAN, as texture: a halftone dot field (indigo + cyan, diagonal swell, caustics),
    slow sonar rings, and something large that only shows as the dots going dark where it passes ---------- */
-const OC={c:mkC(160,90),f:0,mask:null,maskS:0,pingT:6,pings:[],blobs:null};OC.x=OC.c.getContext("2d");OC.img=OC.x.createImageData(160,90);
+const OW=120,OH=68,OC={c:mkC(120,68),f:0,mask:null,maskS:0,pingT:6,pings:[],blobs:null};OC.x=OC.c.getContext("2d");OC.img=OC.x.createImageData(120,68);
 function deepStart(){OC.pings.push({t:0,x:.2+Math.random()*.6,y:.2+Math.random()*.6});DEEP.ev={k:"sonar"};setTimeout(()=>DEEP.ev=null,50);tn(1180,1.6,"sine",.018,1120)}
+function due(o,per){if(o.nt===undefined||DS.T>=o.nt||DS.T<o.nt-1){o.nt=DS.T+per;return true}return false}
 function ocRender(T){const d=OC.img.data,L=G.level,sh=Math.min(.95,.55+.03*(L-15));
   if(!OC.blobs)OC.blobs=[0,1,2].map(i=>({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.02,vy:(Math.random()-.5)*.01,r:.18+Math.random()*.2}));
   for(const b of OC.blobs){b.x+=b.vx*.066;b.y+=b.vy*.066;if(b.x<-.4||b.x>1.4)b.vx*=-1;if(b.y<-.3||b.y>1.3)b.vy*=-1}
-  for(let j=0;j<90;j++){const y=j/90;for(let i=0;i<160;i++){const x=i/160,u=x*7,v=y*7;
+  for(let j=0;j<OH;j++){const y=j/OH;for(let i=0;i<OW;i++){const x=i/OW,u=x*7,v=y*7;
     const c=Math.sin(u+Math.sin(v*1.3+T*.7)*1.2+T*.4)+Math.sin(v*1.7-Math.sin(u*.8-T*.5)*1.4-T*.3),ca=Math.pow(Math.max(0,c*.25+.5),3),
-      dg=.5+.5*Math.sin((x*1.6+y)*13-T*.9);let s=1;for(const b of OC.blobs){const dx=(x-b.x)*1.6,dy=y-b.y;s-=sh*Math.exp(-(dx*dx+dy*dy)/(b.r*b.r))}
+      dg=.5+.5*Math.sin((x*1.6+y)*13-T*.9);let s=1;for(const b of OC.blobs){const dx=(x-b.x)*1.6,dy=y-b.y,qq=(dx*dx+dy*dy)/(b.r*b.r);if(qq<6)s-=sh*Math.exp(-qq)}
     let p=0;for(const q of OC.pings){const r=Math.hypot((x-q.x)*1.6,y-q.y)-q.t*.32;p+=Math.max(0,1-Math.abs(r)*14)*Math.max(0,1-q.t/3.2)*.8}
-    const val=Math.max(0,Math.min(1.3,(ca*.75+dg*.28)*(1.05-y*.6)*Math.max(0,s)+p)),k=(j*160+i)*4;
+    const val=Math.max(0,Math.min(1.3,(ca*.75+dg*.28)*(1.05-y*.6)*Math.max(0,s)+p)),k=(j*OW+i)*4;
     d[k]=val<.5?20-20*val*2:val>1?200*(val-1)/.3:0;d[k+1]=val<.5?val*2*70:70+(val-.5)*2*160;d[k+2]=val<.5?60+val*2*140:Math.min(255,200+(val-.5)*90);d[k+3]=255}}
   OC.x.putImageData(OC.img,0,0)}
 function ocMask(){const s=Math.max(5,Math.round(Math.min(innerWidth,innerHeight)/110));if(OC.mask&&OC.maskS===s)return OC.mask;const m=mkC(s,s),x=m.getContext("2d");
@@ -1225,7 +1229,7 @@ function ocMask(){const s=Math.max(5,Math.round(Math.min(innerWidth,innerHeight)
 function drawDeep(W,H,dt){if(G.zone!=="ocean"||G.state==="menu")return;const A=Math.min(1,G.oceanA===undefined?1:G.oceanA),T=DS.T;
   if(G.state==="play"||G.state==="serve"){OC.pingT-=dt;if(OC.pingT<=0){OC.pingT=7+Math.random()*7;OC.pings.push({t:0,x:.2+Math.random()*.6,y:.2+Math.random()*.6})}}
   for(const q of OC.pings)q.t+=dt;OC.pings=OC.pings.filter(q=>q.t<3.2);
-  OC.f++;if(OC.f%(QL<2?4:2)===1||OC.f<3)ocRender(T);
+  OC.f++;if(OC.f<3||due(OC,DQ>=3?1/30:1/18))ocRender(T);
   ctx.save();ctx.globalAlpha=.68*A;ctx.imageSmoothingEnabled=true;ctx.drawImage(OC.c,0,0,W,H);
   if(QL>=1){ctx.globalAlpha=A;ctx.fillStyle=ctx.createPattern(ocMask(),"repeat");ctx.fillRect(0,0,W,H)}ctx.restore()}
 
@@ -1235,14 +1239,14 @@ function drawDeep(W,H,dt){if(G.zone!=="ocean"||G.state==="menu")return;const A=M
    ===================================================================================================== */
 /* ---------- the octagon field: flat top/bottom/sides on the old box edges, corners cut ---------- */
 const TK=Math.tan(Math.PI/8);
-const tubeVN=()=>[[TK,-1],[1,-TK],[1,TK],[TK,1],[-TK,1],[-1,TK],[-1,-TK],[-TK,-1]];
+const tubeVN=()=>{const n=G.tubeN||8;if(n===8)return[[TK,-1],[1,-TK],[1,TK],[TK,1],[-TK,1],[-1,TK],[-1,-TK],[-TK,-1]];const c=Math.cos(Math.PI/n),L=[];for(let j=0;j<n;j++){const a=(j+.5)*2*Math.PI/n;L.push([Math.cos(a)/c,Math.sin(a)/c])}return L};
 function tubeVerts(){const rx=BW/2,ry=BH/2;return tubeVN().map(([u,v])=>[WX+u*rx,WY+v*ry])}
-function tubeEdges(){const V=tubeVerts();return V.map((p,i)=>{const q=V[(i+1)%8];return[p[0],p[1],q[0],q[1]]})}
-function tubeNormals(){const V=tubeVerts();return V.map((p,i)=>{const q=V[(i+1)%8],ex=q[0]-p[0],ey=q[1]-p[1],l=Math.hypot(ex,ey);let nx=-ey/l,ny=ex/l;if(nx*(WX-p[0])+ny*(WY-p[1])<0){nx=-nx;ny=-ny}return{p,nx,ny}})}
+function tubeEdges(){const V=tubeVerts();return V.map((p,i)=>{const q=V[(i+1)%V.length];return[p[0],p[1],q[0],q[1]]})}
+let _tnK="",_tnV=null;function tubeNormals(){const key=BW+","+BH+","+(G.tubeN||8);if(key===_tnK)return _tnV;const V=tubeVerts();_tnK=key;return _tnV=V.map((p,i)=>{const q=V[(i+1)%V.length],ex=q[0]-p[0],ey=q[1]-p[1],l=Math.hypot(ex,ey);let nx=-ey/l,ny=ex/l;if(nx*(WX-p[0])+ny*(WY-p[1])<0){nx=-nx;ny=-ny}return{p,nx,ny}})}
 function tubeWalls(){let hit=false;for(const e of tubeNormals()){const d=(ball.x-e.p[0])*e.nx+(ball.y-e.p[1])*e.ny;if(d>=BR)continue;
     ball.x+=e.nx*(BR-d);ball.y+=e.ny*(BR-d);const vx=ball.vx,vy=-ball.vy,vn=vx*e.nx+vy*e.ny;
     if(vn<0){const rx=vx-2*vn*e.nx,ry=vy-2*vn*e.ny;ball.vx=rx;ball.vy=-ry;ball.cx/=WALL_SPIN;ball.cy/=WALL_SPIN;hit=true}}
-  if(hit)(Math.abs(ball.vx)>Math.abs(ball.vy)?S.wall1:S.wall2)()}
+  if(hit){const nw=performance.now();if(nw-(G.wsT||0)>80){G.wsT=nw;(Math.abs(ball.vx)>Math.abs(ball.vy)?S.wall1:S.wall2)()}}}
 function clampP(p){const w=(p.w||PW)/2,h=(p.h||PH)/2;p.x=Math.max(w,Math.min(BW-w,p.x));p.y=Math.max(h,Math.min(BH-h,p.y));
   if(!G.tube)return;const N=tubeNormals();for(let it=0;it<3;it++)for(const e of N){let m=1e9;for(const[cx,cy]of[[-w,-h],[w,-h],[w,h],[-w,h]]){const d=(p.x+cx-e.p[0])*e.nx+(p.y+cy-e.p[1])*e.ny;if(d<m)m=d}
     if(m<0){p.x-=e.nx*m;p.y-=e.ny*m}}}
@@ -1256,7 +1260,7 @@ function vxRender(t,pal){const d=VX.img.data;for(let j=0;j<96;j++)for(let i=0;i<
     const ring=Math.floor(Math.sqrt(r)*11),segs=6+ring*3,dir=ring%2?1:-1,rot=t*(.05+.035*((ring*7)%5))*dir,a=Math.atan2(dy,dx)/TAU2+.5+rot;
     const seg=((Math.floor(a*segs)%segs)+segs)%segs,h=((ring*928371+seg*1231)^(ring*seg*97))%1000/1000,fade=Math.min(1,r*1.6);
     let lv=h<.28?0:h<.5?1:h<.7?2:h<.88?3:4;lv=Math.round(lv*fade);const c=pal[lv];d[k]=c[0];d[k+1]=c[1];d[k+2]=c[2];d[k+3]=255}VX.x.putImageData(VX.img,0,0)}
-function drawVortex(W,H,t,A,pal){if(A<=0)return;VX.f++;if(VX.f%(QL<2?4:2)===1||VX.pal!==pal){vxRender(t,pal);VX.pal=pal}const S2=Math.max(W,H)*1.15;
+function drawVortex(W,H,t,A,pal){if(A<=0)return;VX.f++;if(VX.pal!==pal||due(VX,DQ>=3?1/30:1/18)){vxRender(t,pal);VX.pal=pal}const S2=Math.max(W,H)*1.15;
   ctx.save();ctx.globalAlpha=A;ctx.imageSmoothingEnabled=false;ctx.drawImage(VX.c,W/2-S2/2,H/2-S2/2,S2,S2);ctx.restore()}
 /* TWIST: a distortion - the finished picture is cut into rings, each pixelated and turned a little, then eased back */
 const TW={c:mkC(2,2)};
@@ -2265,7 +2269,10 @@ function clsLevelUp(){levelBeaten();healPaddle();G.cl=(G.cl||1)+1;G.el=3;say("LE
 function clsMusicOff(){G.clsMute=true;try{if(MUS.el&&!MUS.el.paused)MUS.el.pause()}catch(e){}}
 function clsMusicBack(){if(!G.clsMute)return;G.clsMute=false;try{if(MUS.on&&MUS.el){musStart();MUS.el.play().catch(()=>{})}}catch(e){}}
 g$("sHell").onclick=()=>startMode("normal");
-g$("sClassic").onclick=()=>{clsMusicOff();startMode("classic")};
+g$("sClassic").onclick=()=>{G.ctest=null;clsMusicOff();startMode("classic")};
+const TO={long:true,tube:true};function toLabel(){g$("tLong").textContent="2X LONGER TUNNEL: "+(TO.long?"ON":"OFF");g$("tTube").textContent="ROUND TUBE WALLS: "+(TO.tube?"ON":"OFF")}
+g$("mTest").onclick=()=>{hideAll();toLabel();g$("tmenu").classList.remove("hidden")};g$("tLong").onclick=()=>{TO.long=!TO.long;toLabel()};g$("tTube").onclick=()=>{TO.tube=!TO.tube;toLabel()};
+g$("tGo").onclick=()=>{clsMusicOff();startMode("classic",{long:TO.long,tube:TO.tube})};g$("tBack").onclick=()=>{hideAll();g$("modes").classList.remove("hidden")};
 g$("sBack").onclick=()=>showMenu();
 
 /* ---------- v0.26 HellWORLD opens on top of HELLBALL in a frame, so going back never needs a page load ---------- */
@@ -2526,9 +2533,9 @@ function reportOpen(){if(G.mode==="online")return;const S2=runStats(),box=g$("re
 const $=id=>document.getElementById(id);
 function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}musStart();if(MUS.on&&!G.clsMute&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}}
 function showMenu(){try{gAbandon()}catch(e){}G.paused=false;if(G.clsMute)setTimeout(clsMusicBack,0);if(CO.on||net.ws){nClose();CO.on=false;if(G.mode==="coop")G.mode="normal"}if(G.mode==="online"&&typeof nClose==="function"){nClose();G.mode="normal"}musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
-const OVS=["medals","startm","menu","cust","achs","modes","lb","over","hkb","pause","olobby","wb"];
+const OVS=["tmenu","medals","startm","menu","cust","achs","modes","lb","over","hkb","pause","olobby","wb"];
 function hideAll(){for(const id of OVS)$(id).classList.add("hidden")}
-function startMode(m){initAudio();G.paused=false;hideAll();newGame(m);droneOn();if(m==="lab")setTimeout(()=>say("THE LAB  //  OFFLINE  //  NOTHING IS RECORDED",3.4),700);if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
+function startMode(m,o){if(o!==undefined)G.ctest=o;else if(m!=="classic")G.ctest=null;initAudio();G.paused=false;hideAll();newGame(m);droneOn();if(m==="lab")setTimeout(()=>say("THE LAB  //  OFFLINE  //  NOTHING IS RECORDED",3.4),700);if(m==="classic"&&G.ctest)setTimeout(()=>say("TEST  //  CLASSIC"+(G.ctest.long?"  //  2X TUNNEL":"")+(G.ctest.tube?"  //  ROUND TUBE":"")+"  //  NOTHING IS SAVED",3.4),700);if(m==="test")setTimeout(()=>say("TEST  //  L SKIP  //  ] +5  //  [ -5  //  E EVENT  //  F DEEP",3),2700)}
 $("bModes").onclick=()=>{if(HELD.r){startMode("lab");return}hideAll();const ms=dailyMods();let db=null;try{db=JSON.parse(localStorage.getItem("hb3_daily")||"null")}catch(e){}
   $("dailyInfo").innerHTML="TODAY: "+ms.map(m=>m.n).join("<br>+ ")+"<br>"+(db&&db.date===todayKey()?"YOUR BEST TODAY: "+db.best:"NO RUN YET TODAY");$("modes").classList.remove("hidden")};
 $("mDaily").onclick=()=>startMode("daily");$("mEndless").onclick=()=>startMode("endless");$("mBack").onclick=()=>showMenu();
@@ -2638,7 +2645,7 @@ function drawTunnel(rgb,ghost){
   const lines=G.tube?tubeVerts():[[0,0],[BW,0],[BW,BH],[0,BH]],nc=lines.length;
   if(!G.tube){for(let i=1;i<6;i++){lines.push([BW*i/6,0],[BW*i/6,BH])}for(let i=1;i<4;i++){lines.push([0,BH*i/4],[BW,BH*i/4])}}
   {const m=ghost?(DS.wob||DS.twist?4:1):rip?60:DS.wob||DS.twist?(lo?7:12):1;if(fm<1)ctx.globalAlpha=fm;
-   for(let g=0;g<(ghost?1:2);g++){const a0=g?nc:0,a1=g?lines.length:nc;if(a0>=a1)continue;ctx.strokeStyle=g?"rgba("+rgb+",.08)":"rgba("+rgb+",.5)";ctx.lineWidth=g?1:1.2;ctx.beginPath();
+   for(let g=0;g<(ghost?1:2);g++){const a0=g?nc:0,a1=g?lines.length:nc;if(a0>=a1)continue;ctx.strokeStyle=g?"rgba("+rgb+",.08)":"rgba("+rgb+","+(G.tubeN>8?.26:.5)+")";ctx.lineWidth=g?1:1.2;ctx.beginPath();
      for(let j=a0;j<a1;j++){const x=lines[j][0],y=lines[j][1];for(let i=0;i<=m;i++){const p=RP(x,y,DEPTH-(DEPTH*(1-i/m))*fm);i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])}}
      ctx.stroke()}
    ctx.globalAlpha=1}
@@ -2651,7 +2658,9 @@ const GL="ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇ�
 let MX;const buildMX=()=>(()=>{const L=[[0,0],[BW,0],[BW,BH],[0,BH]];for(let i=1;i<6;i++){L.push([BW*i/6,0],[BW*i/6,BH])}for(let i=1;i<4;i++){L.push([0,BH*i/4],[BW,BH*i/4])}
   return L.map(([x,y])=>({x,y,drops:[0,1,2].map(()=>({z:Math.random()*DEPTH*1.6,sp:8+Math.random()*14,n:6+Math.floor(Math.random()*8),ch:Array.from({length:14},rg)}))}))})();
 let RING=[];const buildRING=()=>{const R=[];for(let i=1;i<=10;i+=2)R.push({z:DEPTH*i/10,off:Math.random()*1000,ch:Array.from({length:60},rg)});return R};
-function setField(sc){BW=300*sc;BH=200*sc;DEPTH=75*sc;VA=31.066017*(sc>1?1.5:1);WX=BW/2;WY=BH/2;G.spd=sc>1?1.25:1;G.sc=sc;MX=buildMX();RING=buildRING();fit();
+function setField(sc){const tl=G.tl||1;BW=300*sc;BH=200*sc;DEPTH=75*sc*tl;VA=31.066017*(sc>1?1.5:1)*(tl>1?1.4:1);
+  PW=60*(sc>1?1.3:1);PH=40*(sc>1?1.3:1);BR=15*(sc>1?1.25:1);if(G.mode!=="boss"){const v=G.mode==="lab"&&G.mod&&G.mod.aiBig||1;ai.w=PW*v;ai.h=PH*v}   // v0.67: it all felt tiny after the pull-back
+  WX=BW/2;WY=BH/2;G.spd=sc>1?1.25:1;G.sc=sc;MX=buildMX();RING=buildRING();fit();
   for(const p of[pad,ai])Object.assign(p,{x:WX,y:WY,ox:WX,oy:WY,px:WX,py:WY});mouse.x=WX;mouse.y=WY;resetBall()}
 MX=buildMX();RING=buildRING();
 function inject(t){t=String(t).replace(/\s+/g," ").trim().toUpperCase();if(!t||!MX)return;                           // text rides down a code line, letter by letter
@@ -2669,13 +2678,13 @@ function mxWarm(){if(G.level<3||G.level>=6||G.state!=="play")return;if(!MXW.list
 function drawMatrix(dt){const A=G.matrixA*Math.min(1,fxDist());if(A<=0)return;ctx.save();
   const vs=view.s,vx=view.ox,vy=view.oy;let la=-1;
   const fsOf=k=>Math.max(7,Math.round(17*k*vs/3.2)),put=(ch,fs,rgb,a,x,y)=>{if(a<.05)return;const r=gchGet(ch,fs,rgb);if(!r)return;const g=r[0];if(a!==la){ctx.globalAlpha=a;la=a}ctx.drawImage(g.c,r[1]*g.cell,0,g.cell,g.cell,Math.round(x-g.cell/2),Math.round(y-g.cell/2),g.cell,g.cell)};
-  const nd=QL>=2?3:QL===1?2:1;for(const L of MX){const lx=L.x,ly=L.y;for(let di=0;di<nd;di++){const d=L.drops[di];d.z-=d.sp*dt;if(d.z<-d.n*3){d.z=DEPTH+Math.random()*30;d.sp=8+Math.random()*14}
+  const nd=QL>=2?(G.sc>1?2:3):QL===1?2:1;for(const L of MX){const lx=L.x,ly=L.y;for(let di=0;di<nd;di++){const d=L.drops[di];d.z-=d.sp*dt;if(d.z<-d.n*3){d.z=DEPTH+Math.random()*30;d.sp=8+Math.random()*14}
     if(Math.random()<dt*6)d.ch[Math.floor(Math.random()*d.ch.length)]=rg();
     const tx=d.txt;for(let i=0;i<d.n;i++){const z=d.z+i*3.2;if(z<0||z>DEPTH)continue;const k=K(z),px=vx+(WX-(WX-lx)*k)*vs,py=vy+(WY-(WY-ly)*k)*vs,fs=fsOf(k);
       if(tx&&i<tx.length){put(tx[i],fs,"255,176,0",.95*A,px,py);continue}
       if(i===0)put(d.ch[i]||rg(),fs,DS.mxH,.95*A,px,py);else put(d.ch[i]||rg(),fs,DS.mx,(1-i/d.n)*.9*A,px,py)}
     if(tx&&d.z<-tx.length*3.2){d.txt=null;d.n=6+Math.floor(Math.random()*8)}}}
-  for(const r of RING){const z=G.cam?((r.z-G.cam)%DEPTH+DEPTH)%DEPTH:r.z;if(z<1)continue;const per=2*(BW+BH),spc=26,k=K(z),fs=fsOf(k),N=Math.ceil(per/spc),ox=vx+WX*(1-k)*vs,oy=vy+WY*(1-k)*vs,ks=k*vs;r.off+=dt*6;
+  for(const r of RING){const z=G.cam?((r.z-G.cam)%DEPTH+DEPTH)%DEPTH:r.z;if(z<1)continue;const per=2*(BW+BH),spc=26*(G.sc||1),k=K(z),fs=fsOf(k),N=Math.ceil(per/spc),ox=vx+WX*(1-k)*vs,oy=vy+WY*(1-k)*vs,ks=k*vs;r.off+=dt*6;
     for(let c=dt*1.5*N;c>0;c--){if(Math.random()<c)r.ch[Math.floor(Math.random()*N)%60]=rg()}
     const rst=r.txt?1:QL>=2?1:QL===1?2:3;for(let i=0;i<N;i+=rst){let s=(i*spc+r.off)%per,x,y;if(s<BW){x=s;y=0}else if((s-=BW)<BH){x=BW;y=s}else if((s-=BH)<BW){x=BW-s;y=BH}else{s-=BW;x=0;y=BH-s}
       const px=ox+x*ks,py=oy+y*ks,tc=r.txt&&i<r.txt.length?r.txt[i]:null;
