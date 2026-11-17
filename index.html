@@ -72,7 +72,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.64 // BUILD 20261116.2600 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.65 // BUILD 20261116.2700 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -1607,7 +1607,7 @@ function nMaybe(){if(net.meReady&&net.themReady){net.meReady=net.themReady=false
 function nMaybeRe(){if(net.meRe&&net.themRe){net.meRe=net.themRe=false;nStart(net.lastLoser)}}
 function nStart(server){initAudio();hideAll();newGame("online");G.pl=99;G.el=99;G.elMax=3;G.aiName=net.oname||"OPPONENT";G.tagFade=0;G.tagGo=false;G.level=3;net.me=net.them=0;net.over=false;
   resetBall();G.state="count";let n=3;const cd=()=>{if(G.mode!=="online"||G.state!=="count")return;if(n>0){say(String(n),.7);tn(440,.1,"square",.05);n--;setTimeout(cd,700)}else{tn(880,.2,"square",.05);nServe(server)}};cd()}
-function nServe(server){net.server=server;resetBall();if(server==="them"){ball.x=ball.px=ai.x;ball.y=ball.py=ai.y;ball.z=ball.pz=DEPTH}G.vol=0;G.state=server==="me"?"serve":"oserve";say(server==="me"?"YOUR SERVE":"OPPONENT SERVES",1.4)}
+function nServe(server){net.server=server;resetBall();if(server==="them"){ball.x=ball.px=WX;ball.y=ball.py=WY;ball.z=ball.pz=DEPTH}G.vol=0;G.state=server==="me"?"serve":"oserve";say(server==="me"?"YOUR SERVE":"OPPONENT SERVES",1.4)}
 function nHit(serve){nSend({t:"hit",serve,b:{x:ball.x,y:ball.y,z:ball.z,vx:ball.vx,vy:ball.vy,vz:ball.vz,cx:ball.cx,cy:ball.cy}})}
 function nPoint(who){if(net.over)return;if(who==="me")net.me++;else net.them++;G.level=Math.min(9,3+net.me+net.them);G.state="between";ball.stop=true;ball.vz=0;
   if(who==="me"){popup("POINT   "+net.me+" - "+net.them,"#33ff77");G.ripple={sx:Math.max(0,Math.min(BW,ball.x)),sy:Math.max(0,Math.min(BH,ball.y)),t:0};tn(660,.15,"square",.04);setTimeout(()=>tn(990,.25,"square",.04),120)}
@@ -1617,7 +1617,7 @@ function nPoint(who){if(net.over)return;if(who==="me")net.me++;else net.them++;G
     setTimeout(()=>{if(net.over)nLobby((won?"YOU WIN   ":"YOU LOSE   ")+net.me+" - "+net.them+"<br>REMATCH?",{re:true})},2600);return}
   setTimeout(()=>{if(G.mode==="online"&&G.state==="between")nServe(who==="me"?"them":"me")},1000)}
 function nAI(){ai.ox=ai.x;ai.oy=ai.y;ai.px=ai.x;ai.py=ai.y;ai.x+=(net.ox-ai.x)*.6;ai.y+=(net.oy-ai.y)*.6;clampP(ai);ai.vx=ai.x-ai.px;ai.vy=ai.y-ai.py;
-  if(G.state==="oserve"){ball.x=ball.px=ai.x;ball.y=ball.py=ai.y;ball.z=ball.pz=DEPTH}}
+  if(G.state==="oserve"){ball.x=ball.px=WX;ball.y=ball.py=WY;ball.z=ball.pz=DEPTH}}
 function nTick(){if(G.mode!=="online"||!net.live)return;const n=performance.now();if(n-net.padT>33){net.padT=n;nSend({t:"p",x:pad.x,y:pad.y})}}
 setInterval(()=>{if(!net.live)return;const n=performance.now();nSend({t:"ping",ts:n});if(n-net.lastMsg>10000){net.live=false;G.mode="normal";nLobby("CONNECTION LOST.<br>PRESS BACK AND TRY AGAIN.")}},1000);
 addEventListener("pagehide",()=>{if(net.ws)nSend({t:"bye"})});
@@ -2116,7 +2116,7 @@ function nMaybe(){if(!(net.meReady&&net.themReady))return;net.meReady=net.themRe
 function nTick(){if(!net.live||net.spec)return;if(G.mode!=="online"&&!(CO.on&&!CO.host))return;const n=performance.now();if(n-net.padT>33){net.padT=n;nSend(net.kind==="koth"?{t:"p",x:pad.x,y:pad.y,n:gName()}:{t:"p",x:pad.x,y:pad.y})}}
 function nAI(){ai.ox=ai.x;ai.oy=ai.y;ai.px=ai.x;ai.py=ai.y;ai.x+=(net.ox-ai.x)*.6;ai.y+=(net.oy-ai.y)*.6;clampP(ai);ai.vx=ai.x-ai.px;ai.vy=ai.y-ai.py;
   if(net.spec){pad.x=mouse.x=net.sx===undefined?WX:net.sx;pad.y=mouse.y=net.sy===undefined?WY:net.sy}
-  if(G.state==="oserve"){if(net.spec&&net.specNear){ball.x=ball.px=pad.x;ball.y=ball.py=pad.y;ball.z=ball.pz=0}else{ball.x=ball.px=ai.x;ball.y=ball.py=ai.y;ball.z=ball.pz=DEPTH}}}
+  if(G.state==="oserve"){if(net.spec&&net.specNear){ball.x=ball.px=pad.x;ball.y=ball.py=pad.y;ball.z=ball.pz=0}else{ball.x=ball.px=WX;ball.y=ball.py=WY;ball.z=ball.pz=DEPTH}}}
 function nHud(i){if(net.kind==="koth"&&G.mode==="online"&&net.ks){const s=net.ks;return i?"NEXT: "+(s.line.length?kname(s.line[0]):"-")+(net.live?"  //  PING "+Math.round(net.rtt):""):"KING "+kname(s.champ)+" "+"★".repeat(s.streak)+"☆".repeat(Math.max(0,s.win-s.streak))+"  VS "+kname(s.chal)}
   if(CO.on&&i)return (CO.raid?"RAID":"CO-OP")+"  //  LEVEL "+G.level+(net.live?"  //  PING "+Math.round(net.rtt):"  //  SOLO");return null}
 
