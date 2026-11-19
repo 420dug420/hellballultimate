@@ -31,7 +31,7 @@ input[type=range]{accent-color:#33ff77;vertical-align:middle}
 .pf{width:min(94vw,660px);box-sizing:border-box;border:1px solid #114422;background:rgba(0,10,4,.75);padding:10px 12px;font-size:12px;white-space:pre;overflow-x:auto;box-shadow:inset 0 0 22px rgba(51,255,119,.07)}
 .pf-h{color:#33ff77;letter-spacing:2px}.pf-s{color:#119944;margin:2px 0 8px}.pf-r{display:flex;gap:10px;line-height:1.5}.pf-b{color:#1f9a4c}
 .pf-r.up,.pf-r.up .pf-b{color:#ffd23a;text-shadow:0 0 6px rgba(255,210,58,.5)}.pf-r.dn,.pf-r.dn .pf-b{color:#ff4455;text-shadow:0 0 6px rgba(255,68,85,.5)}
-.dugr{background:rgba(51,255,119,.07);box-shadow:inset 0 0 14px rgba(51,255,119,.14);border-bottom:1px solid #1e5a3a}.dugr .dugn{font-weight:bold;letter-spacing:.12em;color:#b8ffd2;animation:dugg 2.6s ease-in-out infinite}.dugr span:nth-child(3){padding-right:16px}.dugr .dugx{color:#ffb000;text-shadow:0 0 6px rgba(255,176,0,.55);letter-spacing:.08em}@keyframes dugg{0%,100%{text-shadow:0 0 4px #33ff77,0 0 11px #33ff77,0 0 22px rgba(51,255,119,.55)}50%{text-shadow:0 0 7px #ffb000,0 0 17px #ffb000,0 0 30px rgba(255,176,0,.6);color:#fff0c8}}.wbr{cursor:pointer}.wbr span{white-space:nowrap}.wbr span:nth-child(2){min-width:10em}.wbr:hover{background:rgba(51,214,255,.08)}.wbr.me{color:#ffb000;text-shadow:0 0 6px rgba(255,176,0,.6)}#rep{position:fixed;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(20,0,0,.45);padding:10px;box-sizing:border-box}#rep.hidden{display:none}
+.dugr{background:rgba(51,255,119,.07);box-shadow:inset 0 0 14px rgba(51,255,119,.14);border-bottom:1px solid #1e5a3a}.dugr .dugn{font-weight:bold;letter-spacing:.12em;color:#b8ffd2;animation:dugg 2.6s ease-in-out infinite}.dugr span:nth-child(3){padding-right:16px}.dugr .dugx{color:#ffb000;text-shadow:0 0 6px rgba(255,176,0,.55);letter-spacing:.08em}@keyframes dugg{0%,100%{text-shadow:0 0 4px #33ff77,0 0 11px #33ff77,0 0 22px rgba(51,255,119,.55)}50%{text-shadow:0 0 7px #ffb000,0 0 17px #ffb000,0 0 30px rgba(255,176,0,.6);color:#fff0c8}}.mvr{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.16em;color:#33ff77;text-shadow:0 0 6px rgba(51,255,119,.5);margin:2px 0}.mvol{width:min(46vw,210px);accent-color:#33ff77;cursor:pointer;height:18px}.mvv{min-width:44px;text-align:right;color:#7dffb0}.wbr{cursor:pointer}.wbr span{white-space:nowrap}.wbr span:nth-child(2){min-width:10em}.wbr:hover{background:rgba(51,214,255,.08)}.wbr.me{color:#ffb000;text-shadow:0 0 6px rgba(255,176,0,.6)}#rep{position:fixed;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(20,0,0,.45);padding:10px;box-sizing:border-box}#rep.hidden{display:none}
 #repWin{position:relative;width:min(96vw,960px);max-height:94vh;overflow:auto;background:linear-gradient(rgba(70,0,0,.9),rgba(28,0,0,.94));border:1px solid rgba(255,60,60,.8);box-shadow:0 0 40px rgba(255,0,0,.25),inset 0 0 60px rgba(255,0,0,.15);color:#ffd2d2;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;padding:14px 18px;box-sizing:border-box;text-shadow:0 0 6px rgba(255,80,80,.6)}
 #repWin::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px)}
 #repWin::before{content:"";position:absolute;left:0;right:0;height:70px;top:-70px;pointer-events:none;background:linear-gradient(transparent,rgba(255,80,80,.07),transparent);animation:rpSweep 6s linear infinite}
@@ -71,8 +71,9 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
 <div id="menu" class="ov"><canvas id="logo2" style="width:min(80vw,440px);height:auto;flex:none"></canvas><div class="dim" id="mWh" style="color:#663333;min-height:13px;font-style:italic;font-size:11px"></div>
  <button class="mb" id="bModes">PLAY</button><button class="mb" id="mOnline" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">ONLINE 1V1</button><button class="mb" id="bCust">CUSTOMIZE</button>
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
+ <label class="mvr">VOLUME <input type="range" class="mvol" min="0" max="100" step="1"><span class="mvv"></span></label>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.69 // BUILD 20261119.0300 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.70 // BUILD 20261119.1330 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -96,7 +97,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <div class="row" id="olShare"><input id="olLink" class="sb" readonly style="width:min(70vw,320px)"><button class="sb" id="olCopy">COPY INVITE LINK</button></div>
  <div class="row" id="olJoin"><input id="olIn" class="sb" placeholder="FRIEND'S CODE" maxlength="5" style="width:150px;text-transform:uppercase"><button class="sb" id="olGo">JOIN</button></div>
  <button class="mb hidden" id="olReady">READY</button><button class="mb hidden" id="olRe">REMATCH</button><button class="mb" id="olBack">BACK</button></div>
-<div id="pause" class="ov hidden"><div class="ttl" style="font-size:28px">PAUSED</div><button class="mb" id="pResume">RESUME</button><button class="mb" id="pRestart">RESTART RUN</button><button class="mb" id="pMenu">MAIN MENU</button><button class="mb" id="pQuit" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">QUIT GAME</button><div class="dim" style="font-size:11px">ESC  RESUME   //   R  RESTART</div></div>
+<div id="pause" class="ov hidden"><div class="ttl" style="font-size:28px">PAUSED</div><button class="mb" id="pResume">RESUME</button><button class="mb" id="pRestart">RESTART RUN</button><button class="mb" id="pMenu">MAIN MENU</button><button class="mb" id="pQuit" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">QUIT GAME</button><div style="height:2px"></div><label class="mvr">VOLUME <input type="range" class="mvol" min="0" max="100" step="1"><span class="mvv"></span></label><div class="dim" style="font-size:11px">ESC  RESUME   //   R  RESTART</div></div>
 <div id="over" class="ov scroll hidden"><div id="ovT" class="ttl" style="font-size:28px;color:#ff4455">GAME OVER</div><div id="ovS" class="dim" style="text-align:center"></div><div id="ovK" class="dim" style="color:#ff4455"></div>
  <div id="profO" class="pf"></div><div class="dim" style="font-size:11px"><span style="color:#ffd23a">YELLOW</span> = WENT UP THIS RUN &nbsp; <span style="color:#ff4455">RED</span> = WENT DOWN</div>
  <div class="row"><button class="mb" id="ovAgain">AGAIN</button><button class="mb" id="ovMenu">MENU</button></div></div>
@@ -164,7 +165,9 @@ function newGame(mode){try{RUN.lv={};RUN.pb=((LB[mode||"normal"]||[])[0]||{}).s|
 function say(t,d){G.msg=t;G.msgT=d||1.5;G.msgD=d||1.5}
 function popup(t,col){G.pops.push({t,col:col||"#ffb000",a:1.4});if(G.pops.length>5)G.pops.shift();if(G.matrixA>0&&G.state!=="menu")inject(t)}
 /* ---- sound: short synth blips (HELLBALL style) ---- */
-let AC=null;function tn(f,d,type,v,f2){if(!AC)return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=type||"square";o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(v||.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02)}
+let MVOL=(()=>{try{const v=parseFloat(localStorage.getItem("hb3_mvol"));return v>=0&&v<=1?v:1}catch(e){return 1}})();
+let AC=null;function mkAC(){const a=new(window.AudioContext||window.webkitAudioContext)();try{const mg=a.createGain();mg.gain.value=MVOL;mg.connect(a.destination);Object.defineProperty(a,"destination",{value:mg});a.mg=mg}catch(e){}return a}   // v0.70: everything that used AC.destination now goes through one master gain
+function tn(f,d,type,v,f2){if(!AC)return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=type||"square";o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(v||.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02)}
 let NB=null;function noise(d,v,hp,delay){if(!AC)return;if(!NB){NB=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate);const a=NB.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1}
   const t=AC.currentTime+(delay||0),s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();s.buffer=NB;f.type="highpass";f.frequency.value=hp||2000;
   g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(f);f.connect(g);g.connect(AC.destination);s.start(t,Math.random());s.stop(t+d+.02)}
@@ -342,7 +345,7 @@ cv.addEventListener("pointermove",e=>{toWorld(e);
   if(press&&!press.flip&&!press.slow&&!press.hold&&!pad.tw&&(G.state==="play"||G.state==="serve"||G.state==="wait")){const dx=e.clientX-press.x,dy=e.clientY-press.y;   // v0.46: flips work as before (drag any time), but never start while a spin is playing or held
     if(Math.hypot(dx,dy)>16){press.flip=true;startFlip(Math.abs(dx)>Math.abs(dy)?"y":"x")}}});
 cv.addEventListener("pointerdown",e=>{if(G.paused)return;toWorld(e);
-  if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}
+  if(!AC){try{AC=mkAC()}catch(_){}}
   if(false){showMenu();return}
   if(G.state==="menu"||G.state==="warp")return;
   if(CO.on&&!CO.host){if(G.state==="serve"||G.state==="play")nSend({t:"gsv"});return}
@@ -2534,7 +2537,7 @@ function reportOpen(){if(G.mode==="online")return;const S2=runStats(),box=g$("re
 
 /* ---- MENU + CUSTOMIZE ---- */
 const $=id=>document.getElementById(id);
-function initAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}musStart();if(MUS.on&&!G.clsMute&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}}
+function initAudio(){if(!AC){try{AC=mkAC()}catch(_){}}musStart();if(MUS.on&&!G.clsMute&&MUS.el.paused&&MUS.cur)MUS.el.play().catch(()=>{});if(!AC){try{AC=mkAC()}catch(_){}}}
 function showMenu(){try{gAbandon()}catch(e){}G.paused=false;if(G.clsMute)setTimeout(clsMusicBack,0);if(CO.on||net.ws){nClose();CO.on=false;if(G.mode==="coop")G.mode="normal"}if(G.mode==="online"&&typeof nClose==="function"){nClose();G.mode="normal"}musPauseRestore();G.state="menu";hideAll();stSave();$("mWh").textContent=pick(LINES);$("cust").classList.add("hidden");$("menu").classList.remove("hidden");$("mBest").textContent=G.best?"BEST "+G.best:""}
 const OVS=["tmenu","medals","startm","menu","cust","achs","modes","lb","over","hkb","pause","olobby","wb"];
 function hideAll(){for(const id of OVS)$(id).classList.add("hidden")}
@@ -2762,7 +2765,7 @@ function musReverse(){const W=MUS.W,sr=AC.sampleRate,len=Math.floor(sr*(2+Math.r
   s2.connect(g);g.connect(W.lp);s2.start();MUS.duck=.2;setTimeout(()=>{MUS.duck=1;MUS.fast=1;setTimeout(()=>MUS.fast=0,1500)},len/sr/MUS.rate*1000-300)}
 function musTick(dt){if(!MUS.el)return;const L=G.state==="menu"?0:G.level;
   const tgt=MUS.on&&MUS.cur&&!G.clsMute?MUS_VOL*MUS.duck:0;MUS.vol=tgt>MUS.vol?Math.min(tgt,MUS.vol+MUS_VOL*dt/(MUS.duck<1||MUS.fast?1.2:9)):MUS.vol+(tgt-MUS.vol)*Math.min(1,dt*3);   // ~9 s fade in, quick duck
-  if(MUS.wa){MUS.el.volume=1;MUS.W.g.gain.setTargetAtTime(MUS.vol,AC.currentTime,.05)}else MUS.el.volume=Math.max(0,Math.min(1,MUS.vol));
+  if(MUS.wa){MUS.el.volume=1;MUS.W.g.gain.setTargetAtTime(MUS.vol,AC.currentTime,.05)}else MUS.el.volume=Math.max(0,Math.min(1,MUS.vol*MVOL));
   let r=1;if(L>=8)r=1-Math.min(.32,.018*(L-7))+Math.sin(DS.T*.7)*Math.min(.03,.004*(L-7));                   // slower + lower, with tape warble
   if(L>=15){MUS.stopT-=dt;if(MUS.stopT<=0&&G.state==="play"&&Math.random()<dt*.02){MUS.stopT=40;MUS.grind=2.2}}
   if(MUS.grind>0){MUS.grind-=dt;r*=.35+.65*Math.abs(MUS.grind-1.1)/1.1}                                      // grinds almost to a stop, then back
@@ -2870,7 +2873,7 @@ showMenu();qLabel();musStart();requestAnimationFrame(loop);   // the exe allows 
   try{if(matchMedia("(pointer:coarse)").matches)setTouch()}catch(e){}
   const mine=e=>e.pointerType!=="mouse"&&e.target===cv;
   addEventListener("pointerdown",e=>{if(e.pointerType!=="mouse")setTouch();if(!mine(e))return;e.stopImmediatePropagation();if(G.paused||!e.isPrimary)return;toWorld(e);
-    if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}
+    if(!AC){try{AC=mkAC()}catch(_){}}
     if(G.state==="menu"||G.state==="warp")return;
     if(CO.on&&!CO.host){if(G.state==="serve"||G.state==="play")nSend({t:"gsv"});return}
     },true);       // touching the field never serves by accident: drag the paddle onto the ball, then tap SPIN
@@ -2884,7 +2887,7 @@ showMenu();qLabel();musStart();requestAnimationFrame(loop);   // the exe allows 
   window.toWorld=toWorld;
   const live=()=>(G.state==="play"||G.state==="serve"||G.state==="wait");
   const down=(id,fn)=>tb(id).addEventListener("pointerdown",e=>{e.preventDefault();e.stopPropagation();if(G.paused)return;initAudioSafe();fn(e)});
-  const initAudioSafe=()=>{if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(_){}}};
+  const initAudioSafe=()=>{if(!AC){try{AC=mkAC()}catch(_){}}};
   down("tbSpin",e=>{if(G.state==="serve"&&touches(pad)){G.state="play";playerHit(true);if(G.mode==="online")nHit(true);return}
     if(CO.on&&!CO.host){return}if(live())press={t:performance.now(),x:e.clientX,y:e.clientY,flip:false,hold:false,slow:false}});
   down("tbFx",()=>{if(live())startFlip("y")});down("tbFy",()=>{if(live())startFlip("x")});
@@ -2937,4 +2940,8 @@ function ballSeagull(cx,cy,r,c){const t=bT();sgStep(t);c.save();c.beginPath();c.
   c.strokeStyle="rgba(230,248,255,.85)";c.lineWidth=Math.max(1,r*.05);c.lineJoin="round";c.beginPath();c.moveTo(pts[0][0],pts[0][1]);for(const p of pts)c.lineTo(p[0],p[1]);c.stroke();c.restore();
   c.save();c.strokeStyle="rgba(255,255,255,.55)";c.lineWidth=Math.max(1,r*.06);c.beginPath();c.arc(cx,cy,r*.97,0,TAU2);c.stroke();c.restore();c.save();c.globalAlpha=.45;glassTop(c,cx,cy,r,"170,225,255");c.restore()}
 setInterval(()=>{try{if(ACHD.seagull)return;if(/demidov/i.test(gName())||(G.state!=="menu"&&G.aiName&&/demidov/i.test(String(G.aiName))))ach("seagull")}catch(e){}},1500);
+
+/* v0.70: master volume (saved on this device) */
+function mvolSet(v){MVOL=Math.max(0,Math.min(1,v));try{localStorage.setItem("hb3_mvol",String(MVOL))}catch(e){}if(AC&&AC.mg)AC.mg.gain.setTargetAtTime(MVOL,AC.currentTime,.02);document.querySelectorAll(".mvol").forEach(el=>{el.value=Math.round(MVOL*100)});document.querySelectorAll(".mvv").forEach(el=>{el.textContent=MVOL<=0?"MUTE":Math.round(MVOL*100)+"%"})}
+document.querySelectorAll(".mvol").forEach(el=>{el.addEventListener("input",()=>mvolSet(el.value/100));el.addEventListener("change",()=>{try{ping(660,.12,.25)}catch(e){}el.blur()})});mvolSet(MVOL);
 </script></body></html>
