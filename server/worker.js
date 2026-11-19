@@ -134,16 +134,24 @@ function pfMerge(a, b) {                                       // achievements: 
 }
 export class Board {
   constructor(state, env) { this.s = state.storage; this.env = env; }
+  async dugInfo() {                                              // v0.49: the owner's account (every player named DUG, folded into the one with the best scores) is pinned atop every board and hidden from the ranks
+    const now = Date.now(); if (this._dug && now - this._dug.t < 60000) return this._dug;
+    const ids = []; for (const [k, v] of await this.s.list({ prefix: "n:" })) if (String(v).toUpperCase() === "DUG") ids.push(k.slice(2));
+    let main = null;
+    if (ids.length) { const sum = {}; for (const id of ids) sum[id] = 0; for (const [, l] of await this.s.list({ prefix: "b:" })) for (const e of l) if (e.p in sum) sum[e.p] += e.s; main = ids.slice().sort((a, b) => sum[b] - sum[a])[0]; }
+    return this._dug = { t: now, ids: new Set(ids), main, pub: main ? await pubId(main) : null };
+  }
   async view(b, pid) {
-    const list = ((await this.s.get("b:" + b)) || []).sort(lbCmp(b)), top = list.slice(0, LB_SHOW);
+    const D = await this.dugInfo(), all = ((await this.s.get("b:" + b)) || []).sort(lbCmp(b)), list = all.filter(e => !D.ids.has(e.p)), top = list.slice(0, LB_SHOW), mine = !!pid && D.ids.has(pid);
     const names = top.length ? await this.s.get(top.map(e => "n:" + e.p)) : new Map();
-    const i = pid ? list.findIndex(e => e.p === pid) : -1;
+    const i = pid && !mine ? list.findIndex(e => e.p === pid) : -1;
     const ids = await Promise.all(top.map(e => pubId(e.p)));
     let near = [];                                             // the players just above and below you, for the end-of-run comparison
     if (i >= 0) { const lo = Math.max(0, i - 3), sl = list.slice(lo, Math.min(list.length, i + 4)), nm = await this.s.get(sl.map(e => "n:" + e.p));
       near = sl.map((e, k) => ({ r: lo + k + 1, n: nm.get("n:" + e.p) || "PLAYER", s: e.s, l: e.l || 0, me: e.p === pid })); }
-    return { board: b, top: top.map((e, k) => ({ n: names.get("n:" + e.p) || "PLAYER", s: e.s, l: e.l || 0, me: e.p === pid, id: ids[k] })),
-      you: i >= 0 ? { rank: i + 1, s: list[i].s } : null, total: list.length, near };
+    const pin = D.main ? [{ n: "DUG", s: 0, l: 0, me: false, id: D.pub, dug: 1, mine }] : [], my = mine ? all.find(e => e.p === pid) : null;
+    return { board: b, top: pin.concat(top.map((e, k) => ({ n: names.get("n:" + e.p) || "PLAYER", s: e.s, l: e.l || 0, me: e.p === pid, id: ids[k] }))),
+      you: i >= 0 ? { rank: i + 1, s: list[i].s } : my ? { rank: 1, s: my.s } : null, total: list.length, near };
   }
   async mergePlayers(A, B) {                                     // fold player B into player A: boards (best score; counts add), profile, HELLWORLD save, name, ghost copy; B becomes an alias of A
     const boards = await this.s.list({ prefix: "b:" });
@@ -202,6 +210,16 @@ export class Board {
       const A = ids[0]; for (const B of ids.slice(1)) await this.mergePlayers(A, B);
       return lbJSON({ ok: true, found: ids.length, merged: ids.length - 1 });
     }
+    if (m && m.op === "mergeall") {                              // v0.49: OWNER ONLY (FX_KEY): fold every group of players sharing a name (any capitals) into the one with the best scores
+      const key = this.env && this.env.FX_KEY ? String(this.env.FX_KEY) : "";
+      if (key.length < 16 || typeof m.key !== "string" || m.key.length !== key.length) return lbJSON({ error: "forbidden" }, 403);
+      let diff = 0; for (let i = 0; i < key.length; i++) diff |= key.charCodeAt(i) ^ m.key.charCodeAt(i);
+      if (diff) return lbJSON({ error: "forbidden" }, 403);
+      const groups = {}; for (const [k, v] of await this.s.list({ prefix: "n:" })) (groups[String(v).toUpperCase()] = groups[String(v).toUpperCase()] || []).push(k.slice(2));
+      const sum = {}; for (const [, l] of await this.s.list({ prefix: "b:" })) for (const e of l) sum[e.p] = (sum[e.p] || 0) + e.s;
+      const out = []; for (const [nm, ids] of Object.entries(groups)) { if (ids.length < 2) continue; ids.sort((a, b) => (sum[b] || 0) - (sum[a] || 0)); for (const B of ids.slice(1)) await this.mergePlayers(ids[0], B); out.push([nm, ids.length]); }
+      this._dug = null; return lbJSON({ ok: true, groups: out });
+    }
     if (m && m.op === "wipe") {                                  // v0.46: OWNER ONLY (needs FX_KEY + a typed confirmation): erase every board, name, profile, link code and HELLWORLD save, keep the daily reading, and start a new epoch so devices reset their own local progress
       const key = this.env && this.env.FX_KEY ? String(this.env.FX_KEY) : "";
       if (key.length < 16 || typeof m.key !== "string" || m.key.length !== key.length) return lbJSON({ error: "forbidden" }, 403);
@@ -226,7 +244,7 @@ export class Board {
     if (!m || !LB_PID.test(m.pid || "")) return lbJSON({ error: "bad player" }, 400);
     { const al = await this.s.get("al:" + m.pid); if (al) m.pid = al; }          // v0.47: a device whose player was merged keeps posting, and it all lands on the merged player
     const name = lbName(m.n);
-    if (name) await this.s.put("n:" + m.pid, name);
+    if (name) { await this.s.put("n:" + m.pid, name); if (name === "DUG") this._dug = null; }
     if (m.op === "name") return lbJSON({ ok: true, n: name });
     if (m.op === "linkmk" || m.op === "linkreset") {            // v0.43: your link code is permanent (any device can show it again); RESET makes a new one and kills the old
       let code = await this.s.get("lp:" + m.pid);
