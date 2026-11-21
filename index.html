@@ -73,7 +73,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <label class="mvr">VOLUME <input type="range" class="mvol" min="0" max="100" step="1"><span class="mvv"></span></label>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.74 // BUILD 20261121.0430 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.75 // BUILD 20261121.1330 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -155,7 +155,7 @@ function spinBall(){if(G.state!=="play"||ball.stop){rotAxis(0,1,0,.012);return}
   rotAxis(0,1,0,ball.vx*.045+ball.cx*7);            // sideways drift + side spin
   rotAxis(1,0,0,-ball.vy*.045+ball.cy*7+ball.vz*.03)} // up/down drift + top spin + rolling down the tunnel
 function resetBall(){Object.assign(ball,{x:WX,y:WY,z:0,vx:0,vy:0,vz:0,cx:0,cy:0,stop:true,px:WX,py:WY,pz:0})}
-function startLevel(){try{RUN.lv=RUN.lv||{};RUN.lv[LVL()]=G.score}catch(e){}try{if(G.mode==="goth"&&G.level>=10)gothUnlock()}catch(e){}G.vol=0;if(G.mode==="classic")G.spd=1+Math.min(.5,Math.max(0,(G.cl||1)-12)*.025);resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck();G.dark=G.mode!=="online"&&G.level>=41&&Math.random()<.45;if(G.dark)setTimeout(()=>{if(G.dark)popup("LIGHTS OUT","#ff4455")},2600)}
+function startLevel(){try{RUN.lv=RUN.lv||{};RUN.lv[LVL()]=G.score}catch(e){}try{if(G.mode==="goth"&&G.level>=10)gothUnlock();GTH.tr=(G.mode==="goth"&&G.level===13)?0:-1;GTH.trp=-1}catch(e){}G.vol=0;if(G.mode==="classic")G.spd=1+Math.min(.5,Math.max(0,(G.cl||1)-12)*.025);resetBall();G.state="serve";if(G.mode==="endless"||G.mode==="boss")G.el=99;pickOpponent();cylCheck();faceCheck();G.dark=G.mode!=="online"&&G.level>=41&&Math.random()<.45;if(G.dark)setTimeout(()=>{if(G.dark)popup("LIGHTS OUT","#ff4455")},2600)}
 function newGame(mode){try{RUN.lv={};RUN.pb=((LB[mode||"normal"]||[])[0]||{}).s||0}catch(e){}G.subDone=false;G.ghostMatch=false;SV.pts=[];SV.said=false;if(mode!=="classic"&&G.clsMute)setTimeout(clsMusicBack,0);G.cl=1;runStart();ghStart(mode);G.grudge=null;mode=mode||"normal";if(mode===true)mode="test";G.mode=mode;G.test=mode==="test"||mode==="lab"||(mode==="classic"&&!!G.ctest);G.tl=(mode==="classic"&&G.ctest&&G.ctest.long)?2:1;G.tubeN=(mode==="classic"&&G.ctest&&G.ctest.tube)?32:8;
   G.mod={};G.modNames=[];if(mode==="daily"){const ms=dailyMods();ms.forEach(m=>Object.assign(G.mod,m));G.modNames=ms.map(m=>m.n.split(":")[0]);RNG=mulberry(todayKey())}else RNG=Math.random;
   G.level=G.mod.start||1;G.score=0;G.pl=mode==="endless"?3:(G.mod.lives||5);G.el=(mode==="endless"||mode==="boss")?99:3;G.epts=0;G.bossWon=false;G.bossLost=false;G.zone=null;G.tube=false;G.tubeK=0;G.elMax=3;G.oceanA=1;ABYSS.length=0;EV.list=[];EV.t=8;BLK.length=0;G.hyCam=0;G.twins=false;ai.w=PW;ai.h=PH;
@@ -1241,7 +1241,7 @@ function foldTick(dt){G.foldT+=dt;G.tubeK=Math.min(1,G.foldT/2.6);G.hyCam=(G.hyC
 /* ---------- v0.73: THE GOTH ROUTE (first expansion) ----------
    idle 60 s on the main menu -> the song starts; 2:39-2:51 the menu glitches on the song's stutters; at 2:51 it cuts to a storm with one button, START?
    START? = mode "goth": 14 goth levels, THE FACE at level 15, its own leaderboard. Reaching level 10 once unlocks ????? in the PLAY menu for good. */
-const GTH={un:(()=>{try{return localStorage.getItem("hb3_goth")==="1"}catch(e){return false}})(),dt:.016,fc:0};
+const GTH={un:(()=>{try{return localStorage.getItem("hb3_goth")==="1"}catch(e){return false}})(),dt:.016,fc:0,tr:-1,trp:-1,skin:(()=>{try{return localStorage.getItem("hb3_gskin")==="1"}catch(e){return false}})()};
 const GTH_CLUES=["IT SINGS IF YOU LEAVE IT ALONE","SIXTY SECONDS OF NOTHING","DON'T TOUCH THE MENU","LET THE SONG REACH THE STORM","2:51","THERE IS A DOOR MARKED ?????","THE MENU CHANGES WHEN NOBODY IS WATCHING"];
 const GTH_T={nave:{n:"THE NAVE",ring:[70,90,215],acc:[150,90,255]},grave:{n:"BURIAL GROUND",ring:[50,70,170],acc:[90,130,255]},cata:{n:"THE OSSUARY",ring:[110,95,180],acc:[170,160,230]},rose:{n:"BLEEDING ROSE",ring:[210,40,70],acc:[255,60,90]},abyss:{n:"THE MIRROR",ring:[40,150,255],acc:[0,210,255]}};
 const gthKey=L=>L<=3?"nave":L<=6?"grave":L<=9?"cata":L<=12?"rose":"abyss";
@@ -1249,7 +1249,7 @@ const gthName=L=>L===16?"THE COIL":(L===1||L===4||L===7||L===10||L===13)?GTH_T[g
 const gcl=(v,a,b)=>Math.max(a,Math.min(b,v));
 const HC=()=>G.mode==="goth"?"#bcd0ff":"#33ff77";
 function gothUnlock(){if(GTH.un)return;GTH.un=true;try{localStorage.setItem("hb3_goth","1")}catch(e){}try{gothShowBtn()}catch(e){}try{if(!GB_TABS.some(t=>t[0]==="goth"))GB_TABS.push(["goth","?????"])}catch(e){}popup("UNLOCKED  //  ?????","#9db4ff")}
-function gothShowBtn(){const b=document.getElementById("mGoth");if(b)b.classList.toggle("hidden",!GTH.un)}
+function gothShowBtn(){const b=document.getElementById("mGoth");if(b)b.classList.toggle("hidden",!GTH.un);const k=document.getElementById("mSkin");if(k)k.classList.toggle("hidden",!GTH.un);try{gskApply()}catch(e){}}
 
 /* ======== lightning storm: the menu backdrop and the far wall of the goth levels ======== */
 function gGenBolt(R,x0,y0,x1,y1){let pts=[[x0,y0],[x1,y1]],off=Math.hypot(x1-x0,y1-y0)*.26;
@@ -1376,7 +1376,11 @@ function gothTunnel(rgb,ghost){
   if(ghost)return;
   const L=G.level,tk=gthKey(L),th=GTH_T[tk],rc=th.ring,ac=th.acc,t=DS.T||0;
   if(!gthStormFar)gthStormFar=new GStorm(GTH_FAR,{seed:3,rain:30,noise:40,fast:true});
+  let T=-1;if(GTH.tr>=0){GTH.tr+=GTH.dt;T=GTH.tr;if(T>10.5){GTH.tr=-1;T=-1}}
+  if(T>=0){for(const st of[.85,1.45,2.05])if(GTH.trp<st&&T>=st){gthStormFar.strike();gthStormFar.flash=1.3}GTH.trp=T}
   gthStormFar.step(GTH.dt);gthStormFar.draw();const f=gthStormFar.flash;
+  const litAt=i=>T<0?1:gcl((T-(2.6+i*.4))/.35,0,1)*(Math.sin(T*55+i*9)>-.35?1:.4);
+  const rv=T<6.2?0:T<7.2?(T-6.2)*.9:gcl(.9*(1-(T-7.2)/2.6),0,.9);
   const Pj=(x,y,zf)=>P(x*BW,y*BH,zf*DEPTH),Pw=(side,b,zf)=>side==="L"?P(0,b*BH,zf*DEPTH):side==="R"?P(BW,b*BH,zf*DEPTH):side==="T"?P(b*BW,0,zf*DEPTH):P(b*BW,BH,zf*DEPTH);
   const rgbA=(a,al)=>"rgba("+a[0]+","+a[1]+","+a[2]+","+al+")";
   const wd=zf=>{const a=Pj(0,.5,zf),b=Pj(1,.5,zf);return(b[0]-a[0])/676};
@@ -1397,7 +1401,7 @@ function gothTunnel(rgb,ghost){
     ctx.strokeStyle="#000";ctx.lineWidth=Math.max(1,fh*.03);for(let k=0;k<12;k++){const a=k/12*Math.PI*2+t*.05;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);ctx.stroke()}
     for(const q of[.35,.68,1]){ctx.beginPath();ctx.arc(cx,cy,r*q,0,7);ctx.stroke()}
     ctx.strokeStyle=rgbA(col,.9);ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke();ctx.restore()}
-  if(tk==="abyss"&&QL>=1){if((GTH.fc++&3)===0){GF.set(0,null,t);GF.render(t)}ctx.globalAlpha=gcl((L-12)*.28,0,.5);ctx.drawImage(GF.cv,fa[0],fa[1],fw,fh*.95);ctx.globalAlpha=1}
+  if(tk==="abyss"&&QL>=1){if((GTH.fc++&3)===0){GF.set(0,null,t);GF.render(t)}ctx.globalAlpha=gcl(Math.max(gcl((L-12)*.28,0,.5),rv),0,1);ctx.drawImage(GF.cv,fa[0],fa[1],fw,fh*.95);ctx.globalAlpha=1}
   ring(1,rc,.9,1.5);
   for(let i=0;i<=10;i++)ring(i/10,rc,.14+.5*(1-i/10),1);
   ctx.strokeStyle=rgbA(rc,.35);ctx.lineWidth=1;for(const[x,y]of[[0,0],[1,0],[0,1],[1,1]]){const a=Pj(x,y,0),b=Pj(x,y,1);ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke()}
@@ -1434,6 +1438,12 @@ function gothTunnel(rgb,ghost){
     if(L>=13){if(!gthLat){const c=mkC(960,540),x=c.getContext("2d");for(let y=0;y<540;y+=7)for(let xx=0;xx<960;xx+=6)for(let k=0;k<3;k++){x.fillStyle=["#ff1a1a","#1aff3c","#1a3cff"][k];x.fillRect(xx+k*2,y,2,5)}gthLat=ctx.createPattern(c,"repeat")}
       ctx.globalAlpha=.1+(L-13)*.06;ctx.globalCompositeOperation="lighter";ctx.fillStyle=gthLat;ctx.fillRect(na[0],na[1],nb[0]-na[0],nb[1]-na[1]);ctx.globalAlpha=1;ctx.globalCompositeOperation="source-over"}
     ctx.restore()}
+  if(T>=0){const dk=gcl(T/.7,0,1)*.95;
+    for(let i=0;i<10;i++){const a=dk*(1-litAt(i));if(a<.01)continue;const z0=i/10,z1=(i+1)/10,o0=Pj(0,0,z0),o1=Pj(1,1,z0),n0=Pj(0,0,z1),n1=Pj(1,1,z1);ctx.fillStyle="rgba(0,0,4,"+a+")";ctx.beginPath();ctx.rect(o0[0],o0[1],o1[0]-o0[0],o1[1]-o0[1]);ctx.rect(n0[0],n0[1],n1[0]-n0[0],n1[1]-n0[1]);ctx.fill("evenodd")}
+    const af=dk*(1-litAt(10))*(1-gcl(f*1.1,0,.92));ctx.fillStyle="rgba(0,0,4,"+af+")";ctx.fillRect(fa[0],fa[1],fw,fh);
+    for(let i=0;i<10;i++){const l=litAt(i)*gcl(1-(T-9)/1.5,0,1);if(l<.02)continue;const zn=(i+.5)/10-.022,zf=(i+.5)/10+.022,a=Pj(.4,0,zn),b=Pj(.6,0,zn),c=Pj(.6,0,zf),d=Pj(.4,0,zf);
+      ctx.fillStyle="rgba(215,235,255,"+(.9*l)+")";ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.lineTo(c[0],c[1]);ctx.lineTo(d[0],d[1]);ctx.closePath();ctx.fill();
+      const cx=(a[0]+b[0])/2,w=b[0]-a[0];ctx.save();ctx.globalCompositeOperation="lighter";const g=ctx.createRadialGradient(cx,a[1]+3,0,cx,a[1]+3,w*1.4);g.addColorStop(0,"rgba(140,190,255,"+(.5*l)+")");g.addColorStop(1,"rgba(140,190,255,0)");ctx.fillStyle=g;ctx.fillRect(cx-w*1.4,a[1]-4,w*2.8,w*2.8);ctx.restore()}}
   ctx.fillStyle="rgba(120,150,255,"+(f*.12)+")";ctx.fillRect(na[0],na[1],nb[0]-na[0],nb[1]-na[1]);
   ctx.restore()}
 GTH.drops=[];for(let i=0;i<40;i++)GTH.drops.push([Math.random(),Math.random(),.5+Math.random()]);
@@ -1446,12 +1456,16 @@ function gsInit(){
    "#gstart{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);background:rgba(2,3,14,.55);border:1px solid rgba(160,185,255,.55);color:#dbe6ff;font:bold clamp(20px,4vw,30px) 'Courier New',monospace;letter-spacing:.45em;padding:14px 22px 14px 36px;opacity:0;pointer-events:none;text-shadow:-2px 0 #ff2a44,2px 0 #2a6bff,0 0 14px #5f7cff;box-shadow:0 0 22px -4px #4a64ff,inset 0 0 22px -8px #4a64ff;cursor:pointer;transition:opacity .25s}"+
    "#gstart.on{opacity:1;pointer-events:auto;animation:gflick 3.3s infinite}#gstart:hover{background:rgba(255,30,60,.22);color:#fff}@keyframes gflick{0%,100%{opacity:1}7%{opacity:.4}9%{opacity:1}41%{opacity:1}43%{opacity:.25}45%{opacity:.9}47%{opacity:.5}49%{opacity:1}}"+
    "#gglitch{position:fixed;inset:0;width:100%;height:100%;z-index:9001;pointer-events:none;image-rendering:pixelated}"+
+   "#gskin{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:4;image-rendering:pixelated;display:none}.gsk #menu{background:rgba(1,2,12,.3)!important}.gsk #menu .mb{color:#c9d2ff!important;border-color:#6f7cff!important;background:rgba(2,3,14,.45);text-shadow:-1px 0 #ff2a44,1px 0 #2a6bff,0 0 10px #5f7cff!important}.gsk #menu .mb:hover{background:rgba(255,30,60,.2)}.gsk #menu .dim{color:#7f8cff!important}.gsk #menu .ft,.gsk #menu .ft span{color:#5560b8!important}.gsk #menu #logo2{filter:hue-rotate(115deg) saturate(1.4)}.gsk #menu .mvr{color:#9db4ff}#mSkin{width:min(86vw,360px)!important;font-size:11px!important;letter-spacing:3px!important;padding:8px 0!important}"+
    "#mGoth{background:#04040e;border-color:#6f7cff;color:#c9d2ff;text-shadow:-1px 0 #ff2a44,1px 0 #2a6bff,0 0 10px #5f7cff}";document.head.appendChild(st);
   const m=document.createElement("div");m.id="gmenu";const c=document.createElement("canvas");c.width=320;c.height=180;m.appendChild(c);const b=document.createElement("button");b.id="gstart";b.textContent="START?";m.appendChild(b);document.body.appendChild(m);
   const gl=document.createElement("canvas");gl.id="gglitch";gl.width=480;gl.height=270;gl.style.display="none";document.body.appendChild(gl);
   GS.menuEl=m;GS.gc=c;GS.btn=b;GS.glEl=gl;GS.gx=gl.getContext("2d");
   const mb=document.createElement("button");mb.className="mb hidden";mb.id="mGoth";mb.textContent="?????";const back=document.getElementById("mBack");if(back&&back.parentNode)back.parentNode.insertBefore(mb,back);
-  mb.onclick=()=>{initAudio();startMode("goth")};b.onclick=()=>gsGo();gothShowBtn();
+  mb.onclick=()=>{initAudio();startMode("goth")};b.onclick=()=>gsGo();
+  const sk=document.createElement("canvas");sk.id="gskin";sk.width=320;sk.height=180;document.body.appendChild(sk);GS.skC=sk;
+  const sb=document.createElement("button");sb.className="mb hidden";sb.id="mSkin";const ft=document.querySelector("#menu .ft");if(ft&&ft.parentNode)ft.parentNode.insertBefore(sb,ft);
+  sb.onclick=()=>{GTH.skin=!GTH.skin;try{localStorage.setItem("hb3_gskin",GTH.skin?"1":"0")}catch(e){}gskApply()};gothShowBtn();
   for(const ev of["mousemove","mousedown","keydown","touchstart","wheel"])addEventListener(ev,()=>{if(!GS.on)GS.idle=0},{passive:true})}
 const gsMenuVisible=()=>{const mn=document.getElementById("menu"),na=document.getElementById("nameAsk");return mn&&!mn.classList.contains("hidden")&&!(na&&!na.classList.contains("hidden"))};
 function gsBody(f){document.body.style.filter=f?f.f:"";document.body.style.transform=f?f.t:""}
@@ -1466,7 +1480,7 @@ function gsHit(fl,gl){GS.flash=Math.max(GS.flash,fl);GS.glitch=Math.max(GS.glitc
 function gsShow(op){if(!GS.storm)GS.storm=new GStorm(GS.gc,{sil:true,seed:5,rain:90,fast:true});GS.menuEl.style.display="block";GS.menuEl.style.opacity=op}
 function gsShift(){GS.shift=true;GS.warm=0;gsShow(1);GS.menuEl.style.pointerEvents="auto";gsHit(1.6,.7);gsBody(null)}
 function gsGo(){const a=GS.el;gsStop();try{initAudio();startMode("goth")}catch(e){console.warn(e)}}
-function gsTick(dt){
+function gsTick(dt){try{gskTick(dt)}catch(e){}
   if(!GS.on){if(G.state==="menu"&&gsMenuVisible()&&MUS.on&&!document.hidden){GS.idle+=dt;if(GS.idle>=GS_IDLE)gsStart()}else GS.idle=0;return}
   const el=GS.el;if(!el){gsStop();return}
   if(!GS.shift&&(!gsMenuVisible()||G.state!=="menu")){gsStop();return}
@@ -1480,6 +1494,9 @@ function gsTick(dt){
   const x=GS.gx;if(GS.glitch>0||GS.flash>.05){GS.glEl.style.display="block";x.clearRect(0,0,480,270);
     if(GS.glitch>0){const n=Math.floor(8+GS.glitch*30);for(let i=0;i<n;i++){const y=Math.random()*270,h=1+Math.random()*(GS.glitch*16),xx=Math.random()*480,w=20+Math.random()*(160+GS.glitch*300);x.fillStyle=["rgba(0,200,255,.55)","rgba(255,30,60,.5)","rgba(40,70,255,.6)","rgba(255,255,255,.7)"][i%4];x.fillRect(xx,y,w,h)}}
     if(GS.flash>.05){x.fillStyle=`rgba(200,220,255,${gcl(GS.flash*.35,0,.8)})`;x.fillRect(0,0,480,270)}}else if(GS.glEl.style.display!=="none"){x.clearRect(0,0,480,270);GS.glEl.style.display="none"}}
+function gskApply(){const on=GTH.un&&GTH.skin;document.body.classList.toggle("gsk",on);const b=document.getElementById("mSkin");if(b)b.textContent=on?"STYLE: ?????":"STYLE: STANDARD"}
+function gskTick(dt){const on=GTH.un&&GTH.skin&&G.state==="menu"&&gsMenuVisible()&&!!GS.skC;
+  if(on){if(!GS.skS)GS.skS=new GStorm(GS.skC,{sil:true,seed:9,rain:80,fast:true});if(GS.skC.style.display!=="block")GS.skC.style.display="block";GS.skS.step(dt);GS.skS.draw()}else if(GS.skC&&GS.skC.style.display!=="none")GS.skC.style.display="none"}
 gsInit();
 
 /* ---------- LEVEL 40: THE FACE ---------- */
