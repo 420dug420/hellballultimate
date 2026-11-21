@@ -99,7 +99,7 @@ export class Room {
 }
 
 /* ---------- Leaderboards: one Durable Object per scope (a Discord server, a DM, or "web"), best score per player per board ---------- */
-const LB_BOARD = /^(normal|hard|gef|classic|cls|1v1|koth|daily-\d{4}-\d{2}-\d{2})$/, LB_PID = /^[a-z0-9]{8,24}$/, LB_KEEP = 100, LB_SHOW = 10;
+const LB_BOARD = /^(normal|hard|gef|classic|cls|goth|1v1|koth|daily-\d{4}-\d{2}-\d{2})$/, LB_PID = /^[a-z0-9]{8,24}$/, LB_KEEP = 100, LB_SHOW = 10;
 const lbName = n => String(n || "").toUpperCase().replace(/[^A-Z0-9 _.-]/g, "").trim().slice(0, 12);
 const lbCORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "Content-Type" };
 const lbJSON = (o, status) => new Response(JSON.stringify(o), { status: status || 200, headers: Object.assign({ "Content-Type": "application/json", "Cache-Control": "no-store" }, lbCORS) });
