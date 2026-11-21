@@ -73,7 +73,7 @@ window.IN_DISCORD=/[?&]frame_id=/.test(location.search);
  <div class="mg"><button class="mb" id="bMed">MEDALS</button><button class="mb" id="bAch">ACHIEVEMENTS</button><button class="mb" id="bLb">SCORES</button><button class="mb" id="bWb" style="border-color:#33d6ff;color:#33d6ff;text-shadow:0 0 8px #33d6ff">LEADERBOARD</button><button class="mb" id="bHw" style="border-color:#ff66cc;color:#ff66cc;text-shadow:0 0 8px #ff66cc">HELLWORLD</button><button class="mb" id="bHk" style="border-color:#ff4455;color:#ff4455;text-shadow:0 0 8px #ff4455">THREAT BOARD</button></div>
  <label class="mvr">VOLUME <input type="range" class="mvol" min="0" max="100" step="1"><span class="mvv"></span></label>
  <div class="dim" id="mBest" style="font-size:11px"></div>
- <div class="ft">v0.73 // BUILD 20261121.0400 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
+ <div class="ft">v0.74 // BUILD 20261121.0430 // <span id="mMus" style="color:#33d6ff"></span><br><span id="mQ"></span></div></div>
 <div id="startm" class="ov hidden"><button class="mb" id="sBack">BACK</button></div>
 <div id="modes" class="ov scroll hidden" style="gap:6px"><div class="ttl">PLAY</div>
  <button class="mb" id="sHell">HELLBALL</button><div class="dim">THE FULL DESCENT. IT CHANGES AS YOU GO DOWN.</div>
@@ -251,7 +251,8 @@ function stepCore(){
 function winPoint(){budCheer();if(Math.random()<.35)aiSay(pick(talkTier()>=2?["LUCKY","FUCK","SHIT","FUCKING HELL","THAT DIDN'T COUNT",">|"]:["LUCKY","WHATEVER","THAT DIDN'T COUNT",">|","HMPH","LAG"]));if(G.vol===1){G.score+=15;popup("ACE! +15","#ffb000")}
   stInc("pw");if(G.vol===1)stInc("aces");G.streak++;const p=25*G.streak;G.score+=p;popup(G.streak>1?"POINT  STREAK x"+G.streak+"  +"+p:"POINT +25","#33ff77");G.vol=0}
 function losePoint(){if(FACE.on)FACE.lostPt=true;budSad();stInc("plost");if(G.mode==="boss")G.bossLost=true;setTimeout(()=>aiMock(true),250);const lost=Math.ceil(G.score*.25);G.score-=lost;if(lost)popup("-25%  (-"+lost+")","#ff4455");G.streak=0;G.vol=0}
-function endPoint(won){G.tagGo=true;if(G.mode==="classic"){G.state="wait";G.waitT=1.1;G.after=won?(G.el<1?"clslevel":"serve"):(G.pl<1?"over":"serve");return}if(G.mode==="grudge"&&won&&G.el<1){grudgeWin();G.state="wait";G.waitT=2.2;G.after="over";return}if(won&&G.el<1&&FACE.on&&!FACE.dead){faceDie();G.state="wait";G.waitT=3.6;G.after=G.mode==="goth"?"gothend":"hellworld";return}
+function endPoint(won){G.tagGo=true;if(G.mode==="classic"){G.state="wait";G.waitT=1.1;G.after=won?(G.el<1?"clslevel":"serve"):(G.pl<1?"over":"serve");return}if(G.mode==="grudge"&&won&&G.el<1){grudgeWin();G.state="wait";G.waitT=2.2;G.after="over";return}if(won&&G.el<1&&FACE.on&&!FACE.dead){faceDie();G.state="wait";G.waitT=3.6;G.after=G.mode==="goth"?"gothtube":"hellworld";return}
+  if(G.mode==="goth"&&won&&G.el<1&&G.level>=16){G.state="wait";G.waitT=2.2;G.after="gothend";return}
   if(G.mode==="goth"&&won&&G.el<1){G.state="wait";G.waitT=G.level===14?.5:1.1;G.after=G.level===14?"faceintro":"level";if(G.level!==14)G.ripple={sx:Math.max(0,Math.min(BW,ball.x)),sy:Math.max(0,Math.min(BH,ball.y)),t:0};G.aiWon=false;return}
   if(won&&G.el<1&&G.level===29){G.state="wait";G.waitT=1;G.after="fold";return}
   if(won&&G.el<1&&G.level===39){G.state="wait";G.waitT=.5;G.after="faceintro";return}
@@ -278,7 +279,8 @@ function afterWait(){if(G.after==="clslevel"){clsLevelUp();return}
   if(G.after==="hyper"){levelBeaten();G.state="hyper";G.hyT=0;G.camT=undefined;BLK.length=0;S.warp();setTimeout(()=>S.form(),600);return}
   if(G.after==="fold"){levelBeaten();G.state="fold";G.foldT=0;S.warp();return}
   if(G.after==="faceintro"){levelBeaten();G.state="faceintro";G.fiT=0;return}
-  if(G.after==="gothend"){levelBeaten();FACE.on=false;G.zone=null;G.bossWon=true;G.state="over";showOver();return}
+  if(G.after==="gothtube"){levelBeaten();FACE.on=false;G.zone=null;G.tube=true;G.tubeK=1;healPaddle();G.level=16;G.el=3;say("LEVEL 16  //  THE COIL",3);startLevel();return}
+  if(G.after==="gothend"){levelBeaten();FACE.on=false;G.zone=null;G.tube=false;G.tubeK=0;G.bossWon=true;G.state="over";showOver();return}
   if(G.after==="hellworld"){levelBeaten();FACE.on=false;G.state="hwin";G.hwT=0;S.form();return}
   if(G.after==="warp"){levelBeaten();G.state="warp";G.warpT=0;S.warp();return}
   if(G.after==="level"){levelBeaten();healPaddle();{const sk=fxSkip(G.level);G.level+=1+sk;if(sk)setTimeout(()=>popup("GEF "+fxGef()+"  //  LEVEL SKIPPED","#ff4455"),500)}G.el=3;say("LEVEL "+G.level+(G.level===35?"  //  THE WORLD TURNS":(G.mode==="goth"&&gthName(G.level)?"  //  "+gthName(G.level):"")),1.8);tn(660,.15,"square",.04);setTimeout(()=>tn(990,.25,"square",.04),120);startLevel()}
@@ -318,7 +320,7 @@ function aiTick(dt){if(G.state==="menu"||G.mode==="online")return;
   if(ai.flip){ai.flip.t+=dt;if(ai.flip.t>=ai.flip.d)ai.flip=null}
   if(G.state==="play"&&ball.vz<0&&ball.z<DEPTH*.8&&Math.random()<dt*Math.min(.6,.08+.03*G.level))aiTrick(pick(["spin","spin","double","flip","slow"]));   // showing off while you scramble
   if(G.aiSay){G.aiSay.t+=dt;if(G.aiSay.t>G.aiSay.d)G.aiSay=null}
-  else if(G.state==="play"&&Math.random()<dt*(.02+.004*G.level))aiSay(Math.random()<.3?pick(AI_EMO):pick(aiPool()),Math.random()<.3?"#ffb000":null)}
+  else if(G.state==="play"&&Math.random()<dt*(.02+.004*G.level)){if(G.mode==="normal"&&!GTH.un&&Math.random()<.16)G.aiSay={txt:pick(GTH_CLUES),col:"#9db4ff",t:0,d:2.8};else aiSay(Math.random()<.3?pick(AI_EMO):pick(aiPool()),Math.random()<.3?"#ffb000":null)}}
 function drawAiSay(t){const s2=G.aiSay;if(!s2||G.state==="warp"||G.state==="form")return;const x=ai.ox+(ai.x-ai.ox)*t,y=ai.oy+(ai.y-ai.oy)*t,p=P(x,y-PH/2,DEPTH);
   const n=Math.min(s2.txt.length,Math.floor(s2.t*28)),txt=s2.txt.slice(0,n)+(n<s2.txt.length||Math.floor(s2.t*3)%2?"_":" "),a=Math.min(1,(s2.d-s2.t)*3);
   ctx.save();ctx.globalAlpha=a;ctx.font="bold 15px 'Courier New',monospace";ctx.textAlign="center";const w=ctx.measureText(s2.txt+"_").width+14;
@@ -1240,9 +1242,10 @@ function foldTick(dt){G.foldT+=dt;G.tubeK=Math.min(1,G.foldT/2.6);G.hyCam=(G.hyC
    idle 60 s on the main menu -> the song starts; 2:39-2:51 the menu glitches on the song's stutters; at 2:51 it cuts to a storm with one button, START?
    START? = mode "goth": 14 goth levels, THE FACE at level 15, its own leaderboard. Reaching level 10 once unlocks ????? in the PLAY menu for good. */
 const GTH={un:(()=>{try{return localStorage.getItem("hb3_goth")==="1"}catch(e){return false}})(),dt:.016,fc:0};
+const GTH_CLUES=["IT SINGS IF YOU LEAVE IT ALONE","SIXTY SECONDS OF NOTHING","DON'T TOUCH THE MENU","LET THE SONG REACH THE STORM","2:51","THERE IS A DOOR MARKED ?????","THE MENU CHANGES WHEN NOBODY IS WATCHING"];
 const GTH_T={nave:{n:"THE NAVE",ring:[70,90,215],acc:[150,90,255]},grave:{n:"BURIAL GROUND",ring:[50,70,170],acc:[90,130,255]},cata:{n:"THE OSSUARY",ring:[110,95,180],acc:[170,160,230]},rose:{n:"BLEEDING ROSE",ring:[210,40,70],acc:[255,60,90]},abyss:{n:"THE MIRROR",ring:[40,150,255],acc:[0,210,255]}};
 const gthKey=L=>L<=3?"nave":L<=6?"grave":L<=9?"cata":L<=12?"rose":"abyss";
-const gthName=L=>(L===1||L===4||L===7||L===10||L===13)?GTH_T[gthKey(L)].n:"";
+const gthName=L=>L===16?"THE COIL":(L===1||L===4||L===7||L===10||L===13)?GTH_T[gthKey(L)].n:"";
 const gcl=(v,a,b)=>Math.max(a,Math.min(b,v));
 const HC=()=>G.mode==="goth"?"#bcd0ff":"#33ff77";
 function gothUnlock(){if(GTH.un)return;GTH.un=true;try{localStorage.setItem("hb3_goth","1")}catch(e){}try{gothShowBtn()}catch(e){}try{if(!GB_TABS.some(t=>t[0]==="goth"))GB_TABS.push(["goth","?????"])}catch(e){}popup("UNLOCKED  //  ?????","#9db4ff")}
@@ -1482,7 +1485,7 @@ gsInit();
 /* ---------- LEVEL 40: THE FACE ---------- */
 const FACE={on:false,dead:false,eyes:[],mouth:0,mT:3,t:0,rets:0,talkT:5,lc:mkC(96,64),xT:0,sx:0,sy:0};FACE.lx=FACE.lc.getContext("2d");
 const FACE_TALK=["I SEE YOU","OPEN WIDER","YOU WERE ALWAYS COMING HERE","THE TUNNEL WAS MY THROAT","LOOK AT ME","I HAVE NO BACK OF THE HEAD","FEED ME THE BALL","BLINK AND I MOVE","WE ARE ALMOST HOME","SAY AAAH","I KNOW YOUR SCORE","I KNOW YOUR NAME","THERE IS NO LEVEL 41. THERE IS ONLY ME.","YOU TASTE LIKE PLASTIC"];
-const FZ=()=>DEPTH*.4;
+const FZ=()=>DEPTH*(G.mode==="goth"?.56:.4);
 function faceCheck(){const gf=G.mode==="goth";FACE.on=gf?G.level===15:(G.level===40&&G.mode!=="boss");FACE.dead=false;FACE.lostPt=false;G.elMax=FACE.on?6:3;if(!FACE.on)return;
   FACE.eyes=gf?[{x:.18,y:.39,hp:3,shut:0},{x:.82,y:.39,hp:3,shut:0}]:[{x:.3,y:.36,hp:3,shut:0},{x:.7,y:.36,hp:3,shut:0}];FACE.mouth=0;FACE.mT=3;FACE.t=0;FACE.rets=0;FACE.talkT=5;G.el=6;G.aiName=null;G.tagFade=1;G.zone="face"}
 function faceRender(c,open,eyes,t,dead){FACE.le=eyes;if(G.mode==="goth"){GF.set(open,eyes,t);return}c.clearRect(0,0,96,64);const E=(e,i)=>{const x=e.x*96,y=e.y*64,w=14,ht=e.hp<=0?0:6*(1-Math.min(1,e.shut*2.5));
@@ -2713,7 +2716,7 @@ function poly(pts,close){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[
 function rimPts(z,n){const pts=[],per=G.tube?tubeEdges():[[0,0,BW,0],[BW,0,BW,BH],[BW,BH,0,BH],[0,BH,0,0]];for(const[a,b,c,d]of per)for(let i=0;i<n;i++){const t=i/n;pts.push(RP(a+(c-a)*t,b+(d-b)*t,z))}return pts}
 function frame(z,col,w){const a=P(0,0,z),b=P(BW,BH,z);ctx.strokeStyle=col;ctx.lineWidth=w||1;ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1])}
 function drawTunnel(rgb,ghost){
-  if(G.mode==="goth"&&G.zone!=="face"&&G.state!=="menu")return gothTunnel(rgb,ghost);
+  if(G.mode==="goth"&&G.zone!=="face"&&G.state!=="menu"&&!G.tube)return gothTunnel(rgb,ghost);
   if(G.blown&&G.state!=="form")return;
   rgb=rgb||DS.rgb;const lo=DQ<3||QL<2||RS<1||!SHB,rip=!!G.ripple,n=ghost?(DS.wob||DS.twist?5:1):rip?40:DS.wob||DS.twist?(lo?8:14):1,fm=G.state==="form"?Math.min(1,Math.max(0,(G.formT-FORM_GROW)/2.2)):1;
   ctx.save();
